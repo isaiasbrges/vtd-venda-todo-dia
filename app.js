@@ -237,7 +237,10 @@ function link(text, r, cls = 'btn') {
   return `<a class="${cls}" href="#/${r}">${text}</a>`;
 }
 function logo() {
-  return `<a class="logo" href="#/home"><span class="logo-mark">VTD</span><span><strong>Venda Todo Dia</strong><small>O kit do Matheus</small></span></a>`;
+  return `<a class="logo" href="#/home" aria-label="VTD Venda Todo Dia, início">${brandImage()}</a>`;
+}
+function brandImage() {
+  return '<span class="brand-art"><img src="assets/logo-vtd.png" width="2172" height="724" alt="VTD Venda Todo Dia por Matheus"></span>';
 }
 function field(label, name, value = '', type = 'text', required = true, placeholder = '') {
   const extra = type === 'number' ? 'step="0.01" inputmode="decimal"' : type === 'email' ? 'autocomplete="email"' : type === 'password' ? `autocomplete="${name === 'password' ? 'current-password' : 'new-password'}"` : '';
@@ -289,7 +292,7 @@ function shell(body, current) {
     <header class="topbar">
       <div class="header-mobile-logo">
         <button class="mobile-menu" data-action="menu" aria-label="Abrir menu" aria-controls="sidebar" aria-expanded="false">${icon('menu')}</button>
-        <span class="logo-mark">VTD</span>
+        <a class="mobile-brand" href="#/home" aria-label="VTD Venda Todo Dia, início">${brandImage()}</a>
       </div>
       <div class="crumb">
         ${icon('home')}

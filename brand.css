@@ -1,0 +1,16 @@
+/* A arte original é preservada; o enquadramento remove apenas o espaço vazio na exibição. */
+.brand-art { display: block; width: 100%; aspect-ratio: 6 / 1; overflow: hidden; flex: none; }
+.brand-art img { display: block; width: 100%; max-width: none; height: auto; transform: translateY(-24%); }
+.sidebar .logo { margin: 0 0 34px; width: 100%; }
+.master-logo { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; margin: 0 0 32px; padding: 0 2px; }
+.master-brand-caption { font-size: 8px; letter-spacing: .16em; color: #a5b09e; padding-left: 5px; }
+.login-visual .logo { width: min(360px, 100%); margin-left: 0; }
+.mobile-brand { display: block; width: 190px; padding: 7px 10px; border-radius: 9px; background: #141c17; }
+.header .brand { width: 230px; flex: none; background: #141c17; padding: 8px 12px; border-radius: 10px; }
+.footer .brand { width: 250px; }
+@media (max-width: 760px) {
+  .login-visual .logo { width: 270px; }
+  .header .brand { width: 180px; }
+  .footer .brand { width: 230px; }
+}
+@media (max-width: 370px) { .mobile-brand { width: 165px; } .header .brand { width: 150px; } }

@@ -99,13 +99,10 @@ const master = {
 
     return `
       <aside class="master-sidebar" id="master-sidebar">
-        <div class="master-logo">
-          <span class="master-logo-mark">VTD</span>
-          <div class="master-logo-text">
-            <strong>Venda Todo Dia</strong>
-            <small>Painel Master</small>
-          </div>
-        </div>
+        <a class="master-logo" href="#/master/overview" aria-label="VTD Venda Todo Dia, Painel Master">
+          ${brandImage()}
+          <span class="master-brand-caption">PAINEL ADMINISTRATIVO</span>
+        </a>
 
         <nav class="master-nav" aria-label="Navegação Master">
           ${menuItems.map(item => `
