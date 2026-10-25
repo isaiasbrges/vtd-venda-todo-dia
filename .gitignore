@@ -3,3 +3,4 @@ backend/storage/*.sqlite
 *.log
 .DS_Store
 Thumbs.db
+vtd-runtime/
