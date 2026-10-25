@@ -3,7 +3,7 @@
 return [
     'app_env' => 'production',
     'app_debug' => false,
-    'app_url' => 'https://seudominio.com.br',
+    'app_url' => 'https://vendatododia.online',
     'app_secret' => 'coloque_aqui_uma_chave_aleatoria_longa_e_segura',
 
     // Banco de Dados MySQL na Hostinger
@@ -11,8 +11,8 @@ return [
         'driver'   => 'mysql',
         'host'     => 'localhost',
         'port'     => 3306,
-        'database' => 'u123456789_vtd',
-        'username' => 'u123456789_vtduser',
+        'database' => 'u916310211_vtd',
+        'username' => 'u916310211_vtd',
         'password' => 'sua_senha_segura_aqui',
         'charset'  => 'utf8mb4'
     ],
@@ -23,10 +23,10 @@ return [
         'host'         => 'smtp.hostinger.com',
         'port'         => 465,
         'encryption'   => 'ssl', // 'ssl' ou 'tls'
-        'username'     => 'contato@seudominio.com.br',
+        'username'     => 'contato@vendatododia.online',
         'password'     => 'senha_do_email_hostinger',
         'from_name'    => 'VTD · Venda Todo Dia',
-        'from_address' => 'contato@seudominio.com.br'
+        'from_address' => 'contato@vendatododia.online'
     ],
 
     // Integração Webhook da Greenn
