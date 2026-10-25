@@ -1,0 +1,2 @@
+# Protege todo o conteúdo do backend contra acesso direto via HTTP
+Require all denied

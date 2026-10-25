@@ -1,0 +1,15 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Bloqueia acesso a arquivos e pastas ocultas
+    RewriteRule (^|/)\.(?!well-known) - [F]
+
+    # Roteamento da API: redireciona chamadas /api/* para api.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^api/(.*)$ api.php?endpoint=$1 [QSA,L]
+    RewriteRule ^api$ api.php [QSA,L]
+</IfModule>
+
+# Previne listagem de diretórios
+Options -Indexes
