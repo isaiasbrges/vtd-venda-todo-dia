@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS calendar_months (
     month_number INT NOT NULL UNIQUE,
     name VARCHAR(50) NOT NULL,
     short_name VARCHAR(10) NOT NULL,
-    lead TEXT NOT NULL,
+    `lead` TEXT NOT NULL,
     buy_tip TEXT NOT NULL,
     practical_tip TEXT NOT NULL,
     dates TEXT NOT NULL,          -- JSON

@@ -331,7 +331,7 @@ class AdminController
         $pdo = Connection::getInstance();
         $stmt = $pdo->prepare("
             UPDATE calendar_months
-            SET lead = :lead, buy_tip = :buy, practical_tip = :tip, suggested_items = :items
+            SET `lead` = :lead, buy_tip = :buy, practical_tip = :tip, suggested_items = :items
             WHERE month_number = :num
         ");
         $stmt->execute([

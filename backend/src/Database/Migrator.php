@@ -175,10 +175,10 @@ class Migrator
 
             // 5. Meses do Calendário
             $sqlMonth = Config::get('db.driver') === 'mysql'
-                ? "INSERT INTO calendar_months (id, month_number, name, short_name, lead, buy_tip, practical_tip, dates, suggested_items)
+                ? "INSERT INTO calendar_months (id, month_number, name, short_name, `lead`, buy_tip, practical_tip, dates, suggested_items)
                    VALUES (:id, :month_number, :name, :short_name, :lead, :buy_tip, :practical_tip, :dates, :suggested_items)
-                   ON DUPLICATE KEY UPDATE name=VALUES(name), lead=VALUES(lead)"
-                : "INSERT OR REPLACE INTO calendar_months (id, month_number, name, short_name, lead, buy_tip, practical_tip, dates, suggested_items)
+                   ON DUPLICATE KEY UPDATE name=VALUES(name), `lead`=VALUES(`lead`)"
+                : "INSERT OR REPLACE INTO calendar_months (id, month_number, name, short_name, `lead`, buy_tip, practical_tip, dates, suggested_items)
                    VALUES (:id, :month_number, :name, :short_name, :lead, :buy_tip, :practical_tip, :dates, :suggested_items)";
 
             $stmtMonth = $this->pdo->prepare($sqlMonth);
