@@ -56,7 +56,7 @@ $router->post('/finance/categories', [\VTD\Controllers\FinanceController::class,
 $router->delete('/finance/categories/{id}', [\VTD\Controllers\FinanceController::class, 'deleteCategory']);
 $router->get('/finance/export-csv', [\VTD\Controllers\FinanceController::class, 'exportCsv']);
 
-// Administração (Requer role admin)
+// Administração & Painel Master (Requer role admin)
 $router->get('/admin/overview', [\VTD\Controllers\AdminController::class, 'overview']);
 $router->get('/admin/clients', [\VTD\Controllers\AdminController::class, 'clients']);
 $router->post('/admin/clients', [\VTD\Controllers\AdminController::class, 'createClient']);
@@ -66,7 +66,27 @@ $router->put('/admin/suppliers/{id}', [\VTD\Controllers\AdminController::class, 
 $router->put('/admin/chapters/{index}', [\VTD\Controllers\AdminController::class, 'updateChapter']);
 $router->put('/admin/calendar/{index}', [\VTD\Controllers\AdminController::class, 'updateMonth']);
 
-// Webhook Greenn
+// Painel Master Avançado
+$router->get('/master/overview', [\VTD\Controllers\MasterController::class, 'overview']);
+$router->get('/master/clients', [\VTD\Controllers\MasterController::class, 'listClients']);
+$router->post('/master/clients', [\VTD\Controllers\MasterController::class, 'createClient']);
+$router->get('/master/clients/{id}', [\VTD\Controllers\MasterController::class, 'clientDetail']);
+$router->patch('/master/clients/{id}/toggle', [\VTD\Controllers\MasterController::class, 'toggleClientStatus']);
+$router->post('/master/clients/{id}/resend-invite', [\VTD\Controllers\MasterController::class, 'resendInvite']);
+$router->delete('/master/clients/{id}/accesses/{accessId}', [\VTD\Controllers\MasterController::class, 'revokeAccess']);
+$router->get('/master/products', [\VTD\Controllers\MasterController::class, 'listProducts']);
+$router->get('/master/integrations', [\VTD\Controllers\MasterController::class, 'listIntegrations']);
+$router->post('/master/integrations', [\VTD\Controllers\MasterController::class, 'createIntegration']);
+$router->put('/master/integrations/{id}', [\VTD\Controllers\MasterController::class, 'updateIntegration']);
+$router->patch('/master/integrations/{id}/toggle', [\VTD\Controllers\MasterController::class, 'toggleIntegration']);
+$router->get('/master/events', [\VTD\Controllers\MasterController::class, 'listEvents']);
+$router->get('/master/events/{id}', [\VTD\Controllers\MasterController::class, 'eventDetail']);
+$router->post('/master/events/{id}/reprocess', [\VTD\Controllers\MasterController::class, 'reprocessEvent']);
+$router->get('/master/settings', [\VTD\Controllers\MasterController::class, 'getSettings']);
+$router->post('/master/settings', [\VTD\Controllers\MasterController::class, 'saveSettings']);
+
+// Webhook Receiver & Integrações
+$router->post('/webhooks/receiver/{token}', [\VTD\Controllers\WebhookReceiverController::class, 'handle']);
 $router->post('/webhooks/greenn', [\VTD\Controllers\GreennWebhookController::class, 'handle']);
 
 // Despacha requisição

@@ -91,7 +91,14 @@ const icons = {
   down: 'M12 3v18 M5 14l7 7 7-7',
   mail: 'M3 5h18v14H3z m0 0 9 8 9-8',
   external: 'M14 3h7v7 M21 3 11 13 M10 3H3v18h18v-7',
-  shield: 'm12 3 9 4v5c0 5-9 10-9 10S3 17 3 12V7z m-4 9 3 3 5-6'
+  shield: 'm12 3 9 4v5c0 5-9 10-9 10S3 17 3 12V7z m-4 9 3 3 5-6',
+  users: 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2 M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M23 21v-2a4 4 0 0 0-3-3.87 M16 3.13a4 4 0 0 1 0 7.75',
+  package: 'M16.5 9.4 7.55 4.24 M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z M3.27 6.96 12 12.01l8.73-5.05 M12 22.08V12',
+  link: 'M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71 M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71',
+  list: 'M8 6h13 M8 12h13 M8 18h13 M3 6h.01 M3 12h.01 M3 18h.01',
+  alert: 'M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z M12 9v4 M12 17h.01',
+  copy: 'M20 9h-9a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2z M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1',
+  refresh: 'M21.5 2v6h-6 M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67'
 };
 
 const icon = n => `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="${icons[n] || icons.arrow}"/></svg>`;
@@ -208,7 +215,7 @@ function shell(body, current) {
     ${logo()}
     <nav aria-label="Navegação principal">
       ${nav.map(([r, l, i]) => `<a href="#/${r}" class="${section === r ? 'active' : ''}">${icon(i)}${l}${r === 'finance' && S.plan === 'essential' ? icon('lock') : ''}</a>`).join('')}
-      ${S.role === 'admin' ? `<a href="#/admin" class="${section === 'admin' ? 'active' : ''}">${icon('shield')}Administração</a>` : ''}
+      ${S.role === 'admin' ? `<a href="#/master/overview" class="${section === 'master' || section === 'admin' ? 'active' : ''}">${icon('shield')}Painel Master</a>` : ''}
     </nav>
     <div class="side-bottom">
       <div class="side-note"><b>${S.plan === 'plus' ? 'Kit + Financeiro' : 'Kit Essencial'}</b>${esc(S.store || 'Minha Loja')}</div>
@@ -219,6 +226,7 @@ function shell(body, current) {
     </div>
   </aside>
   <div class="shell">
+    ${S.role === 'admin' ? `<div style="background:#111215; color:#FFD500; padding:8px 34px; font-size:12px; font-weight:600; display:flex; justify-content:space-between; align-items:center;"><span>Modo lojista ativo.</span><a href="#/master/overview" style="background:#FFD500; color:#111215; padding:4px 12px; border-radius:6px; font-weight:700; text-decoration:none;">Voltar ao Painel Master →</a></div>` : ''}
     <header class="topbar">
       <div class="header-mobile-logo">
         <button class="mobile-menu" data-action="menu" aria-label="Abrir menu">${icon('menu')}</button>
@@ -853,9 +861,296 @@ async function loadFinanceData() {
   }
 }
 
+async function renderMasterRoute(r) {
+  const sub = r.replace(/^master\/?/, '').split('/')[0] || 'overview';
+
+  if (sub === 'overview') {
+    try {
+      const data = await api.get('/master/overview');
+      masterState.overview = data;
+    } catch (e) {
+      console.error(e);
+    }
+    return master.renderOverview();
+  }
+
+  if (sub === 'clients') {
+    try {
+      const res = await api.get('/master/clients', {
+        search: masterState.clientSearch,
+        offer: masterState.clientOffer,
+        status: masterState.clientStatus,
+        page: masterState.clientPage,
+        limit: masterState.clientLimit
+      });
+      masterState.clients = res.clients || [];
+      masterState.clientTotal = res.total || 0;
+      masterState.clientTotalPages = res.total_pages || 1;
+    } catch (e) {
+      console.error(e);
+    }
+    return master.renderClients();
+  }
+
+  if (sub === 'products') {
+    try {
+      const res = await api.get('/master/products');
+      masterState.products = res || [];
+    } catch (e) {
+      console.error(e);
+    }
+    return master.renderProducts();
+  }
+
+  if (sub === 'integrations') {
+    try {
+      const res = await api.get('/master/integrations');
+      masterState.integrations = res || [];
+    } catch (e) {
+      console.error(e);
+    }
+    return master.renderIntegrations();
+  }
+
+  if (sub === 'events') {
+    try {
+      const res = await api.get('/master/events', {
+        status: masterState.eventStatus,
+        integration_id: masterState.eventIntegrationId,
+        search: masterState.eventSearch,
+        page: masterState.eventPage,
+        limit: masterState.eventLimit
+      });
+      masterState.events = res.events || [];
+      masterState.eventTotal = res.total || 0;
+      masterState.eventTotalPages = res.total_pages || 1;
+    } catch (e) {
+      console.error(e);
+    }
+    return master.renderEvents();
+  }
+
+  if (sub === 'suppliers') {
+    return `
+      <div class="master-header">
+        <div>
+          <h1>Catálogo de Fornecedores</h1>
+          <p>Base com 234 contatos comerciais verificados.</p>
+        </div>
+        <div class="master-header-actions">
+          <button class="btn-master-primary" data-action="new-supplier">
+            ${mIcon('plus')} Adicionar fornecedor
+          </button>
+        </div>
+      </div>
+      <section class="master-card">
+        ${suppliers(false)}
+      </section>
+    `;
+  }
+
+  if (sub === 'calendar') {
+    return `
+      <div class="master-header">
+        <div>
+          <h1>Calendário Comercial</h1>
+          <p>Planejamento estratégico de vendas e compras dos 12 meses.</p>
+        </div>
+      </div>
+      <section class="master-card">
+        ${calendar()}
+      </section>
+    `;
+  }
+
+  if (sub === 'guide') {
+    return `
+      <div class="master-header">
+        <div>
+          <h1>Guia do Matheus</h1>
+          <p>Conteúdo formativo dos 8 capítulos do curso.</p>
+        </div>
+      </div>
+      <section class="master-card">
+        ${guide()}
+      </section>
+    `;
+  }
+
+  if (sub === 'settings') {
+    try {
+      const s = await api.get('/master/settings');
+      masterState.settings = s;
+    } catch (e) {
+      console.error(e);
+    }
+    return master.renderSettings();
+  }
+
+  return `<div class="empty"><h1>Seção do Master não encontrada</h1><p><a href="#/master/overview" class="btn primary">Voltar à visão geral</a></p></div>`;
+}
+
+function masterClientModal(client = null) {
+  modal(client ? 'Editar cliente' : 'Criar cliente', `
+    <input type="hidden" name="id" value="${esc(client?.tenant_id || '')}">
+    <div class="fields">
+      ${field('Nome completo do cliente', 'name', client?.name || '', 'text', true, 'Ex: Ana Souza')}
+      ${field('E-mail de acesso', 'email', client?.email || '', 'email', true, 'Ex: ana@exemplo.com')}
+      ${field('Nome da loja / empresa', 'store', client?.store || '', 'text', true, 'Ex: Bella Tênis')}
+      ${select('Produto liberado', 'offer', [['kit-plus', 'Kit + Financeiro (Completo)'], ['kit-essencial', 'Kit Essencial']], client?.plan || 'kit-plus')}
+      ${select('Status do acesso', 'status', [['active', 'Liberado'], ['suspended', 'Suspenso']], client?.status || 'active')}
+      ${field('Validade do acesso (opcional)', 'expires_at', client?.expires_at ? client.expires_at.slice(0, 10) : '', 'date', false)}
+      <div class="field full" style="margin-top:10px;">
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+          <input type="checkbox" name="send_invite" value="1" checked style="width:18px; height:18px; accent-color:#FFD500;">
+          <span>Enviar convite para definição de senha por e-mail</span>
+        </label>
+        <small class="muted" style="display:block; margin-top:4px;">Se não houver servidor SMTP configurado, a conta será criada com segurança e o sistema informará que o e-mail não pôde ser enviado.</small>
+      </div>
+    </div>
+  `, 'Salvar cliente', 'master-client');
+}
+
+async function masterClientDetailModal(tenantId) {
+  try {
+    const data = await api.get('/master/clients/' + tenantId);
+    const c = data.client;
+    const accesses = data.accesses || [];
+    const history = data.history || [];
+
+    modal('Ficha do Cliente: ' + esc(c.client_name), `
+      <div style="margin-bottom:20px; padding:16px; background:#F9FAFB; border-radius:8px; border:1px solid #E5E7EB;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+          <div>
+            <h3 style="margin:0 0 4px 0; font-size:18px;">${esc(c.client_name)}</h3>
+            <span class="muted">${esc(c.client_email)}</span><br>
+            <span style="font-size:12px;">Loja: <b>${esc(c.store_name)}</b></span>
+          </div>
+          <div>
+            <span class="badge-status-pill ${c.status === 'active' ? 'green' : 'red'}">${c.status === 'active' ? 'Liberado' : 'Suspenso'}</span>
+          </div>
+        </div>
+      </div>
+
+      <h4 style="margin:16px 0 8px 0;">Produtos e Acessos Vinculados</h4>
+      <div class="master-table-wrapper" style="margin-bottom:20px;">
+        <table class="master-table" style="font-size:12px;">
+          <thead>
+            <tr>
+              <th>Produto</th>
+              <th>Origem</th>
+              <th>Referência / Pedido</th>
+              <th>Status</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${accesses.length === 0 ? `<tr><td colspan="5" class="muted">Nenhum produto vinculado.</td></tr>` : accesses.map(a => `
+              <tr>
+                <td><b>${esc(a.product_name || a.product_id)}</b></td>
+                <td><span class="badge-offer essential">${esc(a.source)}</span></td>
+                <td>${esc(a.external_reference || '—')}</td>
+                <td><span class="badge-status-pill ${a.status === 'active' ? 'green' : 'red'}">${esc(a.status)}</span></td>
+                <td>
+                  ${a.status === 'active' ? `
+                    <button class="btn-table-action" style="color:#DC2626;" data-action="master-revoke-access" data-tenant="${c.tenant_id}" data-access="${a.id}">
+                      Revogar produto
+                    </button>
+                  ` : 'Revogado'}
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+
+      <h4 style="margin:16px 0 8px 0;">Ações Rápidas</h4>
+      <div style="display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap;">
+        <button class="btn-table-action" data-action="master-toggle-client" data-id="${c.tenant_id}">
+          ${c.status === 'active' ? 'Suspender Conta' : 'Reativar Conta'}
+        </button>
+        <button class="btn-table-action" data-action="master-resend-invite" data-id="${c.tenant_id}">
+          Reenviar Convite de Senha
+        </button>
+      </div>
+
+      <h4 style="margin:16px 0 8px 0;">Histórico de Alterações</h4>
+      <div style="font-size:11px; color:#4B5563; max-height:120px; overflow-y:auto; border:1px solid #E5E7EB; border-radius:6px; padding:10px;">
+        ${history.length === 0 ? 'Nenhuma alteração registrada.' : history.map(h => `
+          <div style="padding:4px 0; border-bottom:1px solid #F3F4F6;">
+            <b>${esc(h.created_at)}</b>: Ação <code>${esc(h.action)}</code>
+          </div>
+        `).join('')}
+      </div>
+    `, '', '');
+  } catch (e) {
+    toast('Erro ao abrir ficha do cliente: ' + e.message);
+  }
+}
+
+function masterIntegrationModal(integ = null) {
+  const isEdit = !!integ;
+  const mappings = integ?.offer_mappings || { 'id_oferta_checkout': 'kit-plus' };
+  const mappingsText = Object.entries(mappings).map(([k, v]) => `${k} = ${v}`).join('\n');
+
+  modal(isEdit ? 'Configurar integração' : 'Nova integração', `
+    <input type="hidden" name="id" value="${esc(integ?.id || '')}">
+    <div class="fields">
+      ${field('Nome da integração', 'name', integ?.name || '', 'text', true, 'Ex: Checkout Principal Greenn')}
+      ${select('Provedor', 'provider', [['greenn', 'Greenn'], ['kiwify', 'Kiwify'], ['hotmart', 'Hotmart'], ['custom', 'Personalizado / Outro']], integ?.provider || 'greenn')}
+      ${select('Ambiente', 'environment', [['production', 'Produção'], ['sandbox', 'Testes / Sandbox']], integ?.environment || 'production')}
+      ${select('Status', 'status', [['active', 'Ativo'], ['inactive', 'Inativo']], integ?.status || 'active')}
+      ${field('Chave secreta / Token do Webhook (opcional)', 'secret_key', integ?.secret_key || '', 'text', false, 'Secret configurado no checkout')}
+      <div class="field full">
+        <label for="m-mappings">Mapeamento de Ofertas Externas (um por linha no formato: <code>codigo_externo = kit-plus</code> ou <code>codigo_externo = kit-essencial</code>)</label>
+        <textarea id="m-mappings" name="offer_mappings_text" style="font-family:monospace; min-height:80px;">${esc(mappingsText)}</textarea>
+      </div>
+    </div>
+  `, 'Salvar integração', 'master-integration');
+}
+
+async function masterReviewEventModal(eventId) {
+  try {
+    const e = await api.get('/master/events/' + eventId);
+    modal('Detalhes do Evento #' + e.id, `
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; background:#F9FAFB; padding:12px; border-radius:8px;">
+          <div>
+            <b>${esc(e.event_type)}</b> (${esc(e.provider)})<br>
+            <span class="muted small">ID Externo: ${esc(e.external_reference || '—')}</span>
+          </div>
+          <span class="badge-status-pill ${e.status === 'success' ? 'green' : (e.status === 'failed' ? 'red' : 'gray')}">
+            ${esc(e.status)}
+          </span>
+        </div>
+
+        ${e.failure_reason ? `
+          <div style="background:#FEE2E2; border:1px solid #FCA5A5; color:#991B1B; padding:12px; border-radius:8px; font-size:12px;">
+            <strong>Motivo da Falha:</strong><br>${esc(e.failure_reason)}
+          </div>
+        ` : ''}
+
+        <div>
+          <strong>Payload Sanitizado Recebido:</strong>
+          <pre style="background:#111215; color:#E5E7EB; padding:12px; border-radius:8px; font-size:11px; max-height:220px; overflow-y:auto;">${esc(JSON.stringify(e.sanitized_payload, null, 2))}</pre>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
+          <button class="btn-master-primary" data-action="master-reprocess-event" data-id="${e.id}">
+            ${mIcon('refresh')} Reprocessar Evento Agora
+          </button>
+        </div>
+      </div>
+    `, '', '');
+  } catch (err) {
+    toast('Erro ao buscar detalhes do evento: ' + err.message);
+  }
+}
+
 async function render() {
   let r = route();
   if (['login', 'recovery'].includes(r)) {
+    document.body.classList.remove('master-active');
     document.title = 'VTD · Acesso';
     $('#app').innerHTML = login(r === 'recovery');
     return;
@@ -868,6 +1163,27 @@ async function render() {
       return;
     }
   }
+
+  // Despacha rotas do Painel Master
+  if (r.startsWith('master') || r.startsWith('admin')) {
+    if (S.role !== 'admin') {
+      toast('Acesso restrito ao Painel Master.');
+      go('home');
+      return;
+    }
+    document.body.classList.add('master-active');
+    let masterRoute = r;
+    if (r === 'admin' || r === 'admin/overview') masterRoute = 'master/overview';
+    else if (r === 'admin/clients') masterRoute = 'master/clients';
+    else if (r === 'admin/content') masterRoute = 'master/suppliers';
+    const body = await renderMasterRoute(masterRoute);
+    document.title = 'VTD · Painel Master';
+    $('#app').innerHTML = master.renderShell(body, masterRoute);
+    window.scrollTo(0, 0);
+    return;
+  }
+
+  document.body.classList.remove('master-active');
 
   if (r.startsWith('guide/')) {
     const n = Number(r.split('/')[1]);
@@ -886,11 +1202,10 @@ async function render() {
     base === 'guide' ? guide() :
     base === 'finance' ? finance(r) :
     base === 'account' ? account() :
-    base === 'admin' ? admin(r) :
     base === 'help' ? help() :
     `<div class="empty"><h1>Página não encontrada</h1><p>Escolha uma seção no menu para continuar.</p>${link('Voltar ao início', 'home', 'btn primary')}</div>`;
 
-  document.title = 'VTD · ' + (nav.find(n => n[0] === base)?.[1] || ({ admin: 'Administração', account: 'Minha conta', help: 'Ajuda' }[base]) || 'Página');
+  document.title = 'VTD · ' + (nav.find(n => n[0] === base)?.[1] || ({ account: 'Minha conta', help: 'Ajuda' }[base]) || 'Página');
   $('#app').innerHTML = shell(body, r);
   window.scrollTo(0, 0);
 }
@@ -925,6 +1240,36 @@ document.addEventListener('input', async e => {
       el.focus();
       el.setSelectionRange(start, start);
     }
+  }
+
+  // Master: Busca rápida de clientes na Visão Geral
+  if (e.target.id === 'master-quick-search') {
+    const q = e.target.value.toLowerCase().trim();
+    const rows = document.querySelectorAll('#master-recent-clients-tbody tr');
+    rows.forEach(r => {
+      const txt = r.textContent.toLowerCase();
+      r.style.display = (!q || txt.includes(q)) ? '' : 'none';
+    });
+  }
+
+  // Master: Busca com debounce na tabela completa de Clientes
+  if (e.target.id === 'master-clients-search') {
+    masterState.clientSearch = e.target.value;
+    masterState.clientPage = 1;
+    clearTimeout(masterState._searchTimer);
+    masterState._searchTimer = setTimeout(() => {
+      render();
+    }, 350);
+  }
+
+  // Master: Busca de Eventos
+  if (e.target.id === 'master-events-search') {
+    masterState.eventSearch = e.target.value;
+    masterState.eventPage = 1;
+    clearTimeout(masterState._evSearchTimer);
+    masterState._evSearchTimer = setTimeout(() => {
+      render();
+    }, 350);
   }
 });
 
@@ -971,6 +1316,46 @@ document.addEventListener('change', async e => {
   if (t.id === 'tx-status') {
     state.txStatus = t.value;
     await loadFinanceData();
+    render();
+  }
+
+  // Master: Filtros rápidos da Visão Geral
+  if (t.id === 'master-quick-offer' || t.id === 'master-quick-status') {
+    const offerVal = ($('#master-quick-offer')?.value || '').toLowerCase();
+    const statusVal = ($('#master-quick-status')?.value || '').toLowerCase();
+    const rows = document.querySelectorAll('#master-recent-clients-tbody tr');
+    rows.forEach(r => {
+      let show = true;
+      if (offerVal) {
+        const hasOffer = r.querySelector(`.badge-offer.${offerVal}`);
+        if (!hasOffer) show = false;
+      }
+      if (statusVal) {
+        const txt = r.textContent.toLowerCase();
+        const matches = statusVal === 'active' ? txt.includes('liberado') : txt.includes('suspenso');
+        if (!matches) show = false;
+      }
+      r.style.display = show ? '' : 'none';
+    });
+  }
+
+  // Master: Filtros na tela de Clientes
+  if (t.id === 'master-clients-filter-offer') {
+    masterState.clientOffer = t.value;
+    masterState.clientPage = 1;
+    render();
+  }
+
+  if (t.id === 'master-clients-filter-status') {
+    masterState.clientStatus = t.value;
+    masterState.clientPage = 1;
+    render();
+  }
+
+  // Master: Filtro de Eventos
+  if (t.id === 'master-events-filter-status') {
+    masterState.eventStatus = t.value;
+    masterState.eventPage = 1;
     render();
   }
 });
@@ -1163,6 +1548,127 @@ document.addEventListener('click', async e => {
     `, 'Salvar mês', 'month');
     return;
   }
+
+  // --- AÇÕES DO PAINEL MASTER ---
+  if (a === 'master-new-client') {
+    masterClientModal();
+    return;
+  }
+  if (a === 'master-manage-client') {
+    masterClientDetailModal(id);
+    return;
+  }
+  if (a === 'master-toggle-client') {
+    try {
+      const res = await api.patch('/master/clients/' + id + '/toggle');
+      toast('Status do cliente alterado para ' + (res.status === 'active' ? 'Liberado' : 'Suspenso'));
+      render();
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+  if (a === 'master-resend-invite') {
+    try {
+      const res = await api.post('/master/clients/' + id + '/resend-invite');
+      toast(res.email_sent ? 'Convite reenviado por e-mail com sucesso!' : 'Aviso: ' + res.message);
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+  if (a === 'master-revoke-access') {
+    const tenantId = el.dataset.tenant;
+    const accessId = el.dataset.access;
+    if (confirm('Deseja realmente revogar este produto específico? Se o cliente possuir outros produtos ativos, eles serão mantidos.')) {
+      try {
+        await api.delete('/master/clients/' + tenantId + '/accesses/' + accessId);
+        toast('Produto revogado com sucesso.');
+        $('#modal').close();
+        render();
+      } catch (err) {
+        toast(err.message);
+      }
+    }
+    return;
+  }
+  if (a === 'master-new-integration') {
+    masterIntegrationModal();
+    return;
+  }
+  if (a === 'master-configure-integration' || a === 'master-edit-integration') {
+    try {
+      let integ = masterState.integrations.find(x => String(x.id) === String(id));
+      if (!integ) {
+        const list = await api.get('/master/integrations');
+        masterState.integrations = list;
+        integ = list.find(x => String(x.id) === String(id));
+      }
+      masterIntegrationModal(integ || null);
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+  if (a === 'master-toggle-integration') {
+    try {
+      await api.patch('/master/integrations/' + id + '/toggle');
+      toast('Status da integração atualizado com sucesso.');
+      render();
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+  if (a === 'master-copy-webhook-url') {
+    const url = el.dataset.url;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(() => {
+        toast('URL do webhook copiada para a área de transferência!');
+      }).catch(() => {
+        prompt('Copie a URL abaixo:', url);
+      });
+    } else {
+      prompt('Copie a URL abaixo:', url);
+    }
+    return;
+  }
+  if (a === 'master-goto-failed-events') {
+    masterState.eventStatus = 'failed';
+    go('master/events');
+    return;
+  }
+  if (a === 'master-review-event') {
+    masterReviewEventModal(id);
+    return;
+  }
+  if (a === 'master-reprocess-event') {
+    try {
+      const res = await api.post('/master/events/' + id + '/reprocess');
+      toast(res.message || 'Evento reprocessado com sucesso!');
+      $('#modal').close();
+      render();
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+  if (a === 'master-clients-page') {
+    const p = Number(el.dataset.page);
+    if (p >= 1 && p <= masterState.clientTotalPages) {
+      masterState.clientPage = p;
+      render();
+    }
+    return;
+  }
+  if (a === 'master-events-page') {
+    const p = Number(el.dataset.page);
+    if (p >= 1 && p <= masterState.eventTotalPages) {
+      masterState.eventPage = p;
+      render();
+    }
+    return;
+  }
 });
 
 document.addEventListener('submit', async e => {
@@ -1184,7 +1690,11 @@ document.addEventListener('submit', async e => {
       S.initialBalance = res.tenant.initial_balance_cents;
       api.csrfToken = res.csrf_token;
       await loadInitialData();
-      go('home');
+      if (res.user.role === 'admin') {
+        go('master/overview');
+      } else {
+        go('home');
+      }
       toast('Bem-vindo(a) ao Venda Todo Dia!');
     } catch (err) {
       toast(err.message);
@@ -1395,6 +1905,78 @@ document.addEventListener('submit', async e => {
       S.months = await api.get('/calendar');
       render();
       toast('Mês atualizado com sucesso.');
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+
+  if (kind === 'master-client') {
+    try {
+      const res = await api.post('/master/clients', {
+        name: d.name.trim(),
+        email: d.email.trim(),
+        store: d.store.trim(),
+        offer: d.offer,
+        status: d.status,
+        expires_at: d.expires_at || null,
+        send_invite: form.querySelector('[name="send_invite"]')?.checked ? true : false
+      });
+      $('#modal').close();
+      const inviteMsg = res.email_sent 
+        ? ' Convite enviado por e-mail.' 
+        : (res.email_notice ? ' ' + res.email_notice : '');
+      toast((res.created ? 'Cliente cadastrado com sucesso!' : 'Oferta vinculada à conta existente!') + inviteMsg);
+      render();
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+
+  if (kind === 'master-integration') {
+    const lines = (d.offer_mappings_text || '').split('\n');
+    const mappings = {};
+    for (const line of lines) {
+      const parts = line.split('=');
+      if (parts.length >= 2) {
+        const k = parts[0].trim();
+        const v = parts[1].trim();
+        if (k && v) mappings[k] = v;
+      }
+    }
+    const payload = {
+      name: d.name.trim(),
+      provider: d.provider,
+      environment: d.environment,
+      status: d.status,
+      secret_key: d.secret_key ? d.secret_key.trim() : null,
+      offer_mappings: mappings
+    };
+    try {
+      if (d.id) {
+        await api.put('/master/integrations/' + d.id, payload);
+        toast('Integração atualizada com sucesso!');
+      } else {
+        await api.post('/master/integrations', payload);
+        toast('Nova integração cadastrada com sucesso!');
+      }
+      $('#modal').close();
+      render();
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+
+  if (kind === 'master-settings') {
+    try {
+      await api.post('/master/settings', {
+        support_email: d.support_email.trim(),
+        support_whatsapp: d.support_whatsapp.trim()
+      });
+      toast('Configurações do Master salvas com sucesso!');
+      render();
     } catch (err) {
       toast(err.message);
     }

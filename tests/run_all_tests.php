@@ -14,6 +14,7 @@ $tests = [
     'Financeiro (Centavos, Quitação & Isolam)' => 'test_finance_module.php',
     'Administração & Provisionamento'          => 'test_admin_module.php',
     'Webhook Greenn (Idempotência & Eventos)'  => 'test_greenn_webhook.php',
+    'Painel Master & Webhook Receiver'         => 'test_master_panel.php',
     'Fumaça da API (Rotas & Dispatcher)'       => 'test_api_smoke.php'
 ];
 

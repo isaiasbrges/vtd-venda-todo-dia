@@ -22,6 +22,7 @@ class AdminMiddleware
         $role = $account['user_role'] ?? '';
         if (!$this->checkAdminRole($role)) {
             Response::error('FORBIDDEN', 'Acesso restrito a administradores da plataforma.', 403);
+            throw new \RuntimeException('FORBIDDEN');
         }
 
         return $account;

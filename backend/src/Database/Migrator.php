@@ -17,24 +17,27 @@ class Migrator
 
     public function runMigrations(): void
     {
-        $migrationFile = dirname(__DIR__, 2) . '/migrations/001_initial_schema.sql';
-        $sql = file_get_contents($migrationFile);
+        $migrationsDir = dirname(__DIR__, 2) . '/migrations';
+        $files = glob($migrationsDir . '/*.sql');
+        sort($files);
 
         $driver = Config::get('db.driver', 'mysql');
 
-        if ($driver === 'sqlite') {
-            // Ajustes para dialeto SQLite
-            $sql = str_replace('INTEGER PRIMARY KEY AUTO_INCREMENT', 'INTEGER PRIMARY KEY AUTOINCREMENT', $sql);
-            $sql = str_replace('AUTO_INCREMENT', '', $sql);
-            $sql = preg_replace('/ENGINE\s*=\s*InnoDB.*?;/i', ';', $sql);
-        }
+        foreach ($files as $file) {
+            $sql = file_get_contents($file);
 
-        // Divide instruções por ponto e vírgula
-        $statements = array_filter(array_map('trim', explode(';', $sql)));
+            if ($driver === 'sqlite') {
+                $sql = str_replace('INTEGER PRIMARY KEY AUTO_INCREMENT', 'INTEGER PRIMARY KEY AUTOINCREMENT', $sql);
+                $sql = str_replace('AUTO_INCREMENT', '', $sql);
+                $sql = preg_replace('/ENGINE\s*=\s*InnoDB.*?;/i', ';', $sql);
+            }
 
-        foreach ($statements as $stmt) {
-            if (!empty($stmt)) {
-                $this->pdo->exec($stmt);
+            $statements = array_filter(array_map('trim', explode(';', $sql)));
+
+            foreach ($statements as $stmt) {
+                if (!empty($stmt)) {
+                    $this->pdo->exec($stmt);
+                }
             }
         }
     }
@@ -47,6 +50,10 @@ class Migrator
         }
 
         $data = json_decode(file_get_contents($jsonFile), true);
+
+        if (Config::get('db.driver') === 'sqlite') {
+            $this->pdo->exec('PRAGMA foreign_keys = OFF;');
+        }
 
         $this->pdo->beginTransaction();
 
@@ -253,9 +260,167 @@ class Migrator
                 ]);
             }
 
+            // 8. Produtos padrão do sistema
+            $products = [
+                [
+                    'id'          => 'kit-essencial',
+                    'name'        => 'Kit Essencial',
+                    'plan_level'  => 'essential',
+                    'description' => 'Acesso completo ao catálogo de fornecedores, favoritos, calendário comercial e guia de estudos.',
+                    'features'    => json_encode(['suppliers', 'favorites', 'calendar', 'guide'])
+                ],
+                [
+                    'id'          => 'kit-plus',
+                    'name'        => 'Kit + Financeiro',
+                    'plan_level'  => 'plus',
+                    'description' => 'Tudo do Kit Essencial mais o painel completo de controle financeiro com projeções e conciliação.',
+                    'features'    => json_encode(['suppliers', 'favorites', 'calendar', 'guide', 'finance'])
+                ]
+            ];
+
+            $sqlProd = Config::get('db.driver') === 'mysql'
+                ? "INSERT INTO products (id, name, plan_level, description, features)
+                   VALUES (:id, :name, :plan_level, :description, :features)
+                   ON DUPLICATE KEY UPDATE name=VALUES(name), description=VALUES(description)"
+                : "INSERT OR REPLACE INTO products (id, name, plan_level, description, features)
+                   VALUES (:id, :name, :plan_level, :description, :features)";
+            $stmtProd = $this->pdo->prepare($sqlProd);
+            foreach ($products as $p) {
+                $stmtProd->execute([
+                    ':id'          => $p['id'],
+                    ':name'        => $p['name'],
+                    ':plan_level'  => $p['plan_level'],
+                    ':description' => $p['description'],
+                    ':features'    => $p['features']
+                ]);
+            }
+
+            // 9. Acessos iniciais vinculados
+            $accesses = [
+                ['acc-1', 'demo-store-1', 'user-1', 'kit-plus', 'manual', 'INITIAL-ADMIN', 'active'],
+                ['acc-2', 'demo-store-2', 'user-2', 'kit-essencial', 'manual', 'INITIAL-USER', 'active']
+            ];
+            $sqlAcc = Config::get('db.driver') === 'mysql'
+                ? "INSERT INTO client_accesses (id, tenant_id, user_id, product_id, source, external_reference, status)
+                   VALUES (:id, :tenant_id, :user_id, :product_id, :source, :external_reference, :status)
+                   ON DUPLICATE KEY UPDATE status=VALUES(status)"
+                : "INSERT OR REPLACE INTO client_accesses (id, tenant_id, user_id, product_id, source, external_reference, status)
+                   VALUES (:id, :tenant_id, :user_id, :product_id, :source, :external_reference, :status)";
+            $stmtAcc = $this->pdo->prepare($sqlAcc);
+            foreach ($accesses as $acc) {
+                $stmtAcc->execute([
+                    ':id'                 => $acc[0],
+                    ':tenant_id'          => $acc[1],
+                    ':user_id'            => $acc[2],
+                    ':product_id'         => $acc[3],
+                    ':source'             => $acc[4],
+                    ':external_reference' => $acc[5],
+                    ':status'             => $acc[6]
+                ]);
+            }
+
+            // 10. Integrações padrão (Checkout principal e Checkout alternativo)
+            $integrations = [
+                [
+                    'id'                 => 'integ-checkout-principal',
+                    'name'               => 'Checkout principal',
+                    'provider'           => 'greenn',
+                    'environment'        => 'production',
+                    'status'             => 'active',
+                    'webhook_token'      => 'token_greenn_principal_live',
+                    'offer_mappings'     => json_encode(['offer_plus_01' => 'kit-plus', 'offer_ess_01' => 'kit-essencial']),
+                    'enabled_events'     => json_encode(['order_paid', 'order_refunded']),
+                    'last_event_at'      => date('Y-m-d H:i:s', time() - 300),
+                    'last_event_status'  => 'success',
+                    'last_event_summary' => 'Compra aprovada → liberar acesso'
+                ],
+                [
+                    'id'                 => 'integ-checkout-secundario',
+                    'name'               => 'Checkout alternativo',
+                    'provider'           => 'kiwify',
+                    'environment'        => 'production',
+                    'status'             => 'inactive',
+                    'webhook_token'      => 'token_kiwify_secundario_live',
+                    'offer_mappings'     => json_encode(['kw_plus' => 'kit-plus']),
+                    'enabled_events'     => json_encode(['order_approved']),
+                    'last_event_at'      => date('Y-m-d H:i:s', time() - 7200),
+                    'last_event_status'  => 'ignored',
+                    'last_event_summary' => 'Aguardando ativação'
+                ]
+            ];
+            $sqlInteg = Config::get('db.driver') === 'mysql'
+                ? "INSERT INTO integrations (id, name, provider, environment, status, webhook_token, offer_mappings, enabled_events, last_event_at, last_event_status, last_event_summary)
+                   VALUES (:id, :name, :provider, :environment, :status, :webhook_token, :offer_mappings, :enabled_events, :last_event_at, :last_event_status, :last_event_summary)
+                   ON DUPLICATE KEY UPDATE name=VALUES(name), status=VALUES(status)"
+                : "INSERT OR REPLACE INTO integrations (id, name, provider, environment, status, webhook_token, offer_mappings, enabled_events, last_event_at, last_event_status, last_event_summary)
+                   VALUES (:id, :name, :provider, :environment, :status, :webhook_token, :offer_mappings, :enabled_events, :last_event_at, :last_event_status, :last_event_summary)";
+            $stmtInteg = $this->pdo->prepare($sqlInteg);
+            foreach ($integrations as $integ) {
+                $stmtInteg->execute($integ);
+            }
+
+            // 11. Eventos de exemplo para visualização imediata
+            $events = [
+                [
+                    'integration_id'     => 'integ-checkout-principal',
+                    'provider'           => 'greenn',
+                    'event_id'           => 'evt_demo_101',
+                    'event_type'         => 'order_paid',
+                    'external_reference' => 'PED-9821',
+                    'client_email'       => 'ana@example.com',
+                    'payload'            => json_encode(['order_id' => 'PED-9821', 'buyer' => ['name' => 'Ana Souza', 'email' => 'ana@example.com'], 'offer' => 'offer_plus_01']),
+                    'status'             => 'success',
+                    'failure_reason'     => null,
+                    'created_at'         => date('Y-m-d H:i:s', time() - 1800)
+                ],
+                [
+                    'integration_id'     => 'integ-checkout-principal',
+                    'provider'           => 'greenn',
+                    'event_id'           => 'evt_demo_102',
+                    'event_type'         => 'invite_sent',
+                    'external_reference' => 'INV-3341',
+                    'client_email'       => 'carla@example.com',
+                    'payload'            => json_encode(['email' => 'carla@example.com', 'action' => 'invite_sent']),
+                    'status'             => 'success',
+                    'failure_reason'     => null,
+                    'created_at'         => date('Y-m-d H:i:s', time() - 3600)
+                ],
+                [
+                    'integration_id'     => 'integ-checkout-principal',
+                    'provider'           => 'greenn',
+                    'event_id'           => 'evt_demo_103',
+                    'event_type'         => 'webhook_received',
+                    'external_reference' => 'PED-UNKNOWN-01',
+                    'client_email'       => 'comprador@desconhecido.com',
+                    'payload'            => json_encode(['order_id' => 'PED-UNKNOWN-01', 'offer_code' => 'oferta_sem_vinculo']),
+                    'status'             => 'failed',
+                    'failure_reason'     => 'Produto sem vínculo com oferta interna.',
+                    'created_at'         => date('Y-m-d H:i:s', time() - 7200)
+                ]
+            ];
+            $stmtEvt = $this->pdo->prepare("
+                INSERT OR IGNORE INTO integration_events (integration_id, provider, event_id, event_type, external_reference, client_email, payload, status, failure_reason, created_at)
+                VALUES (:integration_id, :provider, :event_id, :event_type, :external_reference, :client_email, :payload, :status, :failure_reason, :created_at)
+            ");
+            if (Config::get('db.driver') === 'mysql') {
+                $stmtEvt = $this->pdo->prepare("
+                    INSERT IGNORE INTO integration_events (integration_id, provider, event_id, event_type, external_reference, client_email, payload, status, failure_reason, created_at)
+                    VALUES (:integration_id, :provider, :event_id, :event_type, :external_reference, :client_email, :payload, :status, :failure_reason, :created_at)
+                ");
+            }
+            foreach ($events as $evt) {
+                $stmtEvt->execute($evt);
+            }
+
             $this->pdo->commit();
+            if (Config::get('db.driver') === 'sqlite') {
+                $this->pdo->exec('PRAGMA foreign_keys = ON;');
+            }
         } catch (\Throwable $e) {
             $this->pdo->rollBack();
+            if (Config::get('db.driver') === 'sqlite') {
+                $this->pdo->exec('PRAGMA foreign_keys = ON;');
+            }
             throw $e;
         }
     }
