@@ -51,7 +51,9 @@ class Config
 
     private static function load(): void
     {
-        $envFile = __DIR__ . '/.env.php';
+        // Mantém a configuração e o banco fora da pasta substituída nas implantações.
+        $persistentConfig = dirname(__DIR__, 3) . '/vtd-runtime/config.php';
+        $envFile = is_file($persistentConfig) ? $persistentConfig : __DIR__ . '/.env.php';
         $userConfig = file_exists($envFile) ? require $envFile : [];
 
         // Defaults

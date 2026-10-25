@@ -34,6 +34,8 @@ Use essas contas somente em desenvolvimento. A carga inicial contém dados fict�
 
 Copie backend/config/.env.example.php para backend/config/.env.php e ajuste banco, endereço da aplicação e SMTP. Esse arquivo e os bancos SQLite locais são ignorados pelo Git.
 
+Em hospedagens que substituem public_html a cada implantação, a aplicação também lê vtd-runtime/config.php na pasta acima de public_html. Use essa pasta privada para a configuração e o SQLite persistentes, evitando que uma nova publicação apague os dados. Essa configuração externa tem prioridade sobre backend/config/.env.php.
+
 O driver de e-mail padrão é mock: não envia mensagens. Para convites e recuperação reais, configure SMTP. Valide os provedores de checkout com eventos reais em ambiente de testes antes do uso comercial.
 
 O backend suporta SQLite e MySQL. Consulte [o guia de hospedagem](docs/DEPLOY_HOSTINGER.md). As migrações 001 e 002 fazem parte da instalação atual; o modelo de configuração atualizado está em backend/config/.env.example.php.
