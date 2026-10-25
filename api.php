@@ -63,6 +63,7 @@ $router->post('/admin/clients', [\VTD\Controllers\AdminController::class, 'creat
 $router->put('/admin/clients/{id}', [\VTD\Controllers\AdminController::class, 'updateClient']);
 $router->patch('/admin/clients/{id}/toggle', [\VTD\Controllers\AdminController::class, 'toggleClient']);
 $router->put('/admin/suppliers/{id}', [\VTD\Controllers\AdminController::class, 'updateSupplier']);
+$router->post('/admin/suppliers', [\VTD\Controllers\AdminController::class, 'createSupplier']);
 $router->put('/admin/chapters/{index}', [\VTD\Controllers\AdminController::class, 'updateChapter']);
 $router->put('/admin/calendar/{index}', [\VTD\Controllers\AdminController::class, 'updateMonth']);
 

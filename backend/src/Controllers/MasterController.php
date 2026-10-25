@@ -25,6 +25,38 @@ class MasterController
         return Connection::getInstance();
     }
 
+    private function validateIntegration(string $name, string $provider, mixed $environment, mixed $status, mixed $mappings, mixed $events): bool
+    {
+        $message = null;
+        if ($name === '' || strlen($name) > 150) {
+            $message = 'Informe um nome de integração com até 150 caracteres.';
+        } elseif (!in_array($provider, ['greenn', 'kiwify', 'hotmart', 'custom'], true)) {
+            $message = 'Provedor de integração inválido.';
+        } elseif (!in_array($environment, ['production', 'sandbox'], true) || !in_array($status, ['active', 'inactive'], true)) {
+            $message = 'Ambiente ou status da integração inválido.';
+        } elseif (!is_array($mappings) || !is_array($events) || !array_is_list($events)) {
+            $message = 'Mapeamentos e eventos devem ser listas válidas.';
+        } else {
+            foreach ($mappings as $externalId => $productId) {
+                if (trim((string)$externalId) === '' || !in_array($productId, ['kit-plus', 'kit-essencial'], true)) {
+                    $message = 'Associe cada oferta externa a kit-plus ou kit-essencial.';
+                    break;
+                }
+            }
+            foreach ($events as $event) {
+                if (!is_string($event) || trim($event) === '') {
+                    $message = 'Informe nomes de eventos válidos.';
+                    break;
+                }
+            }
+        }
+        if ($message !== null) {
+            Response::error('VALIDATION_ERROR', $message, 422);
+            return false;
+        }
+        return true;
+    }
+
     private function logAudit(string $adminUserId, string $action, string $targetType, string $targetId, array $details = []): void
     {
         $pdo = $this->getPdo();
@@ -713,7 +745,7 @@ class MasterController
         $sql = "SELECT * FROM integrations ORDER BY created_at ASC";
         $integrations = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
-        $baseUrl = Config::get('app.url', 'http://localhost:8000');
+        $baseUrl = Config::get('app_url', 'http://localhost:8080');
 
         $formatted = array_map(function($i) use ($baseUrl) {
             return [
@@ -722,6 +754,7 @@ class MasterController
                 'provider'       => $i['provider'],
                 'environment'    => $i['environment'],
                 'status'         => $i['status'],
+                'has_secret'     => !empty($i['secret_key']),
                 'webhook_token'  => $i['webhook_token'],
                 'webhook_url'    => rtrim($baseUrl, '/') . '/api/webhooks/receiver/' . $i['webhook_token'],
                 'offer_mappings' => json_decode($i['offer_mappings'] ?? '{}', true) ?: [],
@@ -745,13 +778,13 @@ class MasterController
 
         $name = trim((string)$request->body('name', ''));
         $provider = trim((string)$request->body('provider', 'greenn'));
-        $env = $request->body('environment', 'production') === 'sandbox' ? 'sandbox' : 'production';
+        $env = $request->body('environment', 'production');
         $secret = trim((string)$request->body('secret_key', ''));
         $offerMappings = $request->body('offer_mappings', []);
         $enabledEvents = $request->body('enabled_events', ['order_paid', 'order_refunded']);
+        $status = $request->body('status', 'active');
 
-        if (empty($name)) {
-            Response::error('VALIDATION_ERROR', 'Nome da integração é obrigatório.', 422);
+        if (!$this->validateIntegration($name, $provider, $env, $status, $offerMappings, $enabledEvents)) {
             return;
         }
 
@@ -760,13 +793,14 @@ class MasterController
 
         $stmt = $pdo->prepare("
             INSERT INTO integrations (id, name, provider, environment, status, webhook_token, secret_key, offer_mappings, enabled_events)
-            VALUES (:id, :name, :provider, :env, 'active', :token, :secret, :mappings, :events)
+            VALUES (:id, :name, :provider, :env, :status, :token, :secret, :mappings, :events)
         ");
         $stmt->execute([
             ':id'       => $id,
             ':name'     => $name,
             ':provider' => $provider,
             ':env'      => $env,
+            ':status'   => $status,
             ':token'    => $webhookToken,
             ':secret'   => !empty($secret) ? $secret : null,
             ':mappings' => json_encode($offerMappings, JSON_UNESCAPED_UNICODE),
@@ -796,8 +830,8 @@ class MasterController
 
         $name = trim((string)$request->body('name', ''));
         $provider = trim((string)$request->body('provider', ''));
-        $env = $request->body('environment', 'production') === 'sandbox' ? 'sandbox' : 'production';
-        $status = $request->body('status', 'active') === 'inactive' ? 'inactive' : 'active';
+        $env = $request->body('environment');
+        $status = $request->body('status');
         $secret = $request->body('secret_key');
         $offerMappings = $request->body('offer_mappings');
         $enabledEvents = $request->body('enabled_events');
@@ -808,6 +842,16 @@ class MasterController
 
         if (!$integ) {
             Response::error('INTEGRATION_NOT_FOUND', 'Integração não encontrada.', 404);
+            return;
+        }
+
+        $name = $request->body('name') === null ? $integ['name'] : $name;
+        $provider = $request->body('provider') === null ? $integ['provider'] : $provider;
+        $env = $env ?? $integ['environment'];
+        $status = $status ?? $integ['status'];
+        $offerMappings = $offerMappings ?? json_decode($integ['offer_mappings'], true);
+        $enabledEvents = $enabledEvents ?? json_decode($integ['enabled_events'], true);
+        if (!$this->validateIntegration($name, $provider, $env, $status, $offerMappings, $enabledEvents)) {
             return;
         }
 
@@ -839,7 +883,9 @@ class MasterController
         $sql = "UPDATE integrations SET " . implode(', ', $setPairs) . " WHERE id = :id";
         $pdo->prepare($sql)->execute($paramsMap);
 
-        $this->logAudit($admin['user_id'], 'update_integration', 'integration', $id, $fields);
+        $auditFields = $fields;
+        unset($auditFields['secret_key']);
+        $this->logAudit($admin['user_id'], 'update_integration', 'integration', $id, $auditFields);
 
         Response::json(['message' => 'Integração atualizada com sucesso.']);
     }
@@ -1017,7 +1063,7 @@ class MasterController
             'support_whatsapp' => $rows['support_whatsapp'] ?? '11999999999',
             'mail_driver'      => Config::get('mail.driver', 'mock'),
             'mail_host'        => Config::get('mail.host', 'smtp.hostinger.com'),
-            'app_url'          => Config::get('app.url', 'http://localhost:8000')
+            'app_url'          => Config::get('app_url', 'http://localhost:8080')
         ]);
     }
 
@@ -1029,18 +1075,25 @@ class MasterController
         $supportEmail = trim((string)$request->body('support_email', ''));
         $supportWa = trim((string)$request->body('support_whatsapp', ''));
 
-        $stmt = $pdo->prepare("
+        if ($supportEmail !== '' && !filter_var($supportEmail, FILTER_VALIDATE_EMAIL)) {
+            Response::error('VALIDATION_ERROR', 'Informe um e-mail de suporte válido.', 422);
+            return;
+        }
+        if ($supportWa !== '' && !preg_match('/^\+?[0-9 ()-]{10,25}$/', $supportWa)) {
+            Response::error('VALIDATION_ERROR', 'Informe um WhatsApp válido com DDD.', 422);
+            return;
+        }
+
+        $sql = Config::get('db.driver') === 'mysql' ? "
             INSERT INTO system_settings (setting_key, setting_value, updated_at)
             VALUES (:k, :v, CURRENT_TIMESTAMP)
-            ON CONFLICT(setting_key) DO UPDATE SET setting_value = :v, updated_at = CURRENT_TIMESTAMP
-        ");
-        if (Config::get('db.driver') === 'mysql') {
-            $stmt = $pdo->prepare("
-                INSERT INTO system_settings (setting_key, setting_value, updated_at)
-                VALUES (:k, :v, CURRENT_TIMESTAMP)
-                ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value), updated_at = CURRENT_TIMESTAMP
-            ");
-        }
+            ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value), updated_at = CURRENT_TIMESTAMP
+        " : "
+            INSERT INTO system_settings (setting_key, setting_value, updated_at)
+            VALUES (:k, :v, CURRENT_TIMESTAMP)
+            ON CONFLICT(setting_key) DO UPDATE SET setting_value = excluded.setting_value, updated_at = CURRENT_TIMESTAMP
+        ";
+        $stmt = $pdo->prepare($sql);
 
         if (!empty($supportEmail)) $stmt->execute([':k' => 'support_email', ':v' => $supportEmail]);
         if (!empty($supportWa)) $stmt->execute([':k' => 'support_whatsapp', ':v' => $supportWa]);

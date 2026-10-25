@@ -341,6 +341,7 @@ function supplierList(favs = false) {
         ${S.favs.includes(r.id) ? '★' : '☆'}
       </button>
       ${btn('Ver contatos', 'supplier-detail', 'small', `data-id="${r.id}"`)}
+      ${S.role === 'admin' && route().startsWith('master/') ? btn('Editar', 'edit-supplier', 'small', `data-id="${r.id}"`) : ''}
     </div>
   </article>`).join('') : `<div class="empty">
     ${icon(favs ? 'star' : 'search')}
@@ -935,7 +936,7 @@ async function renderMasterRoute(r) {
       <div class="master-header">
         <div>
           <h1>Catálogo de Fornecedores</h1>
-          <p>Base com 234 contatos comerciais verificados.</p>
+          <p>Gerencie os contatos comerciais da plataforma.</p>
         </div>
         <div class="master-header-actions">
           <button class="btn-master-primary" data-action="new-supplier">
@@ -958,7 +959,8 @@ async function renderMasterRoute(r) {
         </div>
       </div>
       <section class="master-card">
-        ${calendar()}
+        <h2>Planejamento por mês</h2>
+        ${S.months.map((m, i) => `<div class="detail-row"><strong>${esc(m.n)}</strong>${btn('Editar mês', 'edit-month', 'small', `data-index="${i}"`)}</div>`).join('')}
       </section>
     `;
   }
@@ -972,7 +974,8 @@ async function renderMasterRoute(r) {
         </div>
       </div>
       <section class="master-card">
-        ${guide()}
+        <h2>Capítulos do guia</h2>
+        ${S.chapters.map((c, i) => `<div class="detail-row"><strong>${i + 1}. ${esc(c.title)}</strong>${btn('Editar capítulo', 'edit-chapter', 'small', `data-index="${i}"`)}</div>`).join('')}
       </section>
     `;
   }
@@ -1100,7 +1103,7 @@ function masterIntegrationModal(integ = null) {
       ${select('Provedor', 'provider', [['greenn', 'Greenn'], ['kiwify', 'Kiwify'], ['hotmart', 'Hotmart'], ['custom', 'Personalizado / Outro']], integ?.provider || 'greenn')}
       ${select('Ambiente', 'environment', [['production', 'Produção'], ['sandbox', 'Testes / Sandbox']], integ?.environment || 'production')}
       ${select('Status', 'status', [['active', 'Ativo'], ['inactive', 'Inativo']], integ?.status || 'active')}
-      ${field('Chave secreta / Token do Webhook (opcional)', 'secret_key', integ?.secret_key || '', 'text', false, 'Secret configurado no checkout')}
+      ${field('Chave secreta / Token do Webhook (opcional)', 'secret_key', '', 'password', false, integ?.has_secret ? 'Chave salva. Deixe vazio para manter.' : 'Secret configurado no checkout')}
       <div class="field full">
         <label for="m-mappings">Mapeamento de Ofertas Externas (um por linha no formato: <code>codigo_externo = kit-plus</code> ou <code>codigo_externo = kit-essencial</code>)</label>
         <textarea id="m-mappings" name="offer_mappings_text" style="font-family:monospace; min-height:80px;">${esc(mappingsText)}</textarea>
@@ -1175,7 +1178,8 @@ async function render() {
     let masterRoute = r;
     if (r === 'admin' || r === 'admin/overview') masterRoute = 'master/overview';
     else if (r === 'admin/clients') masterRoute = 'master/clients';
-    else if (r === 'admin/content') masterRoute = 'master/suppliers';
+    else if (r === 'admin/content') masterRoute = 'master/guide';
+    else if (r.startsWith('admin/')) masterRoute = r.replace(/^admin\//, 'master/');
     const body = await renderMasterRoute(masterRoute);
     document.title = 'VTD · Painel Master';
     $('#app').innerHTML = master.renderShell(body, masterRoute);
@@ -1373,6 +1377,12 @@ document.addEventListener('click', async e => {
   }
   if (a === 'menu') {
     $('#sidebar').classList.toggle('open');
+    return;
+  }
+  if (a === 'master-menu') {
+    const open = $('#master-sidebar').classList.toggle('open');
+    el.setAttribute('aria-expanded', String(open));
+    el.setAttribute('aria-label', open ? 'Fechar menu administrativo' : 'Abrir menu administrativo');
     return;
   }
   if (a === 'logout') {
@@ -1844,7 +1854,7 @@ document.addEventListener('submit', async e => {
 
   if (kind === 'supplier') {
     try {
-      await api.put('/admin/suppliers/' + d.id, {
+      const payload = {
         nome: d.nome.trim(),
         seg: d.seg.trim(),
         produtos: d.produtos.trim(),
@@ -1856,12 +1866,16 @@ document.addEventListener('submit', async e => {
         email: d.email,
         tel: d.tel ? [d.tel] : [],
         nota: d.nota
-      });
+      };
+      if (d.id) await api.put('/admin/suppliers/' + d.id, payload);
+      else await api.post('/admin/suppliers', payload);
       $('#modal').close();
       const res = await api.get('/suppliers', { search: state.search, page: state.page, limit: 12 });
       S.suppliers = res.suppliers;
+      state.totalSuppliers = res.total;
+      state.totalPages = res.total_pages;
       render();
-      toast('Fornecedor atualizado com sucesso.');
+      toast(d.id ? 'Fornecedor atualizado com sucesso.' : 'Fornecedor cadastrado com sucesso.');
     } catch (err) {
       toast(err.message);
     }
@@ -1950,9 +1964,9 @@ document.addEventListener('submit', async e => {
       provider: d.provider,
       environment: d.environment,
       status: d.status,
-      secret_key: d.secret_key ? d.secret_key.trim() : null,
       offer_mappings: mappings
     };
+    if (d.secret_key?.trim()) payload.secret_key = d.secret_key.trim();
     try {
       if (d.id) {
         await api.put('/master/integrations/' + d.id, payload);

@@ -38,8 +38,8 @@ CREATE TABLE IF NOT EXISTS integrations (
     status VARCHAR(20) NOT NULL DEFAULT 'active', -- 'active', 'inactive'
     webhook_token VARCHAR(64) NOT NULL UNIQUE,
     secret_key VARCHAR(255) NULL,
-    offer_mappings TEXT NOT NULL DEFAULT '{}',    -- JSON {"ext_offer_id": "product_id"}
-    enabled_events TEXT NOT NULL DEFAULT '[]',    -- JSON ["order_paid", "order_refunded", ...]
+    offer_mappings TEXT NOT NULL DEFAULT ('{}'),    -- JSON {"ext_offer_id": "product_id"}
+    enabled_events TEXT NOT NULL DEFAULT ('[]'),    -- JSON ["order_paid", "order_refunded", ...]
     last_event_at DATETIME NULL,
     last_event_status VARCHAR(20) NULL,           -- 'success', 'failed', 'ignored'
     last_event_summary TEXT NULL,

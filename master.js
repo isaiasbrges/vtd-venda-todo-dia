@@ -141,6 +141,7 @@ const master = {
 
       <div class="master-shell">
         <header class="master-topbar">
+          <button class="master-menu-toggle" data-action="master-menu" aria-controls="master-sidebar" aria-expanded="false" aria-label="Abrir menu administrativo">☰</button>
           <div class="master-crumb">
             ${mIcon('home')}
             <span>Master</span>

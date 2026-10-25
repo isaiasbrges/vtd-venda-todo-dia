@@ -249,18 +249,47 @@ class AdminController
 
     public function updateSupplier(Request $request, array $params): void
     {
+        $this->saveSupplier($request, (string)($params['id'] ?? ''));
+    }
+
+    public function createSupplier(Request $request): void
+    {
+        $this->saveSupplier($request, null);
+    }
+
+    private function saveSupplier(Request $request, ?string $id): void
+    {
         (new AdminMiddleware())->handle($request);
-        $id = $params['id'] ?? '';
+        $name = trim((string)$request->body('nome', ''));
+        if ($name === '' || strlen($name) > 150) {
+            Response::error('VALIDATION_ERROR', 'Informe o nome do fornecedor com até 150 caracteres.', 422);
+            return;
+        }
 
         $pdo = Connection::getInstance();
-        $stmt = $pdo->prepare("
+        $isNew = $id === null;
+        if (!$isNew) {
+            $exists = $pdo->prepare('SELECT id FROM suppliers WHERE id = :id');
+            $exists->execute([':id' => $id]);
+            if (!$exists->fetchColumn()) {
+                Response::error('SUPPLIER_NOT_FOUND', 'Fornecedor não encontrado.', 404);
+                return;
+            }
+        }
+        $id = $id ?? 'sup_' . bin2hex(random_bytes(8));
+        $sql = $isNew ? "
+            INSERT INTO suppliers (id, name, segment, products, category, site, instagram, whatsapp, catalogs, email, phones, notes)
+            VALUES (:id, :name, :seg, :produtos, :cat, :site, :ig, :wa, :catalogs, :email, :tel, :nota)
+        " : "
             UPDATE suppliers
             SET name = :name, segment = :seg, products = :produtos, category = :cat, site = :site,
-                instagram = :ig, whatsapp = :wa, catalogs = :catalogs, email = :email, phones = :tel, notes = :nota
+                instagram = :ig, whatsapp = :wa, catalogs = :catalogs, email = :email, phones = :tel, notes = :nota,
+                updated_at = CURRENT_TIMESTAMP
             WHERE id = :id
-        ");
+        ";
+        $stmt = $pdo->prepare($sql);
         $stmt->execute([
-            ':name'     => (string)$request->body('nome', ''),
+            ':name'     => $name,
             ':seg'      => (string)$request->body('seg', ''),
             ':produtos' => (string)$request->body('produtos', ''),
             ':cat'      => (string)$request->body('categoria', ''),
@@ -274,7 +303,7 @@ class AdminController
             ':id'       => $id
         ]);
 
-        Response::json(['message' => 'Fornecedor atualizado com sucesso.']);
+        Response::json(['id' => $id, 'message' => $isNew ? 'Fornecedor cadastrado com sucesso.' : 'Fornecedor atualizado com sucesso.'], $isNew ? 201 : 200);
     }
 
     public function updateChapter(Request $request, array $params): void

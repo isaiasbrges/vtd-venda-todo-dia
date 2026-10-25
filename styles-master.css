@@ -688,6 +688,16 @@ body.master-active {
   padding: 24px;
 }
 
+.master-menu-toggle {
+  display: none;
+  border: 1px solid #D1D5DB;
+  border-radius: 8px;
+  background: #FFFFFF;
+  padding: 8px 12px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
 /* ---------------- RESPONSIVIDADE ---------------- */
 @media (max-width: 1024px) {
   .master-metrics-grid {
@@ -702,6 +712,13 @@ body.master-active {
 }
 
 @media (max-width: 768px) {
+  .master-menu-toggle {
+    display: block;
+  }
+  .master-sidebar.open {
+    top: 64px;
+    height: calc(100vh - 64px);
+  }
   .master-sidebar {
     transform: translateX(-100%);
     transition: transform 0.2s ease;

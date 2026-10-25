@@ -15,6 +15,7 @@ $tests = [
     'Administração & Provisionamento'          => 'test_admin_module.php',
     'Webhook Greenn (Idempotência & Eventos)'  => 'test_greenn_webhook.php',
     'Painel Master & Webhook Receiver'         => 'test_master_panel.php',
+    'Configuração de integrações do Master'    => 'test_master_integrations.php',
     'Fumaça da API (Rotas & Dispatcher)'       => 'test_api_smoke.php'
 ];
 
@@ -35,7 +36,7 @@ foreach ($tests as $name => $file) {
 
     echo "Executando: {$name}... ";
     
-    $cmd = escapeshellarg($phpBinary) . ' ' . escapeshellarg($fullPath);
+    $cmd = escapeshellarg($phpBinary) . ' -d zend.assertions=1 -d assert.exception=1 ' . escapeshellarg($fullPath) . ' 2>&1';
     $output = [];
     $exitCode = 0;
     exec($cmd, $output, $exitCode);

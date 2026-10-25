@@ -96,13 +96,10 @@ public_html/
 declare(strict_types=1);
 
 return [
-    'app' => [
-        'name'        => 'VTD - Viver do Tênis',
-        'url'         => 'https://seudominio.com.br',
-        'environment' => 'production',
-        'debug'       => false,
-        'timezone'    => 'America/Sao_Paulo',
-    ],
+    'app_env'    => 'production',
+    'app_debug'  => false,
+    'app_url'    => 'https://seudominio.com.br',
+    'app_secret' => 'SUBSTITUA_POR_UMA_CHAVE_ALEATORIA_LONGA',
     'db' => [
         'driver'   => 'mysql',
         'host'     => 'localhost',
@@ -124,8 +121,8 @@ return [
     ],
     'greenn' => [
         'webhook_secret'   => 'SEU_TOKEN_SECRETO_CONFIGURADO_NA_GREENN',
-        'essential_offers' => ['essential_anual', 'essential_mensal', 'guia_fornecedores'],
-        'plus_offers'      => ['plus_completo', 'kit_financeiro_plus', 'vtd_combo_plus'],
+        'essential_product_id' => 'ID_DO_PRODUTO_ESSENCIAL',
+        'plus_product_id'      => 'ID_DO_PRODUTO_PLUS',
     ],
     'security' => [
         'session_lifetime' => 86400 * 7, // 7 dias

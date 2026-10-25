@@ -59,18 +59,15 @@ class Migrator
 
         try {
             // 1. Tenants iniciais
-            $stmtTenant = $this->pdo->prepare("
+            $sqlTenant = Config::get('db.driver') === 'mysql' ? "
+                INSERT INTO tenants (id, name, slug, plan, initial_balance_cents, status)
+                VALUES (:id, :name, :slug, :plan, :initial_balance_cents, :status)
+                ON DUPLICATE KEY UPDATE name=VALUES(name), plan=VALUES(plan), initial_balance_cents=VALUES(initial_balance_cents)
+            " : "
                 INSERT OR REPLACE INTO tenants (id, name, slug, plan, initial_balance_cents, status)
                 VALUES (:id, :name, :slug, :plan, :initial_balance_cents, :status)
-            ");
-            // Se for MySQL usamos ON DUPLICATE KEY UPDATE
-            if (Config::get('db.driver') === 'mysql') {
-                $stmtTenant = $this->pdo->prepare("
-                    INSERT INTO tenants (id, name, slug, plan, initial_balance_cents, status)
-                    VALUES (:id, :name, :slug, :plan, :initial_balance_cents, :status)
-                    ON DUPLICATE KEY UPDATE name=VALUES(name), plan=VALUES(plan), initial_balance_cents=VALUES(initial_balance_cents)
-                ");
-            }
+            ";
+            $stmtTenant = $this->pdo->prepare($sqlTenant);
 
             $stmtTenant->execute([
                 ':id' => 'demo-store-1',
@@ -203,16 +200,14 @@ class Migrator
 
             // 6. Categorias Financeiras padrão para o Tenant 1
             $defaultCategories = ['Serviços', 'Mercadorias', 'Moradia', 'Alimentação', 'Transporte', 'Outros'];
-            $stmtCat = $this->pdo->prepare("
+            $sqlCat = Config::get('db.driver') === 'mysql' ? "
+                INSERT IGNORE INTO financial_categories (tenant_id, name)
+                VALUES (:tenant_id, :name)
+            " : "
                 INSERT OR IGNORE INTO financial_categories (tenant_id, name)
                 VALUES (:tenant_id, :name)
-            ");
-            if (Config::get('db.driver') === 'mysql') {
-                $stmtCat = $this->pdo->prepare("
-                    INSERT IGNORE INTO financial_categories (tenant_id, name)
-                    VALUES (:tenant_id, :name)
-                ");
-            }
+            ";
+            $stmtCat = $this->pdo->prepare($sqlCat);
 
             foreach ($defaultCategories as $catName) {
                 $stmtCat->execute([':tenant_id' => 'demo-store-1', ':name' => $catName]);
@@ -398,16 +393,11 @@ class Migrator
                     'created_at'         => date('Y-m-d H:i:s', time() - 7200)
                 ]
             ];
-            $stmtEvt = $this->pdo->prepare("
-                INSERT OR IGNORE INTO integration_events (integration_id, provider, event_id, event_type, external_reference, client_email, payload, status, failure_reason, created_at)
+            $insertEvent = Config::get('db.driver') === 'mysql' ? 'INSERT IGNORE' : 'INSERT OR IGNORE';
+            $stmtEvt = $this->pdo->prepare("$insertEvent INTO integration_events
+                (integration_id, provider, event_id, event_type, external_reference, client_email, payload, status, failure_reason, created_at)
                 VALUES (:integration_id, :provider, :event_id, :event_type, :external_reference, :client_email, :payload, :status, :failure_reason, :created_at)
             ");
-            if (Config::get('db.driver') === 'mysql') {
-                $stmtEvt = $this->pdo->prepare("
-                    INSERT IGNORE INTO integration_events (integration_id, provider, event_id, event_type, external_reference, client_email, payload, status, failure_reason, created_at)
-                    VALUES (:integration_id, :provider, :event_id, :event_type, :external_reference, :client_email, :payload, :status, :failure_reason, :created_at)
-                ");
-            }
             foreach ($events as $evt) {
                 $stmtEvt->execute($evt);
             }
