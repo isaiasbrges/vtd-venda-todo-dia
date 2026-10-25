@@ -45,16 +45,20 @@ php tests/run_all_tests.php
 node --check app.js
 node --check master.js
 node --check data.js
+node --test tests/frontend.test.cjs
 ```
 
 O executor PHP ativa as asserções em cada processo. As suítes utilizam bancos locais e dados demonstrativos: não execute os testes com a configuração de produção.
 
 O GitHub Actions executa a suíte com SQLite e verifica instalação, integrações, configurações e fornecedores também em MySQL 8.
 
+O frontend também tem testes de favoritos, busca concorrente, navegação, rascunhos, filtros financeiros, falhas de conexão e prevenção de envios duplicados.
+
 ## Estrutura
 
 - app.js, master.js: interface do cliente e do administrador.
 - styles.css, styles-master.css: layouts e navegação responsiva.
+- styles-ui.css: identidade visual compartilhada, estados de interação e adaptações para celular.
 - api.php: rotas da API.
 - backend/src/: controladores, segurança, serviços e banco.
 - backend/migrations/, backend/seeds/: esquema e dados demonstrativos.

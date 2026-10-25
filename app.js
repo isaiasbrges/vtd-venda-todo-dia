@@ -4,6 +4,8 @@
 const api = {
   csrfToken: '',
   async req(endpoint, opts = {}) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 20000);
     let url = endpoint.startsWith('/') ? endpoint : '/' + endpoint;
     const apiPath = url.startsWith('/api') ? url : '/api' + url;
     const headers = {
@@ -17,13 +19,19 @@ const api = {
       const res = await fetch(apiPath, {
         credentials: 'include',
         ...opts,
+        signal: opts.signal || controller.signal,
         headers
       });
 
       // Trata respostas sem corpo (ex: 204)
       if (res.status === 204) return null;
 
-      const data = await res.json().catch(() => ({}));
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        throw new Error('O servidor não retornou uma resposta válida. Tente novamente.');
+      }
       if (!res.ok || data.success === false) {
         if (res.status === 401 && !['login', 'recovery'].includes(route())) {
           S.session = false;
@@ -36,8 +44,14 @@ const api = {
       }
       return data.data;
     } catch (e) {
+      if (e.name === 'AbortError') e = new Error('O servidor demorou para responder. Tente novamente.');
+      else if (e instanceof TypeError) e = new Error('Não foi possível conectar ao servidor. Confira sua conexão e tente novamente.');
+      const form = document.querySelector('form[data-submitting]');
+      if (form) formError(form, e.message || 'Não foi possível concluir a ação.');
       console.error('API Error:', e);
       throw e;
+    } finally {
+      clearTimeout(timeout);
     }
   },
   get(ep, params) {
@@ -129,6 +143,7 @@ let S = {
   read: [],
   notes: {},
   suppliers: [],
+  catalogTotal: 0,
   chapters: [],
   months: [],
   categories: [],
@@ -159,6 +174,7 @@ let state = {
 
 const $ = s => document.querySelector(s);
 let toastTimer;
+const noteDrafts = {};
 function toast(s) {
   const el = $('#toast');
   if (!el) return;
@@ -166,6 +182,46 @@ function toast(s) {
   el.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.classList.remove('show'), 3500);
+}
+
+function formError(form, message) {
+  let feedback = form.querySelector('.form-feedback');
+  if (!feedback) {
+    feedback = document.createElement('p');
+    feedback.className = 'form-feedback';
+    feedback.setAttribute('role', 'alert');
+    form.prepend(feedback);
+  }
+  feedback.textContent = message;
+}
+
+function errorPanel(error) {
+  return `<section class="empty" role="alert"><h1>Não foi possível carregar esta tela</h1><p>${esc(error.message || 'Confira sua conexão e tente novamente.')}</p>${btn('Tentar novamente', 'retry-page', 'primary')}${link('Voltar ao início', 'home')}</section>`;
+}
+
+function syncMenuState() {
+  document.querySelectorAll('.sidebar, .master-sidebar').forEach(sidebar => {
+    const masterMenu = sidebar.classList.contains('master-sidebar');
+    const mobile = window.matchMedia?.(`(max-width: ${masterMenu ? 768 : 760}px)`).matches;
+    sidebar.inert = !!mobile && !sidebar.classList.contains('open');
+    if (!mobile) {
+      sidebar.classList.remove('open');
+      const backdrop = $('.nav-backdrop');
+      if (backdrop) backdrop.hidden = true;
+    }
+  });
+}
+
+function filterRecentClients() {
+  const query = ($('#master-quick-search')?.value || '').trim().toLowerCase();
+  const offer = $('#master-quick-offer')?.value || '';
+  const status = $('#master-quick-status')?.value || '';
+  document.querySelectorAll('#master-recent-clients-tbody tr').forEach(row => {
+    const text = row.textContent.toLowerCase();
+    const matchesOffer = !offer || row.querySelector(`.badge-offer.${offer}`);
+    const matchesStatus = !status || text.includes(status === 'active' ? 'liberado' : 'suspenso');
+    row.hidden = !((!query || text.includes(query)) && matchesOffer && matchesStatus);
+  });
 }
 
 const route = () => location.hash.replace(/^#\/?/, '').split('?')[0] || 'login';
@@ -184,7 +240,9 @@ function logo() {
   return `<a class="logo" href="#/home"><span class="logo-mark">VTD</span><span><strong>Venda Todo Dia</strong><small>O kit do Matheus</small></span></a>`;
 }
 function field(label, name, value = '', type = 'text', required = true, placeholder = '') {
-  return `<div class="field"><label for="f-${name}">${label}</label><input id="f-${name}" name="${name}" type="${type}" value="${esc(value)}" placeholder="${esc(placeholder)}" ${required ? 'required' : ''}></div>`;
+  const extra = type === 'number' ? 'step="0.01" inputmode="decimal"' : type === 'email' ? 'autocomplete="email"' : type === 'password' ? `autocomplete="${name === 'password' ? 'current-password' : 'new-password'}"` : '';
+  const input = `<input id="f-${name}" name="${name}" type="${type}" value="${esc(value)}" placeholder="${esc(placeholder)}" ${extra} ${['new_password', 'confirm_password'].includes(name) ? 'minlength="6"' : ''} ${required ? 'required' : ''}>`;
+  return `<div class="field"><label for="f-${name}">${label}</label>${type === 'password' ? `<div class="password-control">${input}<button type="button" data-action="toggle-password" aria-controls="f-${name}" aria-label="Mostrar senha">Mostrar</button></div>` : input}</div>`;
 }
 function select(label, name, options, value) {
   return `<div class="field"><label for="f-${name}">${label}</label><select id="f-${name}" name="${name}">${options.map(([v, l]) => `<option value="${esc(v)}" ${String(v) === String(value) ? 'selected' : ''}>${esc(l)}</option>`).join('')}</select></div>`;
@@ -192,7 +250,8 @@ function select(label, name, options, value) {
 function modal(title, body, submit = '', form = '') {
   const el = $('#modal');
   if (el.open) el.close();
-  el.innerHTML = `<div class="dialog-head"><h2>${title}</h2><button class="close" data-action="close" aria-label="Fechar janela">×</button></div>${form ? `<form data-form="${form}">` : ''}${body}<div class="modal-actions">${btn('Fechar', 'close')}${submit ? `<button class="btn primary" type="submit">${submit}</button>` : ''}</div>${form ? '</form>' : ''}`;
+  el.setAttribute('aria-labelledby', 'dialog-title');
+  el.innerHTML = `<div class="dialog-head"><h2 id="dialog-title">${title}</h2><button class="close" data-action="close" aria-label="Fechar janela">×</button></div>${form ? `<form data-form="${form}">` : ''}${body}<div class="modal-actions">${btn('Fechar', 'close')}${submit ? `<button class="btn primary" type="submit">${submit}</button>` : ''}</div>${form ? '</form>' : ''}`;
   el.showModal();
 }
 function head(title, description, actions = '') {
@@ -229,7 +288,7 @@ function shell(body, current) {
     ${S.role === 'admin' ? `<div style="background:#111215; color:#FFD500; padding:8px 34px; font-size:12px; font-weight:600; display:flex; justify-content:space-between; align-items:center;"><span>Modo lojista ativo.</span><a href="#/master/overview" style="background:#FFD500; color:#111215; padding:4px 12px; border-radius:6px; font-weight:700; text-decoration:none;">Voltar ao Painel Master →</a></div>` : ''}
     <header class="topbar">
       <div class="header-mobile-logo">
-        <button class="mobile-menu" data-action="menu" aria-label="Abrir menu">${icon('menu')}</button>
+        <button class="mobile-menu" data-action="menu" aria-label="Abrir menu" aria-controls="sidebar" aria-expanded="false">${icon('menu')}</button>
         <span class="logo-mark">VTD</span>
       </div>
       <div class="crumb">
@@ -242,8 +301,9 @@ function shell(body, current) {
         <a href="#/account" class="avatar" aria-label="Minha conta">${esc(initials)}</a>
       </div>
     </header>
-    <main class="content" id="main">${body}</main>
+    <main class="content" id="main" tabindex="-1">${body}</main>
   </div>
+  <button class="nav-backdrop" data-action="close-menu" aria-label="Fechar menu" hidden></button>
   <nav class="mobile-bottom" aria-label="Navegação mobile">
     ${nav.filter(n => n[0] !== 'favorites').map(([r, l, i]) => `<a href="#/${r}" class="${section === r ? 'active' : ''}">${icon(i)}${({ suppliers: 'Fornecedores', calendar: 'Calendário', guide: 'Guia', finance: 'Financeiro', home: 'Início' })[r]}</a>`).join('')}
   </nav>`;
@@ -268,6 +328,7 @@ function login(recovery = false) {
           ${resetToken ? `
             <input type="hidden" name="token" value="${esc(resetToken)}">
             ${field('Nova Senha (mínimo 6 caracteres)', 'new_password', '', 'password', true, 'Digite sua nova senha')}
+            ${field('Confirme a nova senha', 'confirm_password', '', 'password', true, 'Repita sua nova senha')}
             <button class="btn primary" type="submit">Salvar Nova Senha ${icon('arrow')}</button>
           ` : `
             ${field('Seu E-mail cadastrado', 'email', '', 'email', true, 'exemplo@loja.com')}
@@ -294,12 +355,21 @@ function check(key, text) {
 
 function home() {
   const m = S.months[state.month] || { n: 'Mês atual', dates: [['Campanha comercial', '']], items: [] };
-  return head('Tudo para sua próxima venda.', 'Escolha bons produtos, encontre fornecedores e prepare sua loja.') +
-    `<section class="welcome"><div><div class="eyebrow">Comece por aqui</div><h2>Sua loja preparada<br>para vender.</h2><p>Conheça o kit e coloque as ideias em prática.</p>${link('Explorar o guia ' + icon('arrow'), 'guide', 'btn primary')}</div></section>
+  const completed = S.chapters.filter((_, i) => S.read.includes(i + 1)).length;
+  const total = S.chapters.length;
+  const progress = total ? Math.round(completed / total * 100) : 0;
+  const nextChapter = Math.max(0, S.chapters.findIndex((_, i) => !S.read.includes(i + 1))) + 1;
+  return `<div class="home-greeting"><span class="eyebrow">SEU ESPAÇO DE CRESCIMENTO</span><span>${esc(new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' }))}</span></div>` + head(`Olá, ${esc(S.name.split(' ')[0] || 'lojista')}. Vamos vender?`, 'Tudo para sua próxima venda. Seus materiais e sua loja, no mesmo lugar.') +
+    `<section class="welcome home-hero"><div class="hero-content"><div class="eyebrow">IDEIAS QUE MOVIMENTAM SUA LOJA</div><h2>O próximo passo<br>começa <em>aqui.</em></h2><p>Encontre bons produtos, planeje suas campanhas e transforme conhecimento em ação.</p>${link('Encontrar fornecedores ' + icon('arrow'), 'suppliers', 'btn primary')}</div><aside class="hero-learning"><span class="hero-learning-icon">${icon('book')}</span><span class="eyebrow">SUA TRILHA DE APRENDIZADO</span><h3>Um capítulo.<br>Uma nova possibilidade.</h3><p>${completed} de ${total} capítulos concluídos</p><div class="progress"><i style="width:${progress}%"></i></div>${link('Continuar meu guia ' + icon('arrow'), 'guide/' + nextChapter, 'hero-learning-link')}</aside></section>
+    <div class="overview-strip">
+      <a href="#/suppliers" class="overview-tile"><span class="overview-icon">${icon('truck')}</span><div><strong>${S.catalogTotal}</strong><span>Fornecedores para explorar</span></div>${icon('arrow')}</a>
+      <a href="#/favorites" class="overview-tile"><span class="overview-icon">${icon('star')}</span><div><strong>${S.favs.length}</strong><span>Contatos nos seus favoritos</span></div>${icon('arrow')}</a>
+      <a href="#/calendar" class="overview-tile"><span class="overview-icon">${icon('calendar')}</span><div><strong>${esc(m.n)}</strong><span>Seu planejamento comercial</span></div>${icon('arrow')}</a>
+    </div>
     <div class="columns">
       <section class="panel">
         <div class="panel-head"><h2>Explore seu kit</h2><span class="tag">Seu acesso</span></div>
-        ${[['suppliers', 'truck', 'Fornecedores do Matheus', `${S.suppliers.length || 234} contatos organizados por categoria`],
+        ${[['suppliers', 'truck', 'Fornecedores do Matheus', `${S.catalogTotal} contatos organizados por categoria`],
            ['calendar', 'calendar', 'Calendário comercial', 'O que comprar e quando se preparar'],
            ['guide', 'book', 'Guia Loja que Vende Todo Dia', `${S.chapters.length || 8} capítulos com tarefas para sua loja`]].map(([r, i, t, d]) => `<a class="kit-row" href="#/${r}"><span class="kit-icon">${icon(i)}</span><div><h3>${t}</h3><p>${d}</p></div>${icon('arrow')}</a>`).join('')}
       </section>
@@ -317,12 +387,13 @@ function home() {
 }
 
 function supplierList(favs = false) {
-  const list = favs ? S.suppliers.filter(r => S.favs.includes(r.id)) : S.suppliers;
-  const count = favs ? list.length : state.totalSuppliers;
-  const pages = favs ? Math.max(1, Math.ceil(list.length / 12)) : state.totalPages;
+  const list = S.suppliers;
+  const count = state.totalSuppliers;
+  const pages = state.totalPages;
+  const filtered = !!(state.search || state.segment || state.wa || state.cat);
 
   return `<div class="list-count">
-    <span>${count} ${favs ? 'favoritos' : 'fornecedores encontrados'}</span>
+    <span>${count} ${favs ? (count === 1 ? 'favorito' : 'favoritos') : (count === 1 ? 'fornecedor encontrado' : 'fornecedores encontrados')}</span>
     <span>Página ${state.page} de ${pages}</span>
   </div>
   ${list.length ? list.map(r => `<article class="supplier">
@@ -345,9 +416,9 @@ function supplierList(favs = false) {
     </div>
   </article>`).join('') : `<div class="empty">
     ${icon(favs ? 'star' : 'search')}
-    <h3>${favs ? 'Nenhum favorito por aqui ainda.' : 'Nenhum fornecedor encontrado.'}</h3>
-    <p>${favs ? 'Marque a estrela de um fornecedor para encontrá-lo aqui.' : 'Tente outra busca ou limpe os filtros.'}</p>
-    ${btn(favs ? 'Explorar fornecedores' : 'Limpar filtros', favs ? 'go-suppliers' : 'clear-filters', 'primary')}
+    <h3>${favs ? (filtered ? 'Nenhum favorito com esses filtros.' : 'Nenhum favorito por aqui ainda.') : 'Nenhum fornecedor encontrado.'}</h3>
+    <p>${favs && !filtered ? 'Marque a estrela de um fornecedor para encontrá-lo aqui.' : 'Tente outra busca ou limpe os filtros.'}</p>
+    ${btn(favs && !filtered ? 'Explorar fornecedores' : 'Limpar filtros', favs && !filtered ? 'go-suppliers' : 'clear-filters', 'primary')}
   </div>`}
   <div class="pagination">
     ${btn('← Anterior', 'page', 'small', `data-page="${state.page - 1}" ${state.page <= 1 ? 'disabled' : ''}`)}
@@ -357,7 +428,7 @@ function supplierList(favs = false) {
 }
 
 function suppliers(favs = false) {
-  const segs = ['Brinquedos', 'Educativos', 'Papelaria/Escolar', 'Puericultura/Bebê', 'Jogos', 'Pelúcias', 'Esporte/Ar livre', 'Livros', 'Bonecas/Bonecos', 'Veículos/Carrinhos', 'Fantasias', 'Outros'];
+  const segs = [...new Set([...(typeof ORIGINAL_SUPPLIERS !== 'undefined' ? ORIGINAL_SUPPLIERS.map(s => s.seg) : []), ...S.suppliers.map(s => s.seg), state.segment].filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
   return head(favs ? 'Seus fornecedores, por perto.' : 'Fornecedores do Matheus', favs ? 'Reúna os contatos que você quer consultar novamente.' : 'Base completa de contatos para encontrar os produtos da sua loja.') +
     `<div class="searchbar">
       <div class="search">
@@ -374,7 +445,7 @@ function suppliers(favs = false) {
       <button class="chip ${state.cat ? 'active' : ''}" data-action="filter-cat" aria-pressed="${state.cat}">Com catálogo</button>
       ${btn('Limpar filtros', 'clear-filters', 'small ghost')}
     </div>
-    <div id="supplier-results">${supplierList(favs)}</div>
+    <div id="supplier-results" aria-live="polite">${supplierList(favs)}</div>
     <p class="storage-note">Contatos comerciais importados do material original. Confirme autenticidade, pedido mínimo, frete e condições diretamente com cada fornecedor.</p>`;
 }
 
@@ -384,15 +455,20 @@ function supplierDetail(id) {
   const channels = [
     ['Site', r.site],
     ['Instagram', r.ig],
-    ['WhatsApp', r.wa?.[0] ? 'https://wa.me/55' + r.wa[0].replace(/\D/g, '') : ''],
+    ...(r.wa || []).map((number, i) => ['WhatsApp' + (i ? ' ' + (i + 1) : ''), 'https://wa.me/' + (number.replace(/\D/g, '').startsWith('55') && number.replace(/\D/g, '').length > 11 ? '' : '55') + number.replace(/\D/g, '')]),
+    ['Facebook', r.fb], ['YouTube', r.yt], ['LinkedIn', r.li], ['TikTok', r.tt], ['Página de contato', r.contato],
     ...((r.cat || []).map((u, i) => ['Catálogo ' + (i + 1), u]))
-  ].filter(x => x[1]);
+  ].filter(x => x[1] && safeURL(x[1]) !== '#');
 
   modal(esc(r.nome), `
     <span class="tag yellow">${esc(r.seg)}</span>
     <p>${esc(r.produtos)}</p>
     <div class="contact-links">
       ${channels.map(([l, u]) => `<a class="btn small" href="${esc(safeURL(u))}" target="_blank" rel="noopener noreferrer">${esc(l)} ${icon('external')}</a>`).join('')}
+    </div>
+    <div class="contact-links">
+      ${(r.tel || []).filter(number => number.replace(/\D/g, '')).map(number => `<a class="btn small" href="tel:${number.replace(/[^+\d]/g, '')}">Ligar: ${esc(number)}</a>`).join('')}
+      ${(r.email || '').split(/[,;]/).map(email => email.trim()).filter(email => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)).map(email => `<a class="btn small" href="mailto:${esc(email)}">Enviar e-mail ${icon('mail')}</a>`).join('')}
     </div>
     ${[['WhatsApp', (r.wa || []).join(' · ')], ['Telefone', (r.tel || []).join(' · ')], ['E-mail', r.email]].filter(x => x[1]).map(([k, v]) => `<div class="detail-row"><span>${k}</span><strong>${esc(v)}</strong></div>`).join('')}
     ${r.nota ? `<div class="note">${esc(r.nota)}</div>` : ''}
@@ -401,6 +477,7 @@ function supplierDetail(id) {
 }
 
 function calendar() {
+  if (!S.months.length) return head('Calendário comercial', 'Prepare sua loja antes das próximas datas.') + '<section class="empty"><h2>Calendário em preparação</h2><p>As orientações de cada mês aparecerão aqui quando estiverem disponíveis.</p></section>';
   const m = S.months[state.month] || { n: '', s: '', lead: '', buy: '', tip: '', dates: [], items: [] };
   const done = (m.items || []).filter((_, i) => S.checks[`m-${state.month}-${i}`]).length;
   return head('Calendário comercial', 'Prepare sua loja antes das próximas datas.') +
@@ -435,14 +512,15 @@ function calendar() {
 }
 
 function guide() {
+  if (!S.chapters.length) return head('Guia do Matheus', 'Aprenda no seu ritmo.') + '<section class="empty"><h2>Seu guia está em preparação</h2><p>Os capítulos aparecerão aqui quando estiverem disponíveis.</p></section>';
   state.chapter = Math.min(state.chapter, Math.max(0, S.chapters.length - 1));
   const ch = S.chapters[state.chapter] || { title: '', body: '', task: '', name: '' };
   return head('Guia do Matheus', 'Leia no seu ritmo e transforme cada capítulo em uma ação.') +
     `<div class="reading">
       <aside class="panel chapters">
         <h3>Loja que Vende Todo Dia</h3>
-        <p class="small muted">Por Matheus · ${S.read.length} de 8 concluídos</p>
-        <div class="progress"><i style="width:${(S.read.length / 8 * 100)}%"></i></div>
+        <p class="small muted">Por Matheus · ${S.read.length} de ${S.chapters.length} concluídos</p>
+        <div class="progress"><i style="width:${(S.chapters.length ? Math.min(100, S.read.length / S.chapters.length * 100) : 0)}%"></i></div>
         <div class="chapters-list">
           ${S.chapters.map((c, i) => `<a href="#/guide/${i + 1}" class="chapter-link ${i === state.chapter ? 'active' : ''}"><span>${S.read.includes(i + 1) ? '✓' : String(i + 1).padStart(2, '0')}</span>${esc(c.name)}</a>`).join('')}
         </div>
@@ -460,16 +538,23 @@ function guide() {
           </label>
           <label class="field">
             <span>Minhas anotações</span>
-            <textarea id="chapter-note" placeholder="Registre suas ideias para aplicar na loja.">${esc(S.notes[state.chapter + 1] || '')}</textarea>
+            <textarea id="chapter-note" placeholder="Registre suas ideias para aplicar na loja.">${esc(noteDrafts[state.chapter + 1] ?? S.notes[state.chapter + 1] ?? '')}</textarea>
           </label>
+          <p class="note-draft" id="note-status">${noteDrafts[state.chapter + 1] !== undefined ? 'Rascunho ainda não salvo.' : 'Clique em salvar depois de editar suas anotações.'}</p>
           ${btn('Salvar anotação', 'save-note', 'small', `style="margin-top:10px"`)}
         </div>
         <div class="reader-nav">
           ${btn('← Anterior', 'chapter', '', `data-index="${state.chapter - 1}" ${!state.chapter ? 'disabled' : ''}`)}
-          ${btn(state.chapter === 7 ? 'Voltar ao início' : 'Próximo capítulo →', 'chapter', 'primary', `data-index="${state.chapter === 7 ? 0 : state.chapter + 1}"`)}
+          ${btn(state.chapter === S.chapters.length - 1 ? 'Voltar ao primeiro capítulo' : 'Próximo capítulo →', 'chapter', 'primary', `data-index="${state.chapter === S.chapters.length - 1 ? 0 : state.chapter + 1}"`)}
         </div>
       </article>
     </div>`;
+}
+
+function chapterText(html) {
+  const doc = new DOMParser().parseFromString(html || '', 'text/html');
+  doc.querySelectorAll('p,h2,h3,h4,li,blockquote,br').forEach(node => node.append(doc.createTextNode('\n\n')));
+  return doc.body.textContent.replace(/\n{3,}/g, '\n\n').trim();
 }
 
 function financeNav(current) {
@@ -569,7 +654,7 @@ function finance(current) {
       (suffix !== 'payable' || (t.type === 'expense' && t.status === 'pending')) &&
       (suffix !== 'receivable' || (t.type === 'income' && t.status === 'pending')) &&
       (!state.txSearch || t.description.toLowerCase().includes(state.txSearch.toLowerCase())) &&
-      (!state.txStatus || t.status === state.txStatus) &&
+      (suffix !== 'transactions' || !state.txStatus || t.status === state.txStatus) &&
       (!state.txType || t.type === state.txType)
     );
 
@@ -621,7 +706,12 @@ function finance(current) {
 }
 
 function transactionModal(id) {
-  const t = S.transactions.find(x => x.id === id) || { type: 'expense', value: 0, category_id: S.categories[0]?.id || 1, date: state.financeMonth + '-24', status: 'pending' };
+  if (!S.categories.length) {
+    modal('Organize seu primeiro lançamento', `<p>Crie uma categoria antes de registrar entradas e saídas.</p>${btn('Criar categoria', 'new-category', 'primary')}`);
+    return;
+  }
+  const defaultDate = state.financeMonth === today().slice(0, 7) ? today() : state.financeMonth + '-01';
+  const t = S.transactions.find(x => String(x.id) === String(id)) || { type: 'expense', value: 0, category_id: S.categories[0].id, date: defaultDate, status: 'pending' };
   modal(id ? 'Editar lançamento' : 'Novo lançamento', `
     <input type="hidden" name="id" value="${esc(id || '')}">
     <div class="fields">
@@ -821,6 +911,7 @@ async function loadInitialData() {
     ]);
 
     S.suppliers = suppliersRes.suppliers || [];
+    S.catalogTotal = suppliersRes.total || 0;
     state.totalSuppliers = suppliersRes.total || S.suppliers.length;
     state.totalPages = suppliersRes.total_pages || 1;
     S.favs = favs || [];
@@ -830,35 +921,74 @@ async function loadInitialData() {
     S.months = cal || [];
     S.chapters = chaps || [];
 
-    if (S.plan === 'plus') {
-      await loadFinanceData();
-    }
-
-    if (S.role === 'admin') {
-      const clients = await api.get('/admin/clients').catch(() => []);
-      S.clients = clients || [];
-    }
   } catch (e) {
-    S.session = false;
+    if (e.status === 401) S.session = false;
+    throw e;
   }
 }
 
+let supplierRequestId = 0;
+let supplierTimer;
+let supplierContext = '';
+async function loadSuppliers() {
+  const requestId = ++supplierRequestId;
+  const current = route();
+  const favs = current === 'favorites';
+  const result = await api.get('/suppliers', {
+    search: state.search, segment: state.segment,
+    wa: state.wa ? 1 : '', cat: state.cat ? 1 : '',
+    favs: favs ? 1 : '', page: state.page, limit: 12
+  });
+  if (requestId !== supplierRequestId || route() !== current) return false;
+  if (state.page > result.total_pages) {
+    state.page = Math.max(1, result.total_pages);
+    return loadSuppliers();
+  }
+  S.suppliers = result.suppliers || [];
+  state.totalSuppliers = result.total || 0;
+  state.totalPages = result.total_pages || 1;
+  return true;
+}
+
+async function refreshSupplierResults() {
+  const current = route();
+  const target = $('#supplier-results');
+  target?.setAttribute('aria-busy', 'true');
+  try {
+    if (await loadSuppliers()) {
+      const results = $('#supplier-results');
+      if (results) results.innerHTML = supplierList(current === 'favorites');
+    }
+  } catch (error) {
+    if (route() === current && $('#supplier-results')) $('#supplier-results').innerHTML = errorPanel(error);
+  } finally {
+    target?.removeAttribute('aria-busy');
+  }
+}
+
+let financeRequestId = 0;
+let financeSearchTimer;
 async function loadFinanceData() {
   if (S.plan !== 'plus') return;
+  const requestId = ++financeRequestId;
+  const current = route();
+  const suffix = current.split('/')[1];
+  const pending = ['payable', 'receivable'].includes(suffix);
   try {
     const [overview, txs, cats] = await Promise.all([
       api.get('/finance/overview', { month: state.financeMonth }),
-      api.get('/finance/transactions', { month: state.financeMonth, search: state.txSearch, status: state.txStatus, type: state.txType }),
+      api.get('/finance/transactions', { month: state.financeMonth, search: state.txSearch, status: pending ? 'pending' : state.txStatus, type: suffix === 'payable' ? 'expense' : suffix === 'receivable' ? 'income' : state.txType }),
       api.get('/finance/categories')
     ]);
 
+    if (requestId !== financeRequestId || current !== route()) return;
     S.financeStats = overview.stats || { start: 0, inc: 0, out: 0, balance: 0, projected: 0 };
     S.chartWeekly = overview.chart || { income: [0,0,0,0,0], expense: [0,0,0,0,0] };
     S.chartCategories = overview.categories || [];
     S.transactions = txs || [];
     S.categories = cats || [];
   } catch (e) {
-    console.error('Erro ao carregar dados financeiros:', e);
+    throw e;
   }
 }
 
@@ -870,7 +1000,7 @@ async function renderMasterRoute(r) {
       const data = await api.get('/master/overview');
       masterState.overview = data;
     } catch (e) {
-      console.error(e);
+      throw e;
     }
     return master.renderOverview();
   }
@@ -888,7 +1018,7 @@ async function renderMasterRoute(r) {
       masterState.clientTotal = res.total || 0;
       masterState.clientTotalPages = res.total_pages || 1;
     } catch (e) {
-      console.error(e);
+      throw e;
     }
     return master.renderClients();
   }
@@ -898,7 +1028,7 @@ async function renderMasterRoute(r) {
       const res = await api.get('/master/products');
       masterState.products = res || [];
     } catch (e) {
-      console.error(e);
+      throw e;
     }
     return master.renderProducts();
   }
@@ -908,7 +1038,7 @@ async function renderMasterRoute(r) {
       const res = await api.get('/master/integrations');
       masterState.integrations = res || [];
     } catch (e) {
-      console.error(e);
+      throw e;
     }
     return master.renderIntegrations();
   }
@@ -926,12 +1056,14 @@ async function renderMasterRoute(r) {
       masterState.eventTotal = res.total || 0;
       masterState.eventTotalPages = res.total_pages || 1;
     } catch (e) {
-      console.error(e);
+      throw e;
     }
     return master.renderEvents();
   }
 
   if (sub === 'suppliers') {
+    supplierContext = 'master/suppliers';
+    await loadSuppliers();
     return `
       <div class="master-header">
         <div>
@@ -985,7 +1117,7 @@ async function renderMasterRoute(r) {
       const s = await api.get('/master/settings');
       masterState.settings = s;
     } catch (e) {
-      console.error(e);
+      throw e;
     }
     return master.renderSettings();
   }
@@ -1093,7 +1225,7 @@ async function masterClientDetailModal(tenantId) {
 
 function masterIntegrationModal(integ = null) {
   const isEdit = !!integ;
-  const mappings = integ?.offer_mappings || { 'id_oferta_checkout': 'kit-plus' };
+  const mappings = integ?.offer_mappings || {};
   const mappingsText = Object.entries(mappings).map(([k, v]) => `${k} = ${v}`).join('\n');
 
   modal(isEdit ? 'Configurar integração' : 'Nova integração', `
@@ -1106,7 +1238,7 @@ function masterIntegrationModal(integ = null) {
       ${field('Chave secreta / Token do Webhook (opcional)', 'secret_key', '', 'password', false, integ?.has_secret ? 'Chave salva. Deixe vazio para manter.' : 'Secret configurado no checkout')}
       <div class="field full">
         <label for="m-mappings">Mapeamento de Ofertas Externas (um por linha no formato: <code>codigo_externo = kit-plus</code> ou <code>codigo_externo = kit-essencial</code>)</label>
-        <textarea id="m-mappings" name="offer_mappings_text" style="font-family:monospace; min-height:80px;">${esc(mappingsText)}</textarea>
+        <textarea id="m-mappings" name="offer_mappings_text" placeholder="codigo_da_sua_oferta = kit-plus" style="font-family:monospace; min-height:80px;">${esc(mappingsText)}</textarea>
       </div>
     </div>
   `, 'Salvar integração', 'master-integration');
@@ -1150,8 +1282,51 @@ async function masterReviewEventModal(eventId) {
   }
 }
 
+let renderVersion = 0;
 async function render() {
-  let r = route();
+  const version = ++renderVersion;
+  const current = route();
+  const active = document.activeElement;
+  const focus = active?.id ? { id: active.id, start: active.selectionStart, end: active.selectionEnd } : null;
+  const scroll = window.scrollY;
+  const app = $('#app');
+  app.setAttribute('aria-busy', 'true');
+  $('#page-progress')?.removeAttribute('hidden');
+  try {
+    await renderPage(current, version);
+    if (version !== renderVersion || route() !== current) return;
+    if (focus) {
+      const replacement = document.getElementById(focus.id);
+      replacement?.focus({ preventScroll: true });
+      if (replacement?.setSelectionRange && focus.start !== null) {
+        try { replacement.setSelectionRange(focus.start, focus.end); } catch {}
+      }
+      window.scrollTo(0, scroll);
+    }
+    document.querySelectorAll('nav a[href]').forEach(a => {
+      if (a.classList.contains('active')) a.setAttribute('aria-current', 'page');
+    });
+    document.querySelectorAll('.table-wrap, .master-table-wrapper').forEach(table => {
+      table.setAttribute('tabindex', '0');
+      table.setAttribute('role', 'region');
+      table.setAttribute('aria-label', 'Tabela de registros. Deslize horizontalmente para ver todas as colunas.');
+    });
+    syncMenuState();
+  } catch (error) {
+    if (version !== renderVersion || route() !== current) return;
+    if (error.status === 401) { go('login'); return; }
+    const body = errorPanel(error);
+    app.innerHTML = S.session ? (current.startsWith('master') || current.startsWith('admin') ? master.renderShell(body, current) : shell(body, current)) : body;
+  } finally {
+    if (version === renderVersion) {
+      app.removeAttribute('aria-busy');
+      $('#page-progress')?.setAttribute('hidden', '');
+      syncMenuState();
+    }
+  }
+}
+
+async function renderPage(r, version) {
   if (['login', 'recovery'].includes(r)) {
     document.body.classList.remove('master-active');
     document.title = 'VTD · Acesso';
@@ -1161,6 +1336,7 @@ async function render() {
 
   if (!S.session) {
     await loadInitialData();
+    if (version !== renderVersion || route() !== r) return;
     if (!S.session) {
       go('login');
       return;
@@ -1181,6 +1357,7 @@ async function render() {
     else if (r === 'admin/content') masterRoute = 'master/guide';
     else if (r.startsWith('admin/')) masterRoute = r.replace(/^admin\//, 'master/');
     const body = await renderMasterRoute(masterRoute);
+    if (version !== renderVersion || route() !== r) return;
     document.title = 'VTD · Painel Master';
     $('#app').innerHTML = master.renderShell(body, masterRoute);
     window.scrollTo(0, 0);
@@ -1195,9 +1372,14 @@ async function render() {
   }
 
   const base = r.split('/')[0];
+  if (['suppliers', 'favorites'].includes(base)) {
+    if (supplierContext !== base) { state.page = 1; supplierContext = base; }
+    await loadSuppliers();
+  }
   if (base === 'finance') {
     await loadFinanceData();
   }
+  if (version !== renderVersion || route() !== r) return;
 
   const body = base === 'home' ? home() :
     base === 'suppliers' ? suppliers() :
@@ -1214,25 +1396,36 @@ async function render() {
   window.scrollTo(0, 0);
 }
 
-window.addEventListener('hashchange', render);
+window.addEventListener('hashchange', () => {
+  if (location.hash === '#main') { $('#main')?.focus(); return; }
+  if ($('#modal')?.open) $('#modal').close();
+  render();
+});
+window.matchMedia?.('(max-width: 760px)').addEventListener('change', syncMenuState);
+window.matchMedia?.('(max-width: 768px)').addEventListener('change', syncMenuState);
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && $('.nav-backdrop') && !$('.nav-backdrop').hidden) $('.nav-backdrop').click();
+});
 
 document.addEventListener('input', async e => {
+  if (e.target.id === 'chapter-note') {
+    noteDrafts[state.chapter + 1] = e.target.value;
+    if ($('#note-status')) $('#note-status').textContent = 'Rascunho ainda não salvo.';
+  }
   if (e.target.id === 'supplier-search') {
     state.search = e.target.value;
     state.page = 1;
-    const res = await api.get('/suppliers', { search: state.search, segment: state.segment, wa: state.wa ? 1 : '', cat: state.cat ? 1 : '', page: 1, limit: 12 });
-    S.suppliers = res.suppliers;
-    state.totalSuppliers = res.total;
-    state.totalPages = res.total_pages;
-    const el = $('#supplier-results');
-    if (el) el.innerHTML = supplierList(route() === 'favorites');
+    ++supplierRequestId;
+    clearTimeout(supplierTimer);
+    supplierTimer = setTimeout(refreshSupplierResults, 300);
   }
 
   if (e.target.id === 'tx-search') {
     state.txSearch = e.target.value;
-    await loadFinanceData();
-    const el = $('#tx-results');
-    if (el) el.innerHTML = txTable(S.transactions);
+    ++financeRequestId;
+    clearTimeout(financeSearchTimer);
+    financeSearchTimer = setTimeout(render, 300);
   }
 
   if (e.target.id === 'admin-search') {
@@ -1248,12 +1441,7 @@ document.addEventListener('input', async e => {
 
   // Master: Busca rápida de clientes na Visão Geral
   if (e.target.id === 'master-quick-search') {
-    const q = e.target.value.toLowerCase().trim();
-    const rows = document.querySelectorAll('#master-recent-clients-tbody tr');
-    rows.forEach(r => {
-      const txt = r.textContent.toLowerCase();
-      r.style.display = (!q || txt.includes(q)) ? '' : 'none';
-    });
+    filterRecentClients();
   }
 
   // Master: Busca com debounce na tabela completa de Clientes
@@ -1280,8 +1468,15 @@ document.addEventListener('input', async e => {
 document.addEventListener('change', async e => {
   const t = e.target;
   if (t.dataset.check) {
-    S.checks[t.dataset.check] = t.checked;
-    await api.post('/checklists', { key: t.dataset.check, checked: t.checked }).catch(() => {});
+    const previous = !!S.checks[t.dataset.check];
+    t.disabled = true;
+    try {
+      await api.post('/checklists', { key: t.dataset.check, checked: t.checked });
+      S.checks[t.dataset.check] = t.checked;
+    } catch (error) {
+      t.checked = previous;
+      toast('Não foi possível salvar o checklist. Tente novamente.');
+    } finally { t.disabled = false; }
     if (route() === 'calendar') {
       const m = S.months[state.month] || { items: [] };
       const done = (m.items || []).filter((_, i) => S.checks[`m-${state.month}-${i}`]).length;
@@ -1292,55 +1487,41 @@ document.addEventListener('change', async e => {
 
   if (t.id === 'chapter-done') {
     const chNum = state.chapter + 1;
-    if (t.checked) S.read = [...new Set([...S.read, chNum])];
-    else S.read = S.read.filter(x => x !== chNum);
-    await api.post('/reading-progress', { chapter_id: chNum, completed: t.checked }).catch(() => {});
-    toast(t.checked ? 'Capítulo concluído.' : 'Capítulo reaberto.');
+    const previous = S.read.includes(chNum);
+    t.disabled = true;
+    try {
+      await api.post('/reading-progress', { chapter_id: chNum, completed: t.checked });
+      if (t.checked) S.read = [...new Set([...S.read, chNum])];
+      else S.read = S.read.filter(x => x !== chNum);
+      toast(t.checked ? 'Capítulo concluído.' : 'Capítulo reaberto.');
+    } catch (error) {
+      t.checked = previous;
+      toast('Não foi possível salvar seu progresso. Tente novamente.');
+    } finally { t.disabled = false; }
   }
 
   if (t.id === 'supplier-segment') {
     state.segment = t.value;
     state.page = 1;
-    const res = await api.get('/suppliers', { search: state.search, segment: state.segment, wa: state.wa ? 1 : '', cat: state.cat ? 1 : '', page: 1, limit: 12 });
-    S.suppliers = res.suppliers;
-    state.totalSuppliers = res.total;
-    state.totalPages = res.total_pages;
-    const el = $('#supplier-results');
-    if (el) el.innerHTML = supplierList(route() === 'favorites');
+    clearTimeout(supplierTimer);
+    await refreshSupplierResults();
   }
 
   if (t.id === 'finance-month') {
     if (t.value) {
       state.financeMonth = t.value;
-      await loadFinanceData();
       render();
     }
   }
 
   if (t.id === 'tx-status') {
     state.txStatus = t.value;
-    await loadFinanceData();
     render();
   }
 
   // Master: Filtros rápidos da Visão Geral
   if (t.id === 'master-quick-offer' || t.id === 'master-quick-status') {
-    const offerVal = ($('#master-quick-offer')?.value || '').toLowerCase();
-    const statusVal = ($('#master-quick-status')?.value || '').toLowerCase();
-    const rows = document.querySelectorAll('#master-recent-clients-tbody tr');
-    rows.forEach(r => {
-      let show = true;
-      if (offerVal) {
-        const hasOffer = r.querySelector(`.badge-offer.${offerVal}`);
-        if (!hasOffer) show = false;
-      }
-      if (statusVal) {
-        const txt = r.textContent.toLowerCase();
-        const matches = statusVal === 'active' ? txt.includes('liberado') : txt.includes('suspenso');
-        if (!matches) show = false;
-      }
-      r.style.display = show ? '' : 'none';
-    });
+    filterRecentClients();
   }
 
   // Master: Filtros na tela de Clientes
@@ -1365,44 +1546,92 @@ document.addEventListener('change', async e => {
 });
 
 document.addEventListener('click', async e => {
+  if (e.target.closest('.skip-link')) {
+    e.preventDefault();
+    $('#main')?.focus();
+    return;
+  }
   const el = e.target.closest('[data-action]');
   if (!el) return;
   const a = el.dataset.action;
   const id = el.dataset.id;
   const index = Number(el.dataset.index);
+  if (el.dataset.pending) return;
+  el.dataset.pending = 'true';
+  const wasDisabled = el.disabled;
+  el.disabled = true;
+  try {
+
+  if (a === 'toggle-password') {
+    const input = document.getElementById(el.getAttribute('aria-controls'));
+    const visible = input.type === 'password';
+    input.type = visible ? 'text' : 'password';
+    el.textContent = visible ? 'Ocultar' : 'Mostrar';
+    el.setAttribute('aria-label', visible ? 'Ocultar senha' : 'Mostrar senha');
+    return;
+  }
 
   if (a === 'close') {
     $('#modal').close();
     return;
   }
   if (a === 'menu') {
-    $('#sidebar').classList.toggle('open');
+    const open = $('#sidebar').classList.toggle('open');
+    el.setAttribute('aria-expanded', String(open));
+    el.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+    $('.nav-backdrop').hidden = !open;
+    syncMenuState();
+    return;
+  }
+  if (a === 'retry-page') { render(); return; }
+  if (a === 'close-menu') {
+    document.querySelectorAll('.sidebar.open, .master-sidebar.open').forEach(side => side.classList.remove('open'));
+    document.querySelectorAll('[aria-controls="sidebar"], [aria-controls="master-sidebar"]').forEach(toggle => {
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', toggle.getAttribute('aria-controls') === 'sidebar' ? 'Abrir menu' : 'Abrir menu administrativo');
+      toggle.focus();
+    });
+    $('.nav-backdrop').hidden = true;
+    syncMenuState();
     return;
   }
   if (a === 'master-menu') {
     const open = $('#master-sidebar').classList.toggle('open');
     el.setAttribute('aria-expanded', String(open));
     el.setAttribute('aria-label', open ? 'Fechar menu administrativo' : 'Abrir menu administrativo');
+    const backdrop = $('.nav-backdrop');
+    if (backdrop) backdrop.hidden = !open;
+    syncMenuState();
     return;
   }
   if (a === 'logout') {
-    await api.post('/auth/logout').catch(() => {});
+    try { await api.post('/auth/logout'); } catch (error) { toast(error.message); return; }
     S.session = false;
+    api.csrfToken = '';
+    S.favs = []; S.notes = {}; S.transactions = [];
+    Object.keys(noteDrafts).forEach(key => delete noteDrafts[key]);
     go('login');
     return;
   }
   if (a === 'go-suppliers') {
     state.search = '';
     state.segment = '';
+    state.wa = state.cat = false;
+    state.page = 1;
     go('suppliers');
     return;
   }
   if (a === 'favorite') {
     const isFav = S.favs.includes(id);
-    S.favs = isFav ? S.favs.filter(x => x !== id) : [...S.favs, id];
-    await api.post('/favorites', { supplier_id: id, status: !isFav }).catch(() => {});
-    const resEl = $('#supplier-results');
-    if (resEl) resEl.innerHTML = supplierList(route() === 'favorites');
+    el.disabled = true;
+    try {
+      await api.post('/favorites', { supplier_id: id, status: !isFav });
+      S.favs = isFav ? S.favs.filter(x => x !== id) : [...S.favs, id];
+      if (route() === 'favorites') await refreshSupplierResults();
+      else if ($('#supplier-results')) $('#supplier-results').innerHTML = supplierList();
+      toast(isFav ? 'Fornecedor removido dos favoritos.' : 'Fornecedor salvo nos favoritos.');
+    } catch (error) { toast('Não foi possível atualizar seus favoritos. Tente novamente.'); }
+    finally { el.disabled = false; }
     return;
   }
   if (a === 'supplier-detail') {
@@ -1412,10 +1641,6 @@ document.addEventListener('click', async e => {
   if (a === 'filter-wa' || a === 'filter-cat') {
     state[a === 'filter-wa' ? 'wa' : 'cat'] = !state[a === 'filter-wa' ? 'wa' : 'cat'];
     state.page = 1;
-    const res = await api.get('/suppliers', { search: state.search, segment: state.segment, wa: state.wa ? 1 : '', cat: state.cat ? 1 : '', page: 1, limit: 12 });
-    S.suppliers = res.suppliers;
-    state.totalSuppliers = res.total;
-    state.totalPages = res.total_pages;
     render();
     return;
   }
@@ -1424,21 +1649,12 @@ document.addEventListener('click', async e => {
     state.segment = '';
     state.wa = state.cat = false;
     state.page = 1;
-    const res = await api.get('/suppliers', { page: 1, limit: 12 });
-    S.suppliers = res.suppliers;
-    state.totalSuppliers = res.total;
-    state.totalPages = res.total_pages;
     render();
     return;
   }
   if (a === 'page') {
-    state.page = Number(el.dataset.page);
-    const res = await api.get('/suppliers', { search: state.search, segment: state.segment, wa: state.wa ? 1 : '', cat: state.cat ? 1 : '', page: state.page, limit: 12 });
-    S.suppliers = res.suppliers;
-    state.totalSuppliers = res.total;
-    state.totalPages = res.total_pages;
-    const resEl = $('#supplier-results');
-    if (resEl) resEl.innerHTML = supplierList(route() === 'favorites');
+    state.page = Math.max(1, Math.min(state.totalPages, Number(el.dataset.page)));
+    await refreshSupplierResults();
     return;
   }
   if (a === 'month') {
@@ -1453,9 +1669,16 @@ document.addEventListener('click', async e => {
   }
   if (a === 'save-note') {
     const noteVal = $('#chapter-note').value;
-    S.notes[state.chapter + 1] = noteVal;
-    await api.post('/notes', { chapter_id: state.chapter + 1, note: noteVal }).catch(() => {});
-    toast('Anotação salva com sucesso.');
+    const chapter = state.chapter + 1;
+    el.disabled = true;
+    try {
+      await api.post('/notes', { chapter_id: chapter, note: noteVal });
+      S.notes[chapter] = noteVal;
+      delete noteDrafts[chapter];
+      if ($('#note-status') && state.chapter + 1 === chapter) $('#note-status').textContent = 'Anotação salva.';
+      toast('Anotação salva com sucesso.');
+    } catch (error) { toast('Não foi possível salvar a anotação. Seu texto continua aqui para tentar novamente.'); }
+    finally { el.disabled = false; }
     return;
   }
   if (a === 'new-tx' || a === 'edit-tx') {
@@ -1535,7 +1758,7 @@ document.addEventListener('click', async e => {
       ${field('Título', 'title', c.title)}
       <div class="field" style="margin-top:15px">
         <label for="chapter-editor">Conteúdo (texto simples)</label>
-        <textarea id="chapter-editor" name="body" style="min-height:260px">${esc(c.body.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim())}</textarea>
+        <textarea id="chapter-editor" name="body" style="min-height:260px">${esc(chapterText(c.body))}</textarea>
       </div>
       <div class="field" style="margin-top:15px">
         <label for="task-editor">Tarefa do capítulo</label>
@@ -1572,7 +1795,8 @@ document.addEventListener('click', async e => {
     try {
       const res = await api.patch('/master/clients/' + id + '/toggle');
       toast('Status do cliente alterado para ' + (res.status === 'active' ? 'Liberado' : 'Suspenso'));
-      render();
+      if ($('#modal').open) await masterClientDetailModal(id);
+      else await render();
     } catch (err) {
       toast(err.message);
     }
@@ -1581,7 +1805,7 @@ document.addEventListener('click', async e => {
   if (a === 'master-resend-invite') {
     try {
       const res = await api.post('/master/clients/' + id + '/resend-invite');
-      toast(res.email_sent ? 'Convite reenviado por e-mail com sucesso!' : 'Aviso: ' + res.message);
+      toast(res.message || 'Convite reenviado com sucesso.');
     } catch (err) {
       toast(err.message);
     }
@@ -1679,12 +1903,26 @@ document.addEventListener('click', async e => {
     }
     return;
   }
+  } catch (error) {
+    toast(error.message || 'Não foi possível concluir a ação. Tente novamente.');
+  } finally {
+    delete el.dataset.pending;
+    el.disabled = wasDisabled;
+  }
 });
 
 document.addEventListener('submit', async e => {
   const form = e.target.closest('[data-form]');
   if (!form) return;
   e.preventDefault();
+  if (form.dataset.submitting) return;
+  form.querySelector('.form-feedback')?.remove();
+  form.dataset.submitting = 'true';
+  form.setAttribute('aria-busy', 'true');
+  const submitButtons = [...form.querySelectorAll('button[type="submit"]')];
+  const labels = submitButtons.map(button => button.innerHTML);
+  submitButtons.forEach(button => { button.disabled = true; button.textContent = 'Aguarde…'; });
+  try {
   const d = Object.fromEntries(new FormData(form));
   const kind = form.dataset.form;
 
@@ -1724,6 +1962,10 @@ document.addEventListener('submit', async e => {
   }
 
   if (kind === 'reset-password') {
+    if (d.new_password.length < 6 || d.new_password !== d.confirm_password) {
+      formError(form, 'Informe uma senha com pelo menos 6 caracteres e confirme a mesma senha.');
+      return;
+    }
     try {
       await api.post('/auth/reset-password', { token: d.token, new_password: d.new_password });
       toast('Sua senha foi redefinida com sucesso!');
@@ -1737,7 +1979,7 @@ document.addEventListener('submit', async e => {
   if (kind === 'profile') {
     const amount = Number(d.initialBalance);
     if (!Number.isFinite(amount)) {
-      toast('Informe um saldo válido.');
+      formError(form, 'Informe um saldo válido.');
       return;
     }
     try {
@@ -1762,7 +2004,7 @@ document.addEventListener('submit', async e => {
   if (kind === 'transaction') {
     const value = Math.round(Number(d.value) * 100);
     if (!Number.isFinite(value) || value <= 0 || !d.description.trim()) {
-      toast('Preencha uma descrição e um valor maior que zero.');
+      formError(form, 'Preencha uma descrição e um valor maior que zero.');
       return;
     }
     const payload = {
@@ -1886,7 +2128,7 @@ document.addEventListener('submit', async e => {
     try {
       await api.put('/admin/chapters/' + d.index, {
         title: d.title.trim(),
-        body: d.body.split(/\n\s*\n/).map(p => '<p>' + esc(p) + '</p>').join(''),
+        body: d.body === chapterText(S.chapters[Number(d.index)].body) ? S.chapters[Number(d.index)].body : d.body.split(/\n\s*\n/).map(p => '<p>' + esc(p) + '</p>').join(''),
         task: d.task.trim()
       });
       $('#modal').close();
@@ -1905,7 +2147,7 @@ document.addEventListener('submit', async e => {
       return [t.trim(), ({ 'febre': 'f', 'estação': 'e', 'estacao': 'e', 'coringa': 'c' })[k.trim().toLowerCase()] || 'c'];
     });
     if (!items.length) {
-      toast('Adicione pelo menos um produto ao mês.');
+      formError(form, 'Adicione pelo menos um produto ao mês.');
       return;
     }
     try {
@@ -1937,10 +2179,8 @@ document.addEventListener('submit', async e => {
         send_invite: form.querySelector('[name="send_invite"]')?.checked ? true : false
       });
       $('#modal').close();
-      const inviteMsg = res.email_sent 
-        ? ' Convite enviado por e-mail.' 
-        : (res.email_notice ? ' ' + res.email_notice : '');
-      toast((res.created ? 'Cliente cadastrado com sucesso!' : 'Oferta vinculada à conta existente!') + inviteMsg);
+      const inviteMsg = res.invite_message ? ' ' + res.invite_message : '';
+      toast((res.is_existing ? 'Oferta vinculada à conta existente!' : 'Cliente cadastrado com sucesso!') + inviteMsg);
       render();
     } catch (err) {
       toast(err.message);
@@ -1950,14 +2190,19 @@ document.addEventListener('submit', async e => {
 
   if (kind === 'master-integration') {
     const lines = (d.offer_mappings_text || '').split('\n');
-    const mappings = {};
+    const mappings = Object.create(null);
     for (const line of lines) {
+      if (!line.trim()) continue;
       const parts = line.split('=');
-      if (parts.length >= 2) {
+      if (parts.length === 2) {
         const k = parts[0].trim();
         const v = parts[1].trim();
-        if (k && v) mappings[k] = v;
-      }
+        if (!k || !['kit-plus', 'kit-essencial'].includes(v) || Object.hasOwn(mappings, k)) {
+          formError(form, 'Cada código externo deve aparecer uma vez e apontar para kit-plus ou kit-essencial.');
+          return;
+        }
+        mappings[k] = v;
+      } else { formError(form, 'Use uma oferta por linha: codigo_externo = kit-plus ou kit-essencial.'); return; }
     }
     const payload = {
       name: d.name.trim(),
@@ -1995,6 +2240,13 @@ document.addEventListener('submit', async e => {
       toast(err.message);
     }
     return;
+  }
+  } catch (error) {
+    formError(form, error.message || 'Não foi possível concluir a ação.');
+  } finally {
+    delete form.dataset.submitting;
+    form.removeAttribute('aria-busy');
+    submitButtons.forEach((button, i) => { button.disabled = false; button.innerHTML = labels[i]; });
   }
 });
 

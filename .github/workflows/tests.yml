@@ -26,6 +26,8 @@ jobs:
           node --check data.js
       - name: Executar testes PHP
         run: php tests/run_all_tests.php
+      - name: Verificar fluxos do frontend
+        run: node --test tests/frontend.test.cjs
 
   mysql:
     runs-on: ubuntu-latest

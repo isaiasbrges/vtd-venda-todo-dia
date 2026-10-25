@@ -151,16 +151,17 @@ const master = {
           <div class="master-top-right">
             <span class="master-badge-status">
               <span class="status-dot active"></span>
-              Sistema Operacional
+              Administração
             </span>
-            <button class="master-avatar-btn" title="Administrador Master">AD</button>
+            <a href="#/account" class="master-avatar-btn" aria-label="Minha conta">${esc((S.name || 'Admin').split(' ').filter(Boolean).map(n => n[0]).slice(0, 2).join(''))}</a>
           </div>
         </header>
 
-        <main class="master-content">
+        <main class="master-content" id="main" tabindex="-1">
           ${body}
         </main>
       </div>
+      <button class="nav-backdrop" data-action="close-menu" aria-label="Fechar menu administrativo" hidden></button>
     `;
   },
 
@@ -248,14 +249,14 @@ const master = {
             <div class="master-filters-row">
               <div class="master-input-search">
                 <span class="search-icon">${mIcon('search')}</span>
-                <input type="text" id="master-quick-search" placeholder="Buscar por nome ou e-mail">
+                <input type="search" id="master-quick-search" aria-label="Buscar clientes recentes" placeholder="Buscar por nome ou e-mail">
               </div>
-              <select class="master-select-filter" id="master-quick-offer">
+              <select class="master-select-filter" id="master-quick-offer" aria-label="Oferta dos clientes recentes">
                 <option value="">Todas as ofertas</option>
                 <option value="plus">Kit + Financeiro</option>
                 <option value="essential">Kit Essencial</option>
               </select>
-              <select class="master-select-filter" id="master-quick-status">
+              <select class="master-select-filter" id="master-quick-status" aria-label="Status dos clientes recentes">
                 <option value="">Todos os status</option>
                 <option value="active">Liberado</option>
                 <option value="suspended">Suspenso</option>
@@ -407,14 +408,14 @@ const master = {
           <div class="master-filters-row">
             <div class="master-input-search">
               <span class="search-icon">${mIcon('search')}</span>
-              <input type="text" id="master-clients-search" placeholder="Buscar por nome, email ou loja..." value="${esc(masterState.clientSearch)}">
+              <input type="search" id="master-clients-search" aria-label="Buscar clientes" placeholder="Buscar por nome, email ou loja..." value="${esc(masterState.clientSearch)}">
             </div>
-            <select class="master-select-filter" id="master-clients-filter-offer">
+            <select class="master-select-filter" id="master-clients-filter-offer" aria-label="Filtrar clientes por oferta">
               <option value="">Todas as ofertas</option>
               <option value="kit-plus" ${masterState.clientOffer === 'kit-plus' ? 'selected' : ''}>Kit + Financeiro</option>
               <option value="kit-essencial" ${masterState.clientOffer === 'kit-essencial' ? 'selected' : ''}>Kit Essencial</option>
             </select>
-            <select class="master-select-filter" id="master-clients-filter-status">
+            <select class="master-select-filter" id="master-clients-filter-status" aria-label="Filtrar clientes por status">
               <option value="">Todos os status</option>
               <option value="active" ${masterState.clientStatus === 'active' ? 'selected' : ''}>Liberado</option>
               <option value="suspended" ${masterState.clientStatus === 'suspended' ? 'selected' : ''}>Suspenso</option>
@@ -461,7 +462,7 @@ const master = {
                     </span>
                   </td>
                   <td>${esc(c.origin)}</td>
-                  <td><small class="muted">${c.created_at ? c.created_at.slice(0, 10) : '—'}</small></td>
+                  <td><small class="muted">${c.created_at ? day(c.created_at.slice(0, 10)) : '—'}</small></td>
                   <td>
                     <div style="display:flex; gap:6px;">
                       <button class="btn-table-action" data-action="master-manage-client" data-id="${c.tenant_id}">
@@ -482,7 +483,7 @@ const master = {
         </div>
 
         <div class="pagination" style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
-          <span class="muted small">Total: ${masterState.clientTotal} clientes (Página ${masterState.clientPage} de ${masterState.clientTotalPages})</span>
+          <span class="muted small">Total: ${masterState.clientTotal} ${masterState.clientTotal === 1 ? 'cliente' : 'clientes'} (Página ${masterState.clientPage} de ${masterState.clientTotalPages})</span>
           <div style="display:flex; gap:8px;">
             <button class="btn-table-action" data-action="master-clients-page" data-page="${masterState.clientPage - 1}" ${masterState.clientPage <= 1 ? 'disabled' : ''}>Anterior</button>
             <button class="btn-table-action" data-action="master-clients-page" data-page="${masterState.clientPage + 1}" ${masterState.clientPage >= masterState.clientTotalPages ? 'disabled' : ''}>Próxima</button>
@@ -496,60 +497,21 @@ const master = {
    * 3. PRODUTOS E ACESSOS
    */
   renderProducts() {
-    return `
-      <div class="master-header">
-        <div>
-          <h1>Produtos e Acessos</h1>
-          <p>Estrutura de planos, ofertas e matriz de permissões do sistema.</p>
-        </div>
-      </div>
-
-      <div class="master-metrics-grid" style="grid-template-columns: 1fr 1fr;">
-        <!-- Kit Essencial -->
-        <div class="master-card">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <span class="badge-offer essential">Oferta de Entrada</span>
-            <span class="badge-status-pill green">Ativo</span>
-          </div>
-          <h2 style="font-size:22px; margin-bottom:8px;">Kit Essencial</h2>
-          <p class="muted" style="margin-bottom:18px;">Catálogo completo dos 234 fornecedores, favoritos, calendário comercial de 12 meses e guia estratégico do Matheus.</p>
-          
-          <div style="background:#F9FAFB; border-radius:8px; padding:14px; margin-bottom:18px;">
-            <strong>Permissões incluídas:</strong>
-            <ul style="margin:8px 0 0; padding-left:20px; font-size:13px; color:#4B5563;">
-              <li>234 fornecedores verificados com contatos e catálogos</li>
-              <li>Lista pessoal de fornecedores favoritos</li>
-              <li>Calendário comercial e checklists mensais</li>
-              <li>Guia de 8 capítulos com registro de progresso e anotações</li>
-              <li style="color:#DC2626; text-decoration:line-through;">Módulo de Controle Financeiro (Bloqueado)</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Kit + Financeiro -->
-        <div class="master-card" style="border-color: #FDE68A;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <span class="badge-offer plus">Oferta Premium / Completa</span>
-            <span class="badge-status-pill green">Ativo</span>
-          </div>
-          <h2 style="font-size:22px; margin-bottom:8px;">Kit + Financeiro</h2>
-          <p class="muted" style="margin-bottom:18px;">Tudo do Kit Essencial somado ao ecossistema multi-tenant de gestão financeira, DRE, saldo realizado/projetado e conciliação.</p>
-          
-          <div style="background:#FEF9C3; border-radius:8px; padding:14px; margin-bottom:18px;">
-            <strong>Permissões incluídas:</strong>
-            <ul style="margin:8px 0 0; padding-left:20px; font-size:13px; color:#713F12;">
-              <li>Tudo incluso no Kit Essencial</li>
-              <li>Dashboard financeiro com métricas em tempo real</li>
-              <li>Lançamentos de contas a pagar e a receber</li>
-              <li>Quitação com data efetiva e conciliação mensal</li>
-              <li>Categorização customizada por loja e exportação em CSV</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    `;
+    const labels = { suppliers: 'Catálogo de fornecedores', favorites: 'Fornecedores favoritos', calendar: 'Calendário e checklists', guide: 'Guia, progresso e anotações', finance: 'Controle financeiro e exportação CSV' };
+    return `<div class="master-header"><div><h1>Produtos e acessos</h1><p>Consulte as ofertas cadastradas e os acessos de cada produto.</p></div></div>
+      <div class="master-products-grid">${masterState.products.length ? masterState.products.map(product => {
+        let features = product.features || [];
+        if (typeof features === 'string') { try { features = JSON.parse(features); } catch { features = []; } }
+        if (!Array.isArray(features)) features = [];
+        const active = Number(product.is_active) === 1;
+        return `<section class="master-card">
+          <div class="panel-head"><span class="badge-offer ${product.plan_level === 'plus' ? 'plus' : 'essential'}">${product.plan_level === 'plus' ? 'Completo' : 'Essencial'}</span><span class="badge-status-pill ${active ? 'green' : 'gray'}">${active ? 'Ativo' : 'Inativo'}</span></div>
+          <h2>${esc(product.name)}</h2><p class="muted">${esc(product.description || '')}</p>
+          <ul class="product-features">${features.map(feature => `<li>${esc(labels[feature] || feature)}</li>`).join('')}</ul>
+          <p><strong>${Number(product.active_clients) || 0}</strong> lojas com acesso ativo</p>
+        </section>`;
+      }).join('') : '<section class="empty"><h2>Nenhum produto cadastrado</h2><p>Os produtos aparecerão aqui quando estiverem disponíveis.</p></section>'}</div>`;
   },
-
   /**
    * 4. INTEGRAÇÕES E WEBHOOKS
    */
@@ -568,6 +530,7 @@ const master = {
       </div>
 
       <div class="master-integ-list">
+        ${masterState.integrations.length ? '' : '<section class="empty"><h2>Nenhuma integração cadastrada</h2><p>Use Nova integração para configurar seu checkout.</p></section>'}
         ${masterState.integrations.map(i => `
           <section class="master-card">
             <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px;">
@@ -580,7 +543,7 @@ const master = {
                   </span>
                   <span class="badge-offer essential" style="text-transform:uppercase;">${esc(i.provider)}</span>
                 </div>
-                <p class="muted" style="margin-top:6px;">Ambiente: <b>${esc(i.environment)}</b> | Eventos habilitados: ${Array.isArray(i.enabled_events) ? i.enabled_events.join(', ') : 'Padrão'}</p>
+                <p class="muted" style="margin-top:6px;">Ambiente: <b>${i.environment === 'sandbox' ? 'Testes' : 'Produção'}</b> | Eventos habilitados: ${Array.isArray(i.enabled_events) ? esc(i.enabled_events.join(', ')) : 'Padrão'}</p>
               </div>
               <div style="display:flex; gap:8px;">
                 <button class="btn-table-action" data-action="master-edit-integration" data-id="${i.id}">
@@ -634,7 +597,7 @@ const master = {
         <div class="master-card-header">
           <h2>Registro de eventos</h2>
           <div class="master-filters-row">
-            <select class="master-select-filter" id="master-events-filter-status">
+            <select class="master-select-filter" id="master-events-filter-status" aria-label="Filtrar eventos por status">
               <option value="">Todos os status</option>
               <option value="success" ${masterState.eventStatus === 'success' ? 'selected' : ''}>Sucesso</option>
               <option value="failed" ${masterState.eventStatus === 'failed' ? 'selected' : ''}>Falha / Atenção</option>
@@ -642,7 +605,7 @@ const master = {
             </select>
             <div class="master-input-search">
               <span class="search-icon">${mIcon('search')}</span>
-              <input type="text" id="master-events-search" placeholder="Buscar por pedido ou e-mail..." value="${esc(masterState.eventSearch)}">
+              <input type="search" id="master-events-search" aria-label="Buscar eventos" placeholder="Buscar por pedido ou e-mail..." value="${esc(masterState.eventSearch)}">
             </div>
           </div>
         </div>
