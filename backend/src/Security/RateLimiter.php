@@ -36,25 +36,26 @@ class RateLimiter
 
     public function hit(string $key): void
     {
-        $stmt = $this->pdo->prepare("
-            INSERT INTO rate_limits (action_key, attempts, last_attempt_at)
-            VALUES (:key, 1, CURRENT_TIMESTAMP)
-            ON CONFLICT(action_key) DO UPDATE SET
-                attempts = attempts + 1,
-                last_attempt_at = CURRENT_TIMESTAMP
-        ");
-
-        // Fallback para MySQL
-        if (\VTD\Config\Config::get('db.driver') === 'mysql') {
-            $stmt = $this->pdo->prepare("
+        $driver = $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+        if ($driver === 'mysql') {
+            $sql = "
                 INSERT INTO rate_limits (action_key, attempts, last_attempt_at)
                 VALUES (:key, 1, CURRENT_TIMESTAMP)
                 ON DUPLICATE KEY UPDATE
                     attempts = attempts + 1,
                     last_attempt_at = CURRENT_TIMESTAMP
-            ");
+            ";
+        } else {
+            $sql = "
+                INSERT INTO rate_limits (action_key, attempts, last_attempt_at)
+                VALUES (:key, 1, CURRENT_TIMESTAMP)
+                ON CONFLICT(action_key) DO UPDATE SET
+                    attempts = attempts + 1,
+                    last_attempt_at = CURRENT_TIMESTAMP
+            ";
         }
 
+        $stmt = $this->pdo->prepare($sql);
         $stmt->execute([':key' => $key]);
     }
 
