@@ -5,6 +5,10 @@
     # Bloqueia acesso a arquivos e pastas ocultas
     RewriteRule (^|/)\.(?!well-known) - [F]
 
+    # Ferramentas de teste e instalação não são endpoints públicos
+    RewriteRule ^(?:tests|backend)(?:/|$) - [F,L]
+    RewriteRule ^(?:setup_local_db|local_router)\.php$ - [F,L]
+
     # Roteamento da API: redireciona chamadas /api/* para api.php
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^api/(.*)$ api.php?endpoint=$1 [QSA,L]
