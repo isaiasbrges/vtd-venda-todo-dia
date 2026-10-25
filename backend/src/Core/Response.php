@@ -5,6 +5,8 @@ namespace VTD\Core;
 
 class Response
 {
+    public static bool $stopOnExit = true;
+
     public static function json(mixed $data, int $status = 200, array $headers = []): void
     {
         if (!headers_sent()) {
@@ -21,7 +23,10 @@ class Response
             'success' => $status >= 200 && $status < 400,
             'data'    => $data
         ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        exit;
+        
+        if (self::$stopOnExit) {
+            exit;
+        }
     }
 
     public static function error(string $code, string $message, int $status = 400, array $details = []): void
@@ -41,7 +46,10 @@ class Response
                 'details' => $details
             ]
         ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-        exit;
+        
+        if (self::$stopOnExit) {
+            exit;
+        }
     }
 
     public static function streamCsv(string $filename, array $headers, array $rows): void
@@ -60,6 +68,9 @@ class Response
             fputcsv($output, $row, ';');
         }
         fclose($output);
-        exit;
+        
+        if (self::$stopOnExit) {
+            exit;
+        }
     }
 }

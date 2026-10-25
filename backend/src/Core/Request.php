@@ -41,7 +41,7 @@ class Request
             }
         }
 
-        $rawBody = file_get_contents('php://input');
+        $rawBody = $GLOBALS['test_raw_input'] ?? file_get_contents('php://input');
         $body = [];
         if (!empty($rawBody)) {
             $decoded = json_decode($rawBody, true);

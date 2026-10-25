@@ -65,11 +65,13 @@ class AuthController
 
         if (empty($email) || empty($password)) {
             Response::error('VALIDATION_ERROR', 'Informe seu e-mail e sua senha para entrar.', 422);
+            return;
         }
 
         $rateKey = 'login:' . $request->getIp() . ':' . strtolower($email);
         if ($this->rateLimiter->tooManyAttempts($rateKey, 5, 15)) {
             Response::error('TOO_MANY_ATTEMPTS', 'Muitas tentativas com dados incorretos. Por favor, aguarde 15 minutos.', 429);
+            return;
         }
 
         $authData = $this->authenticate($email, $password);
@@ -77,10 +79,12 @@ class AuthController
         if (!$authData) {
             $this->rateLimiter->hit($rateKey);
             Response::error('INVALID_CREDENTIALS', 'E-mail ou senha incorretos.', 401);
+            return;
         }
 
         if ($authData['tenant']['status'] === 'suspended') {
             Response::error('ACCOUNT_SUSPENDED', 'O acesso desta loja está suspenso. Entre em contato com o suporte.', 403);
+            return;
         }
 
         // Sucesso
