@@ -178,4 +178,117 @@ class AuthController
             Response::error('UPDATE_ERROR', 'Não foi possível atualizar o perfil: ' . $e->getMessage(), 500);
         }
     }
+
+    public function createPasswordResetToken(string $email): ?string
+    {
+        $pdo = Connection::getInstance();
+        $stmt = $pdo->prepare("SELECT id, name FROM users WHERE email = :email");
+        $stmt->execute([':email' => trim(strtolower($email))]);
+        $user = $stmt->fetch();
+
+        if (!$user) {
+            return null;
+        }
+
+        $token = bin2hex(random_bytes(32));
+        $tokenHash = hash('sha256', $token);
+        $expiresAt = date('Y-m-d H:i:s', time() + 3600); // 1 hora
+
+        $stmtInsert = $pdo->prepare("
+            INSERT INTO password_resets (email, token_hash, expires_at)
+            VALUES (:email, :token_hash, :expires_at)
+        ");
+        $stmtInsert->execute([
+            ':email'      => trim(strtolower($email)),
+            ':token_hash' => $tokenHash,
+            ':expires_at' => $expiresAt
+        ]);
+
+        return $token;
+    }
+
+    public function applyPasswordReset(string $token, string $newPassword): bool
+    {
+        if (strlen($newPassword) < 6) {
+            return false;
+        }
+
+        $pdo = Connection::getInstance();
+        $tokenHash = hash('sha256', $token);
+
+        $stmt = $pdo->prepare("
+            SELECT id, email, expires_at, used_at
+            FROM password_resets
+            WHERE token_hash = :token_hash
+        ");
+        $stmt->execute([':token_hash' => $tokenHash]);
+        $reset = $stmt->fetch();
+
+        if (!$reset || !empty($reset['used_at'])) {
+            return false;
+        }
+
+        if (strtotime($reset['expires_at']) < time()) {
+            return false;
+        }
+
+        $pdo->beginTransaction();
+        try {
+            $newHash = password_hash($newPassword, PASSWORD_DEFAULT);
+            $stmtUser = $pdo->prepare("UPDATE users SET password_hash = :hash WHERE email = :email");
+            $stmtUser->execute([':hash' => $newHash, ':email' => $reset['email']]);
+
+            $stmtMark = $pdo->prepare("UPDATE password_resets SET used_at = CURRENT_TIMESTAMP WHERE id = :id");
+            $stmtMark->execute([':id' => $reset['id']]);
+
+            $pdo->commit();
+            return true;
+        } catch (\Throwable $e) {
+            $pdo->rollBack();
+            return false;
+        }
+    }
+
+    public function forgotPassword(Request $request): void
+    {
+        $email = trim((string)$request->body('email', ''));
+        if (empty($email)) {
+            Response::error('VALIDATION_ERROR', 'Informe o seu e-mail cadastrado.', 422);
+        }
+
+        $token = $this->createPasswordResetToken($email);
+        if ($token) {
+            $pdo = Connection::getInstance();
+            $stmt = $pdo->prepare("SELECT name FROM users WHERE email = :email");
+            $stmt->execute([':email' => strtolower($email)]);
+            $user = $stmt->fetch();
+            $name = $user['name'] ?? 'Cliente';
+
+            $mailer = new \VTD\Services\MailerService();
+            $mailer->sendPasswordReset($email, $name, $token);
+        }
+
+        // Resposta sempre positiva para evitar enumeração de emails
+        Response::json([
+            'message' => 'Se o e-mail estiver cadastrado, as instruções de recuperação foram enviadas.'
+        ]);
+    }
+
+    public function resetPassword(Request $request): void
+    {
+        $token = trim((string)$request->body('token', ''));
+        $newPassword = (string)$request->body('new_password', '');
+
+        if (empty($token) || strlen($newPassword) < 6) {
+            Response::error('VALIDATION_ERROR', 'Token inválido ou senha com menos de 6 caracteres.', 422);
+        }
+
+        $success = $this->applyPasswordReset($token, $newPassword);
+        if (!$success) {
+            Response::error('INVALID_TOKEN', 'Link de recuperação expirado ou já utilizado.', 400);
+        }
+
+        Response::json(['message' => 'Sua senha foi redefinida com sucesso. Faça login com a nova senha.']);
+    }
 }
+
