@@ -2069,6 +2069,23 @@ document.addEventListener('submit', async e => {
     return;
   }
 
+  if (kind === 'recurring') {
+    const cents = Math.round(Number(d.value) * 100);
+    const dayNum = Number(d.day_of_month);
+    if (!d.description?.trim() || !Number.isSafeInteger(cents) || cents <= 0 || dayNum < 1 || dayNum > 31) {
+      toast('Confira a descrição, valor e dia de vencimento.'); return;
+    }
+    try {
+      await api.post('/finance/v2/recurring', {
+        description:d.description.trim(), type:d.type, value_cents:cents,
+        category_id:Number(d.category_id), day_of_month:dayNum, starts_on:d.starts_on
+      });
+      $('#modal').close();
+      await loadFinanceData(); render(); toast('Recorrência criada com sucesso.');
+    } catch(e){toast(e.message);}
+    return;
+  }
+
   if (kind === 'settle') {
     try {
       await api.post('/finance/transactions/' + d.id + '/settle', { effective_date: d.date });
