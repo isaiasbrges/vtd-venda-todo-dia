@@ -703,6 +703,7 @@ function finance(current) {
   const title = { transactions: 'Lançamentos', payable: 'Contas a pagar', receivable: 'Contas a receber', categories: 'Categorias', reports: 'Relatórios', agenda: 'Agenda financeira', recurring: 'Receitas e despesas recorrentes' }[suffix] || 'Seu dinheiro, com clareza.';
   let html = financeHeader(title, 'Receitas, despesas e vencimentos da sua loja em um só lugar.') +
     (!suffix ? financeWelcome() : '') + financeNav(current);
+  if (S.financeV2?.unavailable) html += `<section class="panel" role="alert"><strong>Agenda e recorrências temporariamente indisponíveis</strong><p class="small muted">${esc(S.financeV2.message)}. Os lançamentos e o saldo continuam disponíveis.</p></section>`;
 
   if (suffix === 'agenda') {
     const d = S.financeV2?.agenda || {upcoming:[],overdue:[],overdue_count:0,overdue_cents:0};
@@ -1068,7 +1069,7 @@ async function loadFinanceData() {
       api.get('/finance/overview', { month: state.financeMonth }),
       api.get('/finance/transactions', { month: state.financeMonth, search: state.txSearch, status: pending ? 'pending' : state.txStatus, type: suffix === 'payable' ? 'expense' : suffix === 'receivable' ? 'income' : state.txType }),
       api.get('/finance/categories'),
-      api.get('/finance/v2/dashboard', { month: state.financeMonth })
+      api.get('/finance/v2/dashboard', { month: state.financeMonth }).catch(error => ({ unavailable: true, message: error.message || 'Falha na agenda financeira' }))
     ]);
 
     if (requestId !== financeRequestId || current !== route()) return;
