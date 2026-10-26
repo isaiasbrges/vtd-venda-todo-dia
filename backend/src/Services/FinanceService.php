@@ -43,21 +43,19 @@ class FinanceService
         $startBalance = $initialBalance + $beforeInc - $beforeOut;
 
         // 3. Lançamentos realizados NO mês atual
-        $stmtMonth = $this->pdo->prepare("
+        $stmtMonth = $this->pdo->prepare($this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql'
+            ? "
+                SELECT type, SUM(value_cents) as total
+                FROM financial_transactions
+                WHERE tenant_id = :tid AND status = 'paid' AND DATE_FORMAT(COALESCE(settled_at, date), '%Y-%m') = :month
+                GROUP BY type
+            "
+            : "
             SELECT type, SUM(value_cents) as total
             FROM financial_transactions
             WHERE tenant_id = :tid AND status = 'paid' AND strftime('%Y-%m', COALESCE(settled_at, date)) = :month
             GROUP BY type
         ");
-        // Ajuste sintaxe MySQL vs SQLite
-        if ($this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql') {
-            $stmtMonth = $this->pdo->prepare("
-                SELECT type, SUM(value_cents) as total
-                FROM financial_transactions
-                WHERE tenant_id = :tid AND status = 'paid' AND DATE_FORMAT(COALESCE(settled_at, date), '%Y-%m') = :month
-                GROUP BY type
-            ");
-        }
         $stmtMonth->execute([':tid' => $tenantId, ':month' => $month]);
         $rowsMonth = $stmtMonth->fetchAll();
 
@@ -70,20 +68,19 @@ class FinanceService
         $currentBalance = $startBalance + $monthInc - $monthOut;
 
         // 4. Lançamentos pendentes NO mês atual (para saldo projetado)
-        $stmtPending = $this->pdo->prepare("
+        $stmtPending = $this->pdo->prepare($this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql'
+            ? "
+                SELECT type, SUM(value_cents) as total
+                FROM financial_transactions
+                WHERE tenant_id = :tid AND status = 'pending' AND DATE_FORMAT(date, '%Y-%m') = :month
+                GROUP BY type
+            "
+            : "
             SELECT type, SUM(value_cents) as total
             FROM financial_transactions
             WHERE tenant_id = :tid AND status = 'pending' AND strftime('%Y-%m', date) = :month
             GROUP BY type
         ");
-        if ($this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql') {
-            $stmtPending = $this->pdo->prepare("
-                SELECT type, SUM(value_cents) as total
-                FROM financial_transactions
-                WHERE tenant_id = :tid AND status = 'pending' AND DATE_FORMAT(date, '%Y-%m') = :month
-                GROUP BY type
-            ");
-        }
         $stmtPending->execute([':tid' => $tenantId, ':month' => $month]);
         $rowsPending = $stmtPending->fetchAll();
 
@@ -96,18 +93,17 @@ class FinanceService
         $projectedBalance = $currentBalance + $pendingInc - $pendingOut;
 
         // 5. Série semanal para o gráfico (5 semanas)
-        $stmtWeekly = $this->pdo->prepare("
+        $stmtWeekly = $this->pdo->prepare($this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql'
+            ? "
+                SELECT COALESCE(settled_at, date) as date, type, value_cents
+                FROM financial_transactions
+                WHERE tenant_id = :tid AND status = 'paid' AND DATE_FORMAT(COALESCE(settled_at, date), '%Y-%m') = :month
+            "
+            : "
             SELECT COALESCE(settled_at, date) as date, type, value_cents
             FROM financial_transactions
             WHERE tenant_id = :tid AND status = 'paid' AND strftime('%Y-%m', COALESCE(settled_at, date)) = :month
         ");
-        if ($this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql') {
-            $stmtWeekly = $this->pdo->prepare("
-                SELECT COALESCE(settled_at, date) as date, type, value_cents
-                FROM financial_transactions
-                WHERE tenant_id = :tid AND status = 'paid' AND DATE_FORMAT(COALESCE(settled_at, date), '%Y-%m') = :month
-            ");
-        }
         $stmtWeekly->execute([':tid' => $tenantId, ':month' => $month]);
         $txList = $stmtWeekly->fetchAll();
 
@@ -124,7 +120,17 @@ class FinanceService
         }
 
         // 6. Despesas por categoria
-        $stmtCat = $this->pdo->prepare("
+        $stmtCat = $this->pdo->prepare($this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql'
+            ? "
+                SELECT fc.name, SUM(ft.value_cents) as total
+                FROM financial_transactions ft
+                JOIN financial_categories fc ON fc.id = ft.category_id
+                WHERE ft.tenant_id = :tid AND ft.type = 'expense' AND ft.status = 'paid'
+                      AND DATE_FORMAT(COALESCE(ft.settled_at, ft.date), '%Y-%m') = :month
+                GROUP BY fc.name
+                ORDER BY total DESC
+            "
+            : "
             SELECT fc.name, SUM(ft.value_cents) as total
             FROM financial_transactions ft
             JOIN financial_categories fc ON fc.id = ft.category_id
@@ -133,17 +139,6 @@ class FinanceService
             GROUP BY fc.name
             ORDER BY total DESC
         ");
-        if ($this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql') {
-            $stmtCat = $this->pdo->prepare("
-                SELECT fc.name, SUM(ft.value_cents) as total
-                FROM financial_transactions ft
-                JOIN financial_categories fc ON fc.id = ft.category_id
-                WHERE ft.tenant_id = :tid AND ft.type = 'expense' AND ft.status = 'paid'
-                      AND DATE_FORMAT(COALESCE(ft.settled_at, ft.date), '%Y-%m') = :month
-                GROUP BY fc.name
-                ORDER BY total DESC
-            ");
-        }
         $stmtCat->execute([':tid' => $tenantId, ':month' => $month]);
         $categoriesChart = array_map(function($r) {
             return [
