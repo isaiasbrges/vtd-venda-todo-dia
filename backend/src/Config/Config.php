@@ -57,8 +57,25 @@ class Config
     private static function load(): void
     {
         $backendDir = dirname(__DIR__, 2);
+        $documentRoot = dirname($backendDir);
+
+        // Shared hosting can keep persisted secrets either at the account root
+        // or beside public_html under the domain directory.
+        $persistentCandidates = [
+            dirname($documentRoot, 2) . '/vtd-runtime/config.php',
+            dirname($documentRoot) . '/vtd-runtime/config.php',
+        ];
         $envFile = $backendDir . '/config/.env.php';
-        $userConfig = file_exists($envFile) ? require $envFile : [];
+        foreach ($persistentCandidates as $candidate) {
+            if (is_file($candidate)) {
+                $envFile = $candidate;
+                break;
+            }
+        }
+        $userConfig = is_file($envFile) ? require $envFile : [];
+        if (!is_array($userConfig)) {
+            throw new \RuntimeException('VTD configuration must return an array.');
+        }
 
         // Defaults
         $storageDir = $backendDir . '/storage';
