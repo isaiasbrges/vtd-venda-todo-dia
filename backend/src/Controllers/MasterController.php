@@ -480,10 +480,10 @@ class MasterController
                 $mailDriver = Config::get('mail.driver', 'mock');
                 $smtpHost = Config::get('mail.host', '');
 
-                if ($mailDriver === 'mock' && empty($smtpHost)) {
+                if ($mailDriver === 'mock') {
                     $inviteMessage = "Cliente cadastrado. O convite por e-mail não foi enviado pois o serviço SMTP da Hostinger ainda não está configurado.";
                 } else {
-                    $sent = $this->mailer->sendWelcome($email, $name, $tempPass, $offer);
+                    $sent = $this->mailer->sendWelcomeCredentials($email, $name, $tempPass, $offer);
                     if ($sent) {
                         $inviteSent = true;
                         $inviteMessage = "Convite de acesso e credenciais enviados por e-mail com sucesso.";
@@ -505,8 +505,9 @@ class MasterController
             ], 201);
 
         } catch (\Throwable $e) {
-            $pdo->rollBack();
-            Response::error('SERVER_ERROR', 'Erro ao salvar cliente: ' . $e->getMessage(), 500);
+            if ($pdo->inTransaction()) $pdo->rollBack();
+            error_log('VTD Master createClient: ' . $e->getMessage());
+            Response::error('SERVER_ERROR', 'Não foi possível concluir o cadastro. Confira se o cliente foi criado antes de tentar novamente.', 500);
         }
     }
 
