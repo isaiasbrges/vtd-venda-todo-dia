@@ -23,24 +23,33 @@ final class FinanceV2Controller
         $end = date('Y-m-d', strtotime($start . ' +1 month'));
         $today = date('Y-m-d');
         $overview = (new FinanceService())->calculateMonthOverview($account['tenant_id'], $month);
+        // Separar vencimentos do mes, atrasados anteriores e proximos dias.
+        // Nao limitar antes de calcular alertas: evita contagens e valores incorretos.
         $q = $pdo->prepare("SELECT id, description, type, value_cents, date, category_id
-          FROM financial_transactions WHERE tenant_id = :tid AND status = 'pending'
-          AND date < :end ORDER BY date ASC, created_at ASC LIMIT 50");
+          FROM financial_transactions
+          WHERE tenant_id = :tid AND status = 'pending' AND date < :end
+          ORDER BY date ASC, created_at ASC");
         $q->execute([':tid' => $account['tenant_id'], ':end' => $end]);
-        $all = $q->fetchAll(PDO::FETCH_ASSOC);
         $upcoming = []; $overdue = []; $totalOverdue = 0;
-        foreach ($all as $row) {
+        foreach ($q->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $row['value_cents'] = (int)$row['value_cents'];
             $row['days_until'] = (int)floor((strtotime($row['date']) - strtotime($today)) / 86400);
-            if ($row['date'] < $today) { $overdue[] = $row; $totalOverdue += $row['value_cents']; }
-            elseif ($row['date'] >= $start) $upcoming[] = $row;
+            if ($row['date'] < $today) {
+                $overdue[] = $row;
+                if ($row['type'] === 'expense') $totalOverdue += $row['value_cents'];
+            } elseif ($row['date'] >= $start) {
+                $upcoming[] = $row;
+            }
         }
+        // Compromissos passados do mes selecionado continuam visiveis no calendario.
+        $monthRows = array_values(array_filter(array_merge($overdue, $upcoming),
+            static fn(array $row): bool => $row['date'] >= $start && $row['date'] < $end));
         $rec = $pdo->prepare("SELECT id, description, type, value_cents, day_of_month, starts_on, ends_on, is_active
                              FROM financial_recurring_rules WHERE tenant_id = :tid ORDER BY created_at DESC");
         $rec->execute([':tid' => $account['tenant_id']]);
         Response::json([
             'overview' => $overview,
-            'agenda' => ['upcoming' => $upcoming, 'overdue' => $overdue, 'overdue_count' => count($overdue), 'overdue_cents' => $totalOverdue],
+            'agenda' => ['upcoming' => $upcoming, 'overdue' => $overdue, 'month_rows' => $monthRows, 'overdue_count' => count($overdue), 'overdue_cents' => $totalOverdue],
             'recurring' => $rec->fetchAll(PDO::FETCH_ASSOC),
             'alerts' => array_values(array_filter([
                 count($overdue) ? ['type'=>'overdue','message'=>count($overdue).' compromisso(s) vencido(s).'] : null,
