@@ -176,10 +176,12 @@ const master = {
     const m = data.metrics;
 
     return `
-      <div class="master-header">
+      <section class="master-welcome">
+        <span class="master-welcome-eyebrow">PAINEL MASTER · VTD COMPLETO</span>
+        <div class="master-header">
         <div>
-          <h1>Sua operação, em um só lugar.</h1>
-          <p>Gerencie clientes, acessos e integrações do VTD.</p>
+          <h1>Bem-vindo de volta, ${esc((S.name || 'administrador').trim().split(/\s+/)[0])}! 👋</h1>
+          <p>Sua operação em um só lugar. Acompanhe clientes, acessos e integrações do VTD.</p>
         </div>
         <div class="master-header-actions">
           <button class="btn-master-primary" data-action="master-new-client">
@@ -190,6 +192,8 @@ const master = {
           </button>
         </div>
       </div>
+
+      </section>
 
       <!-- 4 Cards de Métricas Reais -->
       <div class="master-metrics-grid">
