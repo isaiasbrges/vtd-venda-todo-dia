@@ -1,60 +1,15 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seu acesso ao Venda Todo Dia</title>
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #0d0d0d; color: #f0f0f0; margin: 0; padding: 24px; }
-        .card { max-width: 560px; margin: 0 auto; background: #161616; border: 1px solid #282828; border-radius: 12px; overflow: hidden; }
-        .header { background: #111111; padding: 32px 36px; border-bottom: 2px solid #ebc500; }
-        .logo { font-size: 24px; font-weight: 800; color: #ffffff; letter-spacing: -0.5px; }
-        .logo span { color: #ebc500; }
-        .content { padding: 36px; }
-        h1 { font-size: 22px; margin-top: 0; color: #ffffff; }
-        p { font-size: 15px; line-height: 1.6; color: #b5b5b5; margin: 0 0 18px; }
-        .box { background: #202020; border-radius: 8px; padding: 20px; margin: 24px 0; border-left: 4px solid #ebc500; }
-        .row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; }
-        .row:last-child { margin-bottom: 0; }
-        .label { color: #888; }
-        .val { font-weight: 600; color: #fff; font-family: monospace; font-size: 15px; }
-        .btn { display: inline-block; background: #ebc500; color: #111; text-decoration: none; font-weight: 700; padding: 14px 28px; border-radius: 8px; font-size: 15px; margin-top: 12px; }
-        .footer { padding: 24px 36px; background: #111111; font-size: 12px; color: #666; border-top: 1px solid #222; text-align: center; }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <div class="header">
-            <div class="logo">VTD <span>· Venda Todo Dia</span></div>
-        </div>
-        <div class="content">
-            <h1>Olá, <?= htmlspecialchars($name, ENT_QUOTES, 'UTF-8') ?>!</h1>
-            <p>Seja bem-vindo(a)! Seu acesso à plataforma VTD foi liberado com sucesso.</p>
-            <p>Seu plano ativo é: <strong style="color: #ebc500;"><?= $plan === 'plus' ? 'Kit + Financeiro' : 'Kit Essencial' ?></strong>.</p>
-            
-            <div class="box">
-                <div class="row">
-                    <span class="label">Link de Acesso:</span>
-                    <span class="val"><?= htmlspecialchars($loginUrl, ENT_QUOTES, 'UTF-8') ?></span>
-                </div>
-                <div class="row">
-                    <span class="label">Seu E-mail:</span>
-                    <span class="val"><?= htmlspecialchars($email, ENT_QUOTES, 'UTF-8') ?></span>
-                </div>
-                <div class="row">
-                    <span class="label">Sua Senha Inicial:</span>
-                    <span class="val"><?= htmlspecialchars($password, ENT_QUOTES, 'UTF-8') ?></span>
-                </div>
-            </div>
-
-            <p>Recomendamos que você altere sua senha no primeiro acesso em <strong>Minha conta</strong>.</p>
-            <div style="text-align: center; margin: 28px 0 12px;">
-                <a href="<?= htmlspecialchars($loginUrl, ENT_QUOTES, 'UTF-8') ?>" class="btn">Acessar Minha Loja</a>
-            </div>
-        </div>
-        <div class="footer">
-            VTD · Venda Todo Dia · Este e-mail contém suas credenciais confidenciais de acesso.
-        </div>
-    </div>
-</body>
-</html>
+<?php
+$esc = static fn($v) => htmlspecialchars((string)$v, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+$emailTitle = 'Seu acesso ao Venda Todo Dia';
+$preview = 'Sua conta VTD foi liberada. Confira os dados de acesso.';
+$eyebrow = 'ACESSO LIBERADO';
+$heading = 'Tudo pronto para começar a vender.';
+$intro = 'Olá, <strong style="color:#fff">'.$esc($name).'</strong>! Seu acesso à plataforma VTD já está disponível. Aproveite as ferramentas para organizar sua operação e impulsionar suas vendas.';
+$planName = $plan === 'plus' ? 'KIT + FINANCEIRO' : 'KIT ESSENCIAL';
+$extra = '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#202b22;border:1px solid #3f5141;border-radius:12px;margin:12px 0 22px"><tr><td style="padding:23px"><p style="color:#ffdb28;font-size:11px;font-weight:700;letter-spacing:1px;margin:0 0 8px">SEU PLANO ATIVO</p><p style="color:#fff;font-size:22px;font-weight:800;margin:0 0 20px">'.$esc($planName).'</p><p style="color:#aabcad;font-size:11px;margin:0 0 6px">E-MAIL DE ACESSO</p><p style="color:#fff;font-size:15px;word-break:break-all;margin:0 0 18px">'.$esc($email).'</p><p style="color:#aabcad;font-size:11px;margin:0 0 6px">SENHA INICIAL</p><p style="color:#fff;font-size:18px;font-weight:700;word-break:break-all;margin:0">'.$esc($password).'</p></td></tr></table><p style="color:#bcc9bf;font-size:14px;line-height:1.8">Acesse os fornecedores, o guia de vendas e o calendário comercial.'.($plan === 'plus' ? ' O módulo financeiro também está liberado.' : '').'</p>';
+$actionUrl = $loginUrl;
+$actionLabel = 'Acessar minha conta';
+$footnote = 'Proteja seu acesso: altere a senha inicial assim que entrar e não compartilhe essas credenciais.';
+$logoUrl = rtrim((string)\VTD\Config\Config::get('app_url', 'https://vendatododia.online'), '/') . '/assets/logo-vtd.png';
+?>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title><?= $esc($emailTitle) ?></title></head><body style="margin:0;padding:0;background:#0b0e0c;font-family:Arial,Helvetica,sans-serif;color:#f5f6f2;"><div style="display:none;max-height:0;overflow:hidden"><?= $esc($preview) ?></div><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0b0e0c"><tr><td align="center" style="padding:32px 12px"><table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#141a16;border:1px solid #354336;border-radius:16px"><tr><td style="background:#101611;padding:28px 32px;border-bottom:2px solid #f8d800"><img src="<?= $esc($logoUrl) ?>" width="230" alt="VTD Venda Todo Dia" style="display:block;max-width:100%;height:auto;border:0"></td></tr><tr><td style="padding:36px 32px 22px"><p style="font-size:11px;letter-spacing:2px;color:#ffdb28;font-weight:700;margin:0 0 17px"><?= $esc($eyebrow) ?></p><h1 style="color:#fff;font-size:30px;line-height:1.2;margin:0 0 20px;letter-spacing:-.8px"><?= $esc($heading) ?></h1><p style="color:#bcc9bf;line-height:1.8;font-size:15px;margin:0 0 22px"><?= $intro ?></p><?= $extra ?><table role="presentation" cellpadding="0" cellspacing="0" style="margin:28px 0 22px"><tr><td bgcolor="#ffdb28" style="border-radius:9px"><a href="<?= $esc($actionUrl) ?>" style="display:inline-block;padding:17px 26px;color:#161a13;font-weight:800;text-decoration:none;font-size:15px"><?= $esc($actionLabel) ?> &rarr;</a></td></tr></table><p style="color:#9dab9f;font-size:12px;line-height:1.7;margin:0 0 24px">Se o botão não abrir, copie o endereço abaixo:<br><a href="<?= $esc($actionUrl) ?>" style="color:#f7db4c;word-break:break-all"><?= $esc($actionUrl) ?></a></p><div style="border-top:1px solid #344336;padding-top:18px;color:#9dab9f;font-size:12px;line-height:1.8"><?= $esc($footnote) ?></div></td></tr><tr><td style="background:#0f1510;border-top:1px solid #2d382f;padding:24px 32px"><strong style="font-size:12px;letter-spacing:1px;color:#fff">VENDA TODO DIA</strong><p style="color:#829183;font-size:11px;line-height:1.6;margin:8px 0 0">Seu negócio, um próximo passo a cada dia.<br>Mensagem automática da plataforma VTD.</p></td></tr></table></td></tr></table></body></html>
