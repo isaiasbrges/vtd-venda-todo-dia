@@ -137,6 +137,11 @@ class WebhookReceiverController
         $offerMappings = json_decode($integration['offer_mappings'] ?? '{}', true) ?: [];
 
         $eventType = $normalized['event_type'];
+        if ($isReprocess) {
+            $q = $pdo->prepare("SELECT status FROM integration_events WHERE id = :id");
+            $q->execute([':id' => $eventId]);
+            if ($q->fetchColumn() === 'success') return ['success' => true, 'message' => 'Evento já concluído; sem alterações.'];
+        }
         $productExternalCode = (string)$normalized['product_id'];
 
         // Se for compra pendente: registra sem liberar
@@ -170,7 +175,12 @@ class WebhookReceiverController
             return ['success' => false, 'message' => $reason];
         }
 
-        $orderId = $normalized['order_id'];
+        $orderId = trim((string)$normalized['order_id']);
+        if ($orderId === '' || str_starts_with($orderId, 'ORD-')) {
+            $reason = 'Identificador real da venda não encontrado. Acesso não alterado.';
+            $pdo->prepare("UPDATE integration_events SET status = 'failed', failure_reason = :reason WHERE id = :id")->execute([':reason' => $reason, ':id' => $eventId]);
+            return ['success' => false, 'message' => $reason];
+        }
 
         // 1. REEMBOLSO OU CHARGEBACK
         if (in_array($eventType, ['order_refunded', 'order_chargeback', 'refunded', 'chargeback'])) {
@@ -222,6 +232,17 @@ class WebhookReceiverController
         if (in_array($eventType, ['order_paid', 'payment_approved', 'approved'])) {
             $pdo->beginTransaction();
             try {
+                $accessCheck = $pdo->prepare("SELECT product_id, status FROM client_accesses WHERE source = 'webhook' AND external_reference = :ref LIMIT 1");
+                $accessCheck->execute([':ref' => $orderId]);
+                $existingAccess = $accessCheck->fetch(PDO::FETCH_ASSOC);
+                if ($existingAccess) {
+                    if ($existingAccess['status'] === 'active' && $existingAccess['product_id'] === $internalProduct) {
+                        $pdo->prepare("UPDATE integration_events SET status = 'success', failure_reason = NULL WHERE id = :id")->execute([':id' => $eventId]);
+                        $pdo->commit();
+                        return ['success' => true, 'message' => 'Compra já liberada anteriormente, sem duplicação.'];
+                    }
+                    throw new \RuntimeException('Referência já existente com produto ou status diferente; revisão manual necessária.');
+                }
                 // Verifica se usuário já existe
                 $stmtUser = $pdo->prepare("SELECT id, tenant_id FROM users WHERE email = :email");
                 $stmtUser->execute([':email' => $buyerEmail]);
@@ -230,6 +251,7 @@ class WebhookReceiverController
                 $tenantId = '';
                 $userId = '';
                 $isNew = false;
+                $upgraded = false;
                 $tempPass = bin2hex(random_bytes(6));
 
                 if ($existingUser) {
@@ -237,6 +259,9 @@ class WebhookReceiverController
                     $userId = $existingUser['id'];
 
                     if ($internalProduct === 'kit-plus') {
+                        $planCheck = $pdo->prepare("SELECT plan FROM tenants WHERE id = :id");
+                        $planCheck->execute([':id' => $tenantId]);
+                        $upgraded = $planCheck->fetchColumn() !== 'plus';
                         $pdo->prepare("UPDATE tenants SET plan = 'plus', status = 'active', updated_at = CURRENT_TIMESTAMP WHERE id = :id")
                             ->execute([':id' => $tenantId]);
                     }
@@ -287,8 +312,16 @@ class WebhookReceiverController
                 $pdo->commit();
 
                 // Disparo de e-mail de acesso caso seja novo usuário
-                if ($isNew && !$isReprocess) {
-                    $this->mailer->sendWelcome($buyerEmail, $buyerName ?: 'Cliente', $tempPass, $internalProduct === 'kit-plus' ? 'plus' : 'essential');
+                if ($isNew) {
+                    if ($isReprocess) {
+                        $resetToken = (new AuthController())->createPasswordResetToken($buyerEmail);
+                        $mailOk = $resetToken !== null && $this->mailer->sendPasswordReset($buyerEmail, $buyerName ?: 'Cliente', $resetToken);
+                    } else {
+                        $mailOk = $this->mailer->sendWelcomeCredentials($buyerEmail, $buyerName ?: 'Cliente', $tempPass, $internalProduct === 'kit-plus' ? 'plus' : 'essential');
+                    }
+                    if (!$mailOk) error_log('VTD: falha no aviso de acesso para evento ' . $eventId);
+                } elseif ($upgraded && !$this->mailer->sendUpgradeNotification($buyerEmail, $buyerName ?: 'Cliente')) {
+                    error_log('VTD: falha no e-mail de upgrade para evento ' . $eventId);
                 }
 
                 return ['success' => true, 'message' => "Acesso liberado com sucesso para o produto '{$internalProduct}'."];
@@ -333,7 +366,7 @@ class WebhookReceiverController
             }
             $orderId = (string)($body['sale']['id'] ?? $body['sale']['code'] ?? $body['sale']['hash'] ?? $orderId);
             $eventId = (string)($body['event_id'] ?? $body['id'] ?? $body['hashing'] ??
-                ($body['sale']['id'] ?? '') . ':' . ($body['sale']['status'] ?? ''));
+                (!empty($body['sale']['id']) ? (string)$body['sale']['id'] . ':' . (string)($body['sale']['status'] ?? '') : bin2hex(random_bytes(10))));
             $buyerEmail = (string)($body['sale']['client']['email'] ?? $body['sale']['customer']['email'] ?? $body['sale']['buyer']['email'] ?? $body['buyer']['email'] ?? $body['client']['email'] ?? $body['buyer_email'] ?? $body['email'] ?? '');
             $buyerName = (string)($body['sale']['client']['name'] ?? $body['sale']['customer']['name'] ?? $body['sale']['buyer']['name'] ?? $body['buyer']['name'] ?? $body['client']['name'] ?? $body['buyer_name'] ?? $body['name'] ?? '');
             $productId = (string)($body['sale']['product']['id'] ?? $body['sale']['product_id'] ?? $body['sale']['offer']['id'] ?? $body['sale']['offer_id'] ?? $body['product']['id'] ?? $body['product_id'] ?? $body['offer']['id'] ?? $body['offer_code'] ?? '');
