@@ -320,9 +320,23 @@ class WebhookReceiverController
         $productId = '';
 
         if ($provider === 'greenn') {
-            $buyerEmail = (string)($body['buyer']['email'] ?? $body['client']['email'] ?? $body['buyer_email'] ?? $body['email'] ?? '');
-            $buyerName = (string)($body['buyer']['name'] ?? $body['client']['name'] ?? $body['buyer_name'] ?? $body['name'] ?? '');
-            $productId = (string)($body['product']['id'] ?? $body['product_id'] ?? $body['offer']['id'] ?? $body['offer_code'] ?? '');
+            // Greenn envia atualizações de venda como saleupdated. Somente
+            // converta para pagamento confirmado quando o status aninhado for paid.
+            if (strtolower($eventType) === 'saleupdated') {
+                $saleStatus = strtolower(trim((string)($body['sale']['status'] ?? '')));
+                $eventType = match ($saleStatus) {
+                    'paid' => 'order_paid',
+                    'refunded', 'refund', 'chargeback' => 'order_refunded',
+                    'waiting', 'pending', 'unpaid', 'open' => 'order_pending',
+                    default => 'saleupdated',
+                };
+            }
+            $orderId = (string)($body['sale']['id'] ?? $body['sale']['code'] ?? $body['sale']['hash'] ?? $orderId);
+            $eventId = (string)($body['event_id'] ?? $body['id'] ?? $body['hashing'] ??
+                ($body['sale']['id'] ?? '') . ':' . ($body['sale']['status'] ?? ''));
+            $buyerEmail = (string)($body['sale']['client']['email'] ?? $body['sale']['customer']['email'] ?? $body['sale']['buyer']['email'] ?? $body['buyer']['email'] ?? $body['client']['email'] ?? $body['buyer_email'] ?? $body['email'] ?? '');
+            $buyerName = (string)($body['sale']['client']['name'] ?? $body['sale']['customer']['name'] ?? $body['sale']['buyer']['name'] ?? $body['buyer']['name'] ?? $body['client']['name'] ?? $body['buyer_name'] ?? $body['name'] ?? '');
+            $productId = (string)($body['sale']['product']['id'] ?? $body['sale']['product_id'] ?? $body['sale']['offer']['id'] ?? $body['sale']['offer_id'] ?? $body['product']['id'] ?? $body['product_id'] ?? $body['offer']['id'] ?? $body['offer_code'] ?? '');
         } elseif ($provider === 'kiwify') {
             $buyerEmail = (string)($body['Customer']['email'] ?? $body['customer']['email'] ?? '');
             $buyerName = (string)($body['Customer']['full_name'] ?? $body['customer']['name'] ?? '');
