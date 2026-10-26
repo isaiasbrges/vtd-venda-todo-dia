@@ -1,0 +1,12 @@
+/* VTD Financeiro V2 — complemento visual isolado */
+.finance-calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-top:16px}
+.finance-calendar-head{padding:8px 0;text-align:center;font-size:11px;color:#788276;font-weight:700}
+.finance-calendar-day{min-height:92px;background:#fafbf7;border:1px solid #e2e8df;border-radius:11px;padding:9px;min-width:0}
+.finance-calendar-day.empty{background:transparent;border:0}
+.finance-calendar-day.today{border-color:#caad00;box-shadow:inset 0 0 0 1px #caad00}
+.finance-calendar-date{font-weight:800;font-size:12px;color:#263122}
+.finance-calendar-pill{display:block;margin-top:5px;background:#e8eee8;border-radius:5px;padding:4px 5px;color:#293a2e;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.finance-calendar-pill.expense{background:#fff0e9;color:#8d4b32}
+.finance-calendar-pill.income{background:#e0f3e8;color:#216644}
+.finance-calendar-more{display:block;font-size:9px;margin-top:4px;color:#667365}
+@media(max-width:700px){.finance-calendar{gap:3px}.finance-calendar-day{min-height:65px;padding:5px;border-radius:6px}.finance-calendar-pill{font-size:9px;padding:3px}.finance-calendar-head{font-size:9px}}
