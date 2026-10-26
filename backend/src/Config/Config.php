@@ -62,7 +62,7 @@ class Config
         // Shared hosting can keep persisted secrets either at the account root
         // or beside public_html under the domain directory.
         $persistentCandidates = [
-            dirname($documentRoot, 2) . '/vtd-runtime/config.php',
+            dirname($documentRoot, 3) . '/vtd-runtime/config.php',
             dirname($documentRoot) . '/vtd-runtime/config.php',
         ];
         $envFile = $backendDir . '/config/.env.php';
