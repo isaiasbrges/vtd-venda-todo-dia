@@ -1,42 +1,14 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recuperação de Acesso · VTD</title>
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #0d0d0d; color: #f0f0f0; margin: 0; padding: 24px; }
-        .card { max-width: 560px; margin: 0 auto; background: #161616; border: 1px solid #282828; border-radius: 12px; overflow: hidden; }
-        .header { background: #111111; padding: 32px 36px; border-bottom: 2px solid #ebc500; }
-        .logo { font-size: 24px; font-weight: 800; color: #ffffff; letter-spacing: -0.5px; }
-        .logo span { color: #ebc500; }
-        .content { padding: 36px; }
-        h1 { font-size: 22px; margin-top: 0; color: #ffffff; }
-        p { font-size: 15px; line-height: 1.6; color: #b5b5b5; margin: 0 0 18px; }
-        .btn { display: inline-block; background: #ebc500; color: #111; text-decoration: none; font-weight: 700; padding: 14px 28px; border-radius: 8px; font-size: 15px; margin-top: 12px; }
-        .footer { padding: 24px 36px; background: #111111; font-size: 12px; color: #666; border-top: 1px solid #222; text-align: center; }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <div class="header">
-            <div class="logo">VTD <span>· Venda Todo Dia</span></div>
-        </div>
-        <div class="content">
-            <h1>Recuperação de Acesso</h1>
-            <p>Olá, <?= htmlspecialchars($name, ENT_QUOTES, 'UTF-8') ?>.</p>
-            <p>Recebemos uma solicitação para redefinir a sua senha de acesso à plataforma VTD.</p>
-            <p>Clique no botão abaixo para escolher uma nova senha. Este link expira em <strong>60 minutos</strong>:</p>
-            
-            <div style="text-align: center; margin: 32px 0;">
-                <a href="<?= htmlspecialchars($resetUrl, ENT_QUOTES, 'UTF-8') ?>" class="btn">Redefinir Minha Senha</a>
-            </div>
-
-            <p style="font-size: 13px; color: #888;">Se você não solicitou a recuperação, pode ignorar este e-mail com segurança. Sua senha atual permanecerá inalterada.</p>
-        </div>
-        <div class="footer">
-            VTD · Venda Todo Dia · Mensagem automática de segurança.
-        </div>
-    </div>
-</body>
-</html>
+<?php
+$esc = static fn($v) => htmlspecialchars((string)$v, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+$emailTitle = 'Recuperação de senha · Venda Todo Dia';
+$preview = 'Recebemos uma solicitação de recuperação. O link expira em 60 minutos.';
+$eyebrow = 'SEGURANÇA DA CONTA';
+$heading = 'Vamos recuperar seu acesso.';
+$intro = 'Olá, <strong style="color:#fff">'.$esc($name).'</strong>. Recebemos uma solicitação para redefinir a senha da sua conta VTD. Você pode criar uma nova senha pelo botão abaixo.';
+$extra = '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#202b22;border-left:4px solid #ffdb28;margin:22px 0"><tr><td style="padding:20px"><p style="margin:0 0 8px;color:#fff;font-size:15px;font-weight:700">Link válido por 60 minutos</p><p style="margin:0;color:#bdc8be;font-size:13px;line-height:1.7">Se não foi você, ignore esta mensagem. Sua senha não será alterada.</p></td></tr></table>';
+$actionUrl = $resetUrl;
+$actionLabel = 'Criar nova senha';
+$footnote = 'O VTD nunca solicita sua senha por e-mail. Se você não reconhece esta solicitação, não abra o link.';
+$logoUrl = rtrim((string)\VTD\Config\Config::get('app_url', 'https://vendatododia.online'), '/') . '/assets/logo-vtd.png';
+?>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title><?= $esc($emailTitle) ?></title></head><body style="margin:0;padding:0;background:#0b0e0c;font-family:Arial,Helvetica,sans-serif;color:#f5f6f2;"><div style="display:none;max-height:0;overflow:hidden"><?= $esc($preview) ?></div><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0b0e0c"><tr><td align="center" style="padding:32px 12px"><table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#141a16;border:1px solid #354336;border-radius:16px"><tr><td style="background:#101611;padding:28px 32px;border-bottom:2px solid #f8d800"><img src="<?= $esc($logoUrl) ?>" width="230" alt="VTD Venda Todo Dia" style="display:block;max-width:100%;height:auto;border:0"></td></tr><tr><td style="padding:36px 32px 22px"><p style="font-size:11px;letter-spacing:2px;color:#ffdb28;font-weight:700;margin:0 0 17px"><?= $esc($eyebrow) ?></p><h1 style="color:#fff;font-size:30px;line-height:1.2;margin:0 0 20px;letter-spacing:-.8px"><?= $esc($heading) ?></h1><p style="color:#bcc9bf;line-height:1.8;font-size:15px;margin:0 0 22px"><?= $intro ?></p><?= $extra ?><table role="presentation" cellpadding="0" cellspacing="0" style="margin:28px 0 22px"><tr><td bgcolor="#ffdb28" style="border-radius:9px"><a href="<?= $esc($actionUrl) ?>" style="display:inline-block;padding:17px 26px;color:#161a13;font-weight:800;text-decoration:none;font-size:15px"><?= $esc($actionLabel) ?> &rarr;</a></td></tr></table><p style="color:#9dab9f;font-size:12px;line-height:1.7;margin:0 0 24px">Se o botão não abrir, copie o endereço abaixo:<br><a href="<?= $esc($actionUrl) ?>" style="color:#f7db4c;word-break:break-all"><?= $esc($actionUrl) ?></a></p><div style="border-top:1px solid #344336;padding-top:18px;color:#9dab9f;font-size:12px;line-height:1.8"><?= $esc($footnote) ?></div></td></tr><tr><td style="background:#0f1510;border-top:1px solid #2d382f;padding:24px 32px"><strong style="font-size:12px;letter-spacing:1px;color:#fff">VENDA TODO DIA</strong><p style="color:#829183;font-size:11px;line-height:1.6;margin:8px 0 0">Seu negócio, um próximo passo a cada dia.<br>Mensagem automática da plataforma VTD.</p></td></tr></table></td></tr></table></body></html>
