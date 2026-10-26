@@ -56,8 +56,16 @@ class GreennWebhookController
     {
         $pdo = Connection::getInstance();
 
-        $eventId = (string)($payload['id'] ?? $payload['transaction_id'] ?? bin2hex(random_bytes(10)));
-        $event = (string)($payload['event'] ?? $payload['status'] ?? 'order_paid');
+        $eventId = (string)($payload['id'] ?? $payload['sale']['id'] ?? $payload['transaction_id'] ?? bin2hex(random_bytes(10)));
+        $event = strtolower(trim((string)($payload['event'] ?? $payload['status'] ?? 'unknown')));
+        if ($event === 'saleupdated') {
+            $saleStatus = strtolower(trim((string)($payload['sale']['status'] ?? '')));
+            $event = match ($saleStatus) {
+                'paid' => 'order_paid',
+                'refunded', 'chargeback' => 'order_refunded',
+                default => 'unknown',
+            };
+        }
 
         // Normalização de eventos da Greenn
         $isPaid = in_array($event, ['order_paid', 'approved', 'transacao_aprovada', 'pago'], true);
@@ -75,9 +83,9 @@ class GreennWebhookController
         }
 
         // 2. Extração dos dados do comprador
-        $buyerEmail = trim(strtolower((string)($payload['buyer_email'] ?? $payload['customer']['email'] ?? $payload['email'] ?? '')));
-        $buyerName = trim((string)($payload['buyer_name'] ?? $payload['customer']['name'] ?? $payload['name'] ?? 'Cliente VTD'));
-        $productId = (string)($payload['product_id'] ?? $payload['offer_id'] ?? $payload['product']['id'] ?? '');
+        $buyerEmail = trim(strtolower((string)($payload['sale']['client']['email'] ?? $payload['sale']['customer']['email'] ?? $payload['buyer_email'] ?? $payload['customer']['email'] ?? $payload['email'] ?? '')));
+        $buyerName = trim((string)($payload['sale']['client']['name'] ?? $payload['sale']['customer']['name'] ?? $payload['buyer_name'] ?? $payload['customer']['name'] ?? $payload['name'] ?? 'Cliente VTD'));
+        $productId = (string)($payload['sale']['product']['id'] ?? $payload['sale']['product_id'] ?? $payload['product_id'] ?? $payload['offer_id'] ?? $payload['product']['id'] ?? '');
 
         $plusProductId = (string)Config::get('greenn.plus_product_id', 'kit-plus');
         $isPlusPlan = ($productId === $plusProductId) || str_contains(strtolower($payload['product_name'] ?? ''), 'financeiro');
