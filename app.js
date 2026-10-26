@@ -627,6 +627,31 @@ function txTable(list) {
   </table></div>` : `<div class="empty">${icon('wallet')}<h3>Nenhum lançamento encontrado.</h3><p>Adicione um lançamento ou selecione outro período.</p>${btn('Novo lançamento', 'new-tx', 'primary')}</div>`;
 }
 
+function financeCalendar(rows) {
+  const [year,month] = state.financeMonth.split('-').map(Number);
+  const days = new Date(year, month, 0).getDate();
+  const offset = new Date(year, month - 1, 1).getDay();
+  const week = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  const byDate = new Map();
+  (rows || []).forEach(t => {
+    const key = String(t.date).slice(0,10);
+    if (!byDate.has(key)) byDate.set(key, []);
+    byDate.get(key).push(t);
+  });
+  const cells = week.map(w => `<div class="finance-calendar-head">${w}</div>`);
+  for (let x=0;x<offset;x++) cells.push('<div class="finance-calendar-day empty"></div>');
+  for (let n=1;n<=days;n++) {
+    const date = state.financeMonth + '-' + String(n).padStart(2,'0');
+    const items = byDate.get(date) || [];
+    cells.push(`<div class="finance-calendar-day ${date===today()?'today':''}" aria-label="${n} de ${state.financeMonth}">
+      <span class="finance-calendar-date">${n}</span>
+      ${items.slice(0,2).map(t=>`<span class="finance-calendar-pill ${t.type==='income'?'income':'expense'}" title="${esc(t.description)} — ${money(Number(t.value_cents))}">${esc(t.description)}</span>`).join('')}
+      ${items.length>2 ? `<small class="finance-calendar-more">+${items.length-2} compromisso(s)</small>` : ''}
+    </div>`);
+  }
+  return `<div class="finance-calendar" role="group" aria-label="Calendário financeiro de ${state.financeMonth}">${cells.join('')}</div>`;
+}
+
 function financeAgendaList(rows) {
   return rows?.length ? rows.map(t => `<div class="detail-row"><span><strong>${esc(t.description)}</strong><small style="display:block">${day(t.date)} · ${t.type === 'income' ? 'A receber' : 'A pagar'}</small></span><strong>${money(Number(t.value_cents))}</strong></div>`).join('') : '<p class="small muted" style="padding:14px 0">Nenhum compromisso neste período.</p>';
 }
@@ -652,7 +677,7 @@ function finance(current) {
     html += `<section class="panel" style="margin-bottom:18px"><div class="panel-head"><h2>Vencimentos e alertas</h2><span class="tag yellow">${d.overdue_count} atrasado(s)</span></div>
       ${alerts.map(a => `<p class="note">${esc(a.message)}</p>`).join('')}
       <p class="small muted">Compromissos atrasados: <strong>${money(d.overdue_cents)}</strong></p></section>
-      <section class="panel"><h2>Vencidos</h2>${financeAgendaList(d.overdue)}
+      <section class="panel"><h2>Calendário do mês</h2>${financeCalendar([...(d.upcoming || []), ...(d.overdue || [])])}<h2 style="margin-top:24px">Vencidos</h2>${financeAgendaList(d.overdue)}
       <h2 style="margin-top:24px">Próximos vencimentos</h2>${financeAgendaList(d.upcoming)}</section>`;
     return html;
   }
