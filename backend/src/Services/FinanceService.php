@@ -28,7 +28,7 @@ class FinanceService
         $stmtBefore = $this->pdo->prepare("
             SELECT type, SUM(value_cents) as total
             FROM financial_transactions
-            WHERE tenant_id = :tid AND status = 'paid' AND date < :start
+            WHERE tenant_id = :tid AND status = 'paid' AND COALESCE(settled_at, date) < :start
             GROUP BY type
         ");
         $stmtBefore->execute([':tid' => $tenantId, ':start' => $monthStart]);
@@ -46,7 +46,7 @@ class FinanceService
         $stmtMonth = $this->pdo->prepare("
             SELECT type, SUM(value_cents) as total
             FROM financial_transactions
-            WHERE tenant_id = :tid AND status = 'paid' AND strftime('%Y-%m', date) = :month
+            WHERE tenant_id = :tid AND status = 'paid' AND strftime('%Y-%m', COALESCE(settled_at, date)) = :month
             GROUP BY type
         ");
         // Ajuste sintaxe MySQL vs SQLite
@@ -54,7 +54,7 @@ class FinanceService
             $stmtMonth = $this->pdo->prepare("
                 SELECT type, SUM(value_cents) as total
                 FROM financial_transactions
-                WHERE tenant_id = :tid AND status = 'paid' AND DATE_FORMAT(date, '%Y-%m') = :month
+                WHERE tenant_id = :tid AND status = 'paid' AND DATE_FORMAT(COALESCE(settled_at, date), '%Y-%m') = :month
                 GROUP BY type
             ");
         }
@@ -97,15 +97,15 @@ class FinanceService
 
         // 5. Série semanal para o gráfico (5 semanas)
         $stmtWeekly = $this->pdo->prepare("
-            SELECT date, type, value_cents
+            SELECT COALESCE(settled_at, date) as date, type, value_cents
             FROM financial_transactions
-            WHERE tenant_id = :tid AND status = 'paid' AND strftime('%Y-%m', date) = :month
+            WHERE tenant_id = :tid AND status = 'paid' AND strftime('%Y-%m', COALESCE(settled_at, date)) = :month
         ");
         if (\VTD\Config\Config::get('db.driver') === 'mysql') {
             $stmtWeekly = $this->pdo->prepare("
-                SELECT date, type, value_cents
+                SELECT COALESCE(settled_at, date) as date, type, value_cents
                 FROM financial_transactions
-                WHERE tenant_id = :tid AND status = 'paid' AND DATE_FORMAT(date, '%Y-%m') = :month
+                WHERE tenant_id = :tid AND status = 'paid' AND DATE_FORMAT(COALESCE(settled_at, date), '%Y-%m') = :month
             ");
         }
         $stmtWeekly->execute([':tid' => $tenantId, ':month' => $month]);
@@ -129,7 +129,7 @@ class FinanceService
             FROM financial_transactions ft
             JOIN financial_categories fc ON fc.id = ft.category_id
             WHERE ft.tenant_id = :tid AND ft.type = 'expense' AND ft.status = 'paid'
-                  AND strftime('%Y-%m', ft.date) = :month
+                  AND strftime('%Y-%m', COALESCE(ft.settled_at, ft.date)) = :month
             GROUP BY fc.name
             ORDER BY total DESC
         ");
@@ -139,7 +139,7 @@ class FinanceService
                 FROM financial_transactions ft
                 JOIN financial_categories fc ON fc.id = ft.category_id
                 WHERE ft.tenant_id = :tid AND ft.type = 'expense' AND ft.status = 'paid'
-                      AND DATE_FORMAT(ft.date, '%Y-%m') = :month
+                      AND DATE_FORMAT(COALESCE(ft.settled_at, ft.date), '%Y-%m') = :month
                 GROUP BY fc.name
                 ORDER BY total DESC
             ");
@@ -225,7 +225,9 @@ class FinanceService
                 'category_id' => (int)$r['category_id'],
                 'date'        => $r['date'],
                 'status'      => $r['status'],
-                'settled_at'  => $r['settled_at']
+                'settled_at'  => $r['settled_at'],
+                'due_date'    => $r['date'],
+                'paid_at'     => $r['settled_at']
             ];
         }, $rows);
     }
@@ -240,15 +242,14 @@ class FinanceService
         $date = trim((string)($data['date'] ?? date('Y-m-d')));
         $status = ($data['status'] ?? 'pending') === 'paid' ? 'paid' : 'pending';
 
-        if (empty($desc) || $valueCents <= 0) {
-            throw new \InvalidArgumentException("Descrição e valor maior que zero são obrigatórios.");
-        }
+        $this->validateFinancialInput($tenantId, $desc, $valueCents, $catId, $date);
+        $settledAt = $status === 'paid' ? (string)($data['paid_at'] ?? date('Y-m-d')) : null;
 
         $this->pdo->beginTransaction();
         try {
             $stmt = $this->pdo->prepare("
-                INSERT INTO financial_transactions (id, tenant_id, description, type, value_cents, category_id, date, status, created_by_user_id)
-                VALUES (:id, :tid, :desc, :type, :val, :cat, :date, :status, :uid)
+                INSERT INTO financial_transactions (id, tenant_id, description, type, value_cents, category_id, date, status, settled_at, created_by_user_id)
+                VALUES (:id, :tid, :desc, :type, :val, :cat, :date, :status, :settled_at, :uid)
             ");
             $stmt->execute([
                 ':id'     => $id,
@@ -259,6 +260,7 @@ class FinanceService
                 ':cat'    => $catId,
                 ':date'   => $date,
                 ':status' => $status,
+                ':settled_at' => $settledAt,
                 ':uid'    => $userId
             ]);
 
@@ -308,11 +310,13 @@ class FinanceService
         $date = trim((string)($data['date'] ?? $before['date']));
         $status = ($data['status'] ?? $before['status']) === 'paid' ? 'paid' : 'pending';
 
+        $this->validateFinancialInput($tenantId, $desc, $valueCents, $catId, $date);
+        $settledAt = $status === 'paid' ? ($before['settled_at'] ?: date('Y-m-d')) : null;
         $this->pdo->beginTransaction();
         try {
             $stmt = $this->pdo->prepare("
                 UPDATE financial_transactions
-                SET description = :desc, type = :type, value_cents = :val, category_id = :cat, date = :date, status = :status
+                SET description = :desc, type = :type, value_cents = :val, category_id = :cat, date = :date, status = :status, settled_at = :settled_at
                 WHERE id = :id AND tenant_id = :tid
             ");
             $stmt->execute([
@@ -322,6 +326,7 @@ class FinanceService
                 ':cat'    => $catId,
                 ':date'   => $date,
                 ':status' => $status,
+                ':settled_at' => $settledAt,
                 ':id'     => $id,
                 ':tid'    => $tenantId
             ]);
@@ -365,11 +370,12 @@ class FinanceService
             throw new \RuntimeException("Lançamento não encontrado.");
         }
 
+        if (!self::validDate($effectiveDate)) throw new \InvalidArgumentException('Data de quitação inválida.');
         $this->pdo->beginTransaction();
         try {
             $stmt = $this->pdo->prepare("
                 UPDATE financial_transactions
-                SET status = 'paid', date = :eff_date, settled_at = :eff_date
+                SET status = 'paid', settled_at = :eff_date
                 WHERE id = :id AND tenant_id = :tid
             ");
             $stmt->execute([
@@ -393,7 +399,6 @@ class FinanceService
             $this->pdo->commit();
 
             $before['status'] = 'paid';
-            $before['date'] = $effectiveDate;
             $before['settled_at'] = $effectiveDate;
             return $before;
         } catch (\Throwable $e) {
@@ -479,4 +484,21 @@ class FinanceService
         $stmt = $this->pdo->prepare("DELETE FROM financial_categories WHERE id = :cid AND tenant_id = :tid");
         $stmt->execute([':cid' => $id, ':tid' => $tenantId]);
     }
+    public static function validDate(string $date): bool
+    {
+        $d = \DateTimeImmutable::createFromFormat('!Y-m-d', $date);
+        return $d !== false && $d->format('Y-m-d') === $date;
+    }
+
+    private function validateFinancialInput(string $tenantId, string $desc, int $cents, int $categoryId, string $date): void
+    {
+        if ($desc === '' || mb_strlen($desc) > 190 || $cents <= 0) {
+            throw new \InvalidArgumentException('Informe descrição de até 190 caracteres e valor maior que zero.');
+        }
+        if (!self::validDate($date)) throw new \InvalidArgumentException('Data de vencimento inválida.');
+        $stmt = $this->pdo->prepare('SELECT COUNT(*) FROM financial_categories WHERE tenant_id = :tenant AND id = :category');
+        $stmt->execute([':tenant' => $tenantId, ':category' => $categoryId]);
+        if (!(int)$stmt->fetchColumn()) throw new \InvalidArgumentException('Categoria não pertence à sua loja.');
+    }
+
 }
