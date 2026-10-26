@@ -627,7 +627,7 @@ class MasterController
         $mailDriver = Config::get('mail.driver', 'mock');
         $smtpHost = Config::get('mail.host', '');
 
-        if ($mailDriver === 'mock' && empty($smtpHost)) {
+        if ($mailDriver === 'mock') {
             Response::error('MAIL_NOT_CONFIGURED', 'Serviço de e-mail (SMTP) não configurado. Adicione as credenciais no arquivo .env.php para disparar e-mails.', 400);
             return;
         }
@@ -635,7 +635,7 @@ class MasterController
         // Gera token temporário de redefinição
         $token = bin2hex(random_bytes(32));
         $tokenHash = hash('sha256', $token);
-        $expiresAt = date('Y-m-d H:i:s', time() + 7200);
+        $expiresAt = date('Y-m-d H:i:s', time() + 3600);
 
         $stmtReset = $pdo->prepare("
             INSERT INTO password_resets (email, token_hash, expires_at)
@@ -647,7 +647,7 @@ class MasterController
             ':expires_at' => $expiresAt
         ]);
 
-        $sent = $this->mailer->sendPasswordReset($user['email'], $token);
+        $sent = $this->mailer->sendPasswordReset($user['email'], $user['name'] ?: 'Cliente', $token);
 
         $this->logAudit($admin['user_id'], 'resend_invite', 'client', $tenantId, [
             'email' => $user['email'],
