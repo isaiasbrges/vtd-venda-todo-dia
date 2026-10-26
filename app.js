@@ -710,7 +710,7 @@ function finance(current) {
     html += `<section class="panel" style="margin-bottom:18px"><div class="panel-head"><h2>Vencimentos e alertas</h2><span class="tag yellow">${d.overdue_count} atrasado(s)</span></div>
       ${alerts.map(a => `<p class="note">${esc(a.message)}</p>`).join('')}
       <p class="small muted">Compromissos atrasados: <strong>${money(d.overdue_cents)}</strong></p></section>
-      <section class="panel finance-calendar-panel"><h2>Calendário do mês</h2>${financeCalendar([...(d.upcoming || []), ...(d.overdue || [])])}<h2 style="margin-top:24px">Vencidos</h2>${financeAgendaList(d.overdue)}
+      <section class="panel finance-calendar-panel"><h2>Calendário do mês</h2>${financeCalendar(d.month_rows || [...(d.upcoming || []), ...(d.overdue || [])].filter(t => String(t.date).startsWith(state.financeMonth)))}<h2 style="margin-top:24px">Vencidos</h2>${financeAgendaList(d.overdue)}
       <h2 style="margin-top:24px">Próximos vencimentos</h2>${financeAgendaList(d.upcoming)}</section>`;
     return html;
   }
@@ -1068,7 +1068,7 @@ async function loadFinanceData() {
       api.get('/finance/overview', { month: state.financeMonth }),
       api.get('/finance/transactions', { month: state.financeMonth, search: state.txSearch, status: pending ? 'pending' : state.txStatus, type: suffix === 'payable' ? 'expense' : suffix === 'receivable' ? 'income' : state.txType }),
       api.get('/finance/categories'),
-      api.get('/finance/v2/dashboard', { month: state.financeMonth }).catch(() => null)
+      api.get('/finance/v2/dashboard', { month: state.financeMonth })
     ]);
 
     if (requestId !== financeRequestId || current !== route()) return;
