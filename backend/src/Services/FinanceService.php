@@ -50,7 +50,7 @@ class FinanceService
             GROUP BY type
         ");
         // Ajuste sintaxe MySQL vs SQLite
-        if (\VTD\Config\Config::get('db.driver') === 'mysql') {
+        if ($this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql') {
             $stmtMonth = $this->pdo->prepare("
                 SELECT type, SUM(value_cents) as total
                 FROM financial_transactions
@@ -76,7 +76,7 @@ class FinanceService
             WHERE tenant_id = :tid AND status = 'pending' AND strftime('%Y-%m', date) = :month
             GROUP BY type
         ");
-        if (\VTD\Config\Config::get('db.driver') === 'mysql') {
+        if ($this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql') {
             $stmtPending = $this->pdo->prepare("
                 SELECT type, SUM(value_cents) as total
                 FROM financial_transactions
@@ -101,7 +101,7 @@ class FinanceService
             FROM financial_transactions
             WHERE tenant_id = :tid AND status = 'paid' AND strftime('%Y-%m', COALESCE(settled_at, date)) = :month
         ");
-        if (\VTD\Config\Config::get('db.driver') === 'mysql') {
+        if ($this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql') {
             $stmtWeekly = $this->pdo->prepare("
                 SELECT COALESCE(settled_at, date) as date, type, value_cents
                 FROM financial_transactions
@@ -133,7 +133,7 @@ class FinanceService
             GROUP BY fc.name
             ORDER BY total DESC
         ");
-        if (\VTD\Config\Config::get('db.driver') === 'mysql') {
+        if ($this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql') {
             $stmtCat = $this->pdo->prepare("
                 SELECT fc.name, SUM(ft.value_cents) as total
                 FROM financial_transactions ft
@@ -179,7 +179,7 @@ class FinanceService
         $params = [':tid' => $tenantId];
 
         if (!empty($month)) {
-            if (\VTD\Config\Config::get('db.driver') === 'mysql') {
+            if ($this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'mysql') {
                 $conditions[] = "DATE_FORMAT(CASE WHEN ft.status = 'paid' THEN COALESCE(ft.settled_at, ft.date) ELSE ft.date END, '%Y-%m') = :month";
             } else {
                 $conditions[] = "strftime('%Y-%m', CASE WHEN ft.status = 'paid' THEN COALESCE(ft.settled_at, ft.date) ELSE ft.date END) = :month";
