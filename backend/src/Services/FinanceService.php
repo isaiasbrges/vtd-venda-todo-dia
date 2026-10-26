@@ -180,9 +180,9 @@ class FinanceService
 
         if (!empty($month)) {
             if (\VTD\Config\Config::get('db.driver') === 'mysql') {
-                $conditions[] = "DATE_FORMAT(ft.date, '%Y-%m') = :month";
+                $conditions[] = "DATE_FORMAT(CASE WHEN ft.status = 'paid' THEN COALESCE(ft.settled_at, ft.date) ELSE ft.date END, '%Y-%m') = :month";
             } else {
-                $conditions[] = "strftime('%Y-%m', ft.date) = :month";
+                $conditions[] = "strftime('%Y-%m', CASE WHEN ft.status = 'paid' THEN COALESCE(ft.settled_at, ft.date) ELSE ft.date END) = :month";
             }
             $params[':month'] = $month;
         }
