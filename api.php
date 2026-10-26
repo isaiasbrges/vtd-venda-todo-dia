@@ -56,6 +56,12 @@ $router->post('/finance/categories', [\VTD\Controllers\FinanceController::class,
 $router->delete('/finance/categories/{id}', [\VTD\Controllers\FinanceController::class, 'deleteCategory']);
 $router->get('/finance/export-csv', [\VTD\Controllers\FinanceController::class, 'exportCsv']);
 
+// Financeiro V2: painel consolidado, agenda e recorrências
+$router->get('/finance/v2/dashboard', [\VTD\Controllers\FinanceV2Controller::class, 'dashboard']);
+$router->post('/finance/v2/recurring', [\VTD\Controllers\FinanceV2Controller::class, 'createRecurring']);
+$router->post('/finance/v2/recurring/generate', [\VTD\Controllers\FinanceV2Controller::class, 'generateRecurring']);
+$router->post('/finance/v2/recurring/{id}/stop', [\VTD\Controllers\FinanceV2Controller::class, 'stopRecurring']);
+
 // Administração & Painel Master (Requer role admin)
 $router->get('/admin/overview', [\VTD\Controllers\AdminController::class, 'overview']);
 $router->get('/admin/clients', [\VTD\Controllers\AdminController::class, 'clients']);
