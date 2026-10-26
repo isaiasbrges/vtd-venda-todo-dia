@@ -22,6 +22,11 @@ class FinanceController
         $account = (new PlanMiddleware())->handle($request);
         $month = (string)$request->query('month', date('Y-m'));
 
+        if (!preg_match('/^\\d{4}-(0[1-9]|1[0-2])$/', $month)) {
+            Response::error('VALIDATION_ERROR', 'Mês inválido.', 422);
+            return;
+        }
+
         $overview = $this->service->calculateMonthOverview($account['tenant_id'], $month);
         Response::json($overview);
     }
@@ -35,6 +40,11 @@ class FinanceController
             'status' => (string)$request->query('status', ''),
             'type'   => (string)$request->query('type', '')
         ];
+
+        if (!preg_match('/^\\d{4}-(0[1-9]|1[0-2])$/', $month)) {
+            Response::error('VALIDATION_ERROR', 'Mês inválido.', 422);
+            return;
+        }
 
         $transactions = $this->service->getTransactions($account['tenant_id'], $month, $filters);
         Response::json($transactions);
@@ -166,6 +176,11 @@ class FinanceController
     {
         $account = (new PlanMiddleware())->handle($request);
         $month = (string)$request->query('month', date('Y-m'));
+
+        if (!preg_match('/^\\d{4}-(0[1-9]|1[0-2])$/', $month)) {
+            Response::error('VALIDATION_ERROR', 'Mês inválido.', 422);
+            return;
+        }
 
         $txs = $this->service->getTransactions($account['tenant_id'], $month);
 
