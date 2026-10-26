@@ -311,7 +311,8 @@ class WebhookReceiverController
 
                 $pdo->commit();
 
-                // Disparo de e-mail de acesso caso seja novo usuário
+                // Notificações não podem desfazer uma compra já persistida.
+                try {
                 if ($isNew) {
                     if ($isReprocess) {
                         $resetToken = (new AuthController())->createPasswordResetToken($buyerEmail);
@@ -324,9 +325,13 @@ class WebhookReceiverController
                     error_log('VTD: falha no e-mail de upgrade para evento ' . $eventId);
                 }
 
+                } catch (\Throwable $mailError) {
+                    error_log('VTD: falha ao notificar comprador após gravar compra ' . $eventId . ': ' . $mailError->getMessage());
+                }
+
                 return ['success' => true, 'message' => "Acesso liberado com sucesso para o produto '{$internalProduct}'."];
             } catch (\Throwable $e) {
-                $pdo->rollBack();
+                if ($pdo->inTransaction()) $pdo->rollBack();
                 $pdo->prepare("UPDATE integration_events SET status = 'failed', failure_reason = :reason WHERE id = :id")
                     ->execute([':reason' => $e->getMessage(), ':id' => $eventId]);
                 return ['success' => false, 'message' => $e->getMessage()];
