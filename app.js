@@ -151,7 +151,8 @@ let S = {
   transactions: [],
   financeStats: { start: 0, inc: 0, out: 0, balance: 0, projected: 0 },
   chartWeekly: { income: [0,0,0,0,0], expense: [0,0,0,0,0] },
-  chartCategories: []
+  chartCategories: [],
+  financeV2: null
 };
 
 let state = {
@@ -562,7 +563,7 @@ function chapterText(html) {
 
 function financeNav(current) {
   return `<nav class="financial-nav" aria-label="Seções financeiras">
-    ${[['finance', 'Visão geral'], ['finance/transactions', 'Lançamentos'], ['finance/payable', 'A pagar'], ['finance/receivable', 'A receber'], ['finance/categories', 'Categorias'], ['finance/reports', 'Relatórios']].map(([r, t]) => link(t, r, ' ' + (current === r ? 'active' : ''))).join('')}
+    ${[['finance', 'Visão geral'], ['finance/transactions', 'Lançamentos'], ['finance/payable', 'A pagar'], ['finance/receivable', 'A receber'], ['finance/categories', 'Categorias'], ['finance/reports', 'Relatórios'], ['finance/agenda', 'Agenda'], ['finance/recurring', 'Recorrências']].map(([r, t]) => link(t, r, ' ' + (current === r ? 'active' : ''))).join('')}
   </nav>`;
 }
 
@@ -626,6 +627,10 @@ function txTable(list) {
   </table></div>` : `<div class="empty">${icon('wallet')}<h3>Nenhum lançamento encontrado.</h3><p>Adicione um lançamento ou selecione outro período.</p>${btn('Novo lançamento', 'new-tx', 'primary')}</div>`;
 }
 
+function financeAgendaList(rows) {
+  return rows?.length ? rows.map(t => `<div class="detail-row"><span><strong>${esc(t.description)}</strong><small style="display:block">${day(t.date)} · ${t.type === 'income' ? 'A receber' : 'A pagar'}</small></span><strong>${money(Number(t.value_cents))}</strong></div>`).join('') : '<p class="small muted" style="padding:14px 0">Nenhum compromisso neste período.</p>';
+}
+
 function finance(current) {
   if (S.plan !== 'plus') {
     return head('Controle financeiro', 'Acompanhe as finanças, entradas e saídas da sua loja.') +
@@ -638,9 +643,28 @@ function finance(current) {
   }
 
   const suffix = current.split('/')[1] || '';
-  const title = { transactions: 'Lançamentos', payable: 'Contas a pagar', receivable: 'Contas a receber', categories: 'Categorias', reports: 'Relatórios' }[suffix] || 'Seu dinheiro, com clareza.';
+  const title = { transactions: 'Lançamentos', payable: 'Contas a pagar', receivable: 'Contas a receber', categories: 'Categorias', reports: 'Relatórios', agenda: 'Agenda financeira', recurring: 'Receitas e despesas recorrentes' }[suffix] || 'Seu dinheiro, com clareza.';
   let html = financeHeader(title, 'Acompanhe os valores realizados e os compromissos previstos da sua loja.') + financeNav(current);
 
+  if (suffix === 'agenda') {
+    const d = S.financeV2?.agenda || {upcoming:[],overdue:[],overdue_count:0,overdue_cents:0};
+    const alerts = S.financeV2?.alerts || [];
+    html += `<section class="panel" style="margin-bottom:18px"><div class="panel-head"><h2>Vencimentos e alertas</h2><span class="tag yellow">${d.overdue_count} atrasado(s)</span></div>
+      ${alerts.map(a => `<p class="note">${esc(a.message)}</p>`).join('')}
+      <p class="small muted">Compromissos atrasados: <strong>${money(d.overdue_cents)}</strong></p></section>
+      <section class="panel"><h2>Vencidos</h2>${financeAgendaList(d.overdue)}
+      <h2 style="margin-top:24px">Próximos vencimentos</h2>${financeAgendaList(d.upcoming)}</section>`;
+    return html;
+  }
+  if (suffix === 'recurring') {
+    const rules = S.financeV2?.recurring || [];
+    html += `<section class="panel"><div class="panel-head"><h2>Recorrências mensais</h2>${btn(icon('plus') + ' Nova recorrência', 'new-recurring', 'primary')}</div>
+      <p class="muted small">Cadastre uma vez, depois gere os lançamentos do mês selecionado. Gerar novamente não duplica.</p>
+      <div style="margin:16px 0">${btn('Gerar lançamentos de ' + state.financeMonth, 'generate-recurring', 'primary')}</div>
+      ${rules.length ? rules.map(x => `<div class="detail-row"><span><strong>${esc(x.description)}</strong><small style="display:block">${x.type === 'income' ? 'Receita' : 'Despesa'} · dia ${Number(x.day_of_month)} · ${money(Number(x.value_cents))}</small></span><span>${Number(x.is_active) ? btn('Desativar','stop-recurring','small',`data-id="${esc(x.id)}"`) : '<span class="tag">Inativa</span>'}</span></div>`).join('') : '<p class="muted">Nenhuma recorrência cadastrada.</p>'}
+      </section>`;
+    return html;
+  }
   if (suffix === 'categories') {
     html += `<section class="panel">
       <div class="panel-head"><h2>Organize seus lançamentos</h2>${btn(icon('plus') + ' Nova categoria', 'new-category', 'primary')}</div>
@@ -651,6 +675,10 @@ function finance(current) {
   }
 
   html += stats();
+  if (!suffix && S.financeV2) {
+    const d = S.financeV2.agenda || {};
+    html += `<section class="panel" style="margin-bottom:20px"><div class="panel-head"><h2>Próximos compromissos</h2>${link('Abrir agenda →','finance/agenda','link')}</div><p class="small muted">${Number(d.overdue_count || 0)} vencido(s) · ${money(Number(d.overdue_cents || 0))} em atraso</p>${financeAgendaList((d.upcoming || []).slice(0,4))}</section>`;
+  }
 
   if (['transactions', 'payable', 'receivable'].includes(suffix)) {
     let list = S.transactions.filter(t =>
@@ -978,10 +1006,11 @@ async function loadFinanceData() {
   const suffix = current.split('/')[1];
   const pending = ['payable', 'receivable'].includes(suffix);
   try {
-    const [overview, txs, cats] = await Promise.all([
+    const [overview, txs, cats, financeV2] = await Promise.all([
       api.get('/finance/overview', { month: state.financeMonth }),
       api.get('/finance/transactions', { month: state.financeMonth, search: state.txSearch, status: pending ? 'pending' : state.txStatus, type: suffix === 'payable' ? 'expense' : suffix === 'receivable' ? 'income' : state.txType }),
-      api.get('/finance/categories')
+      api.get('/finance/categories'),
+      api.get('/finance/v2/dashboard', { month: state.financeMonth }).catch(() => null)
     ]);
 
     if (requestId !== financeRequestId || current !== route()) return;
@@ -990,6 +1019,7 @@ async function loadFinanceData() {
     S.chartCategories = overview.categories || [];
     S.transactions = txs || [];
     S.categories = cats || [];
+    S.financeV2 = financeV2;
   } catch (e) {
     throw e;
   }
@@ -1682,6 +1712,606 @@ document.addEventListener('click', async e => {
       toast('Anotação salva com sucesso.');
     } catch (error) { toast('Não foi possível salvar a anotação. Seu texto continua aqui para tentar novamente.'); }
     finally { el.disabled = false; }
+    return;
+  }
+  if (a === 'new-recurring') {
+    if (!S.categories.length) { toast('Crie uma categoria antes de cadastrar recorrências.'); return; }
+    modal('Nova recorrência mensal', `
+      <div class="fields">
+        ${field('Descrição','description','')}
+        ${field('Valor em R
+    transactionModal(id);
+    return;
+  }
+  if (a === 'delete-tx') {
+    modal('Excluir lançamento?', `<p>Este lançamento será removido permanentemente do controle financeiro.</p>${btn('Confirmar exclusão', 'confirm-delete-tx', 'danger', `data-id="${id}"`)}`);
+    return;
+  }
+  if (a === 'confirm-delete-tx') {
+    try {
+      await api.delete('/finance/transactions/' + id);
+      $('#modal').close();
+      await loadFinanceData();
+      render();
+      toast('Lançamento excluído com sucesso.');
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+  if (a === 'settle-tx') {
+    const t = S.transactions.find(x => x.id === id);
+    modal(t?.type === 'income' ? 'Registrar recebimento' : 'Registrar pagamento', `
+      <input type="hidden" name="id" value="${id}">
+      ${field('Data efetiva do pagamento / recebimento', 'date', today(), 'date')}
+      <p class="storage-note">O valor passará para o realizado no mês da data efetiva informada.</p>
+    `, 'Confirmar', 'settle');
+    return;
+  }
+  if (a === 'new-category') {
+    modal('Nova categoria', field('Nome da categoria', 'name'), 'Adicionar', 'category');
+    return;
+  }
+  if (a === 'delete-category') {
+    const catId = el.dataset.id;
+    try {
+      await api.delete('/finance/categories/' + catId);
+      await loadFinanceData();
+      render();
+      toast('Categoria excluída com sucesso.');
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+  if (a === 'export-csv') {
+    window.location.href = `/api/finance/export-csv?month=${encodeURIComponent(state.financeMonth)}`;
+    toast('Gerando download do arquivo CSV...');
+    return;
+  }
+  if (a === 'new-supplier' || a === 'edit-supplier') {
+    supplierModal(id);
+    return;
+  }
+  if (a === 'new-client' || a === 'edit-client') {
+    clientModal(id);
+    return;
+  }
+  if (a === 'toggle-client') {
+    try {
+      await api.patch('/admin/clients/' + id + '/toggle');
+      const clients = await api.get('/admin/clients');
+      S.clients = clients;
+      render();
+      toast('Acesso do cliente atualizado.');
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+  if (a === 'edit-chapter') {
+    const c = S.chapters[index];
+    modal('Editar capítulo', `
+      <input type="hidden" name="index" value="${index}">
+      ${field('Título', 'title', c.title)}
+      <div class="field" style="margin-top:15px">
+        <label for="chapter-editor">Conteúdo (texto simples)</label>
+        <textarea id="chapter-editor" name="body" style="min-height:260px">${esc(chapterText(c.body))}</textarea>
+      </div>
+      <div class="field" style="margin-top:15px">
+        <label for="task-editor">Tarefa do capítulo</label>
+        <textarea name="task" id="task-editor">${esc(c.task)}</textarea>
+      </div>
+    `, 'Salvar capítulo', 'chapter');
+    return;
+  }
+  if (a === 'edit-month') {
+    const m = S.months[index];
+    modal('Editar ' + esc(m.n), `
+      <input type="hidden" name="index" value="${index}">
+      <div class="field"><label for="m-lead">Apresentação</label><textarea id="m-lead" name="lead">${esc(m.lead)}</textarea></div>
+      <div class="field" style="margin-top:14px"><label for="m-buy">Orientação de compra</label><textarea id="m-buy" name="buy">${esc(m.buy)}</textarea></div>
+      <div class="field" style="margin-top:14px"><label for="m-tip">Dica prática</label><textarea id="m-tip" name="tip">${esc(m.tip)}</textarea></div>
+      <div class="field" style="margin-top:14px">
+        <label for="m-items">Produtos (um por linha; tipo: febre, estação ou coringa)</label>
+        <textarea id="m-items" name="items">${esc((m.items || []).map(([s, k]) => s + ' | ' + ({ f: 'febre', e: 'estação', c: 'coringa' })[k]).join('\n'))}</textarea>
+      </div>
+    `, 'Salvar mês', 'month');
+    return;
+  }
+
+  // --- AÇÕES DO PAINEL MASTER ---
+  if (a === 'master-new-client') {
+    masterClientModal();
+    return;
+  }
+  if (a === 'master-manage-client') {
+    masterClientDetailModal(id);
+    return;
+  }
+  if (a === 'master-toggle-client') {
+    try {
+      const res = await api.patch('/master/clients/' + id + '/toggle');
+      toast('Status do cliente alterado para ' + (res.status === 'active' ? 'Liberado' : 'Suspenso'));
+      if ($('#modal').open) await masterClientDetailModal(id);
+      else await render();
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+  if (a === 'master-resend-invite') {
+    try {
+      const res = await api.post('/master/clients/' + id + '/resend-invite');
+      toast(res.message || 'Convite reenviado com sucesso.');
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+  if (a === 'master-revoke-access') {
+    const tenantId = el.dataset.tenant;
+    const accessId = el.dataset.access;
+    if (confirm('Deseja realmente revogar este produto específico? Se o cliente possuir outros produtos ativos, eles serão mantidos.')) {
+      try {
+        await api.delete('/master/clients/' + tenantId + '/accesses/' + accessId);
+        toast('Produto revogado com sucesso.');
+        $('#modal').close();
+        render();
+      } catch (err) {
+        toast(err.message);
+      }
+    }
+    return;
+  }
+  if (a === 'master-new-integration') {
+    masterIntegrationModal();
+    return;
+  }
+  if (a === 'master-configure-integration' || a === 'master-edit-integration') {
+    try {
+      let integ = masterState.integrations.find(x => String(x.id) === String(id));
+      if (!integ) {
+        const list = await api.get('/master/integrations');
+        masterState.integrations = list;
+        integ = list.find(x => String(x.id) === String(id));
+      }
+      masterIntegrationModal(integ || null);
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+  if (a === 'master-toggle-integration') {
+    try {
+      await api.patch('/master/integrations/' + id + '/toggle');
+      toast('Status da integração atualizado com sucesso.');
+      render();
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+  if (a === 'master-copy-webhook-url') {
+    const url = el.dataset.url;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(() => {
+        toast('URL do webhook copiada para a área de transferência!');
+      }).catch(() => {
+        prompt('Copie a URL abaixo:', url);
+      });
+    } else {
+      prompt('Copie a URL abaixo:', url);
+    }
+    return;
+  }
+  if (a === 'master-goto-failed-events') {
+    masterState.eventStatus = 'failed';
+    go('master/events');
+    return;
+  }
+  if (a === 'master-review-event') {
+    masterReviewEventModal(id);
+    return;
+  }
+  if (a === 'master-reprocess-event') {
+    try {
+      const res = await api.post('/master/events/' + id + '/reprocess');
+      toast(res.message || 'Evento reprocessado com sucesso!');
+      $('#modal').close();
+      render();
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+  if (a === 'master-clients-page') {
+    const p = Number(el.dataset.page);
+    if (p >= 1 && p <= masterState.clientTotalPages) {
+      masterState.clientPage = p;
+      render();
+    }
+    return;
+  }
+  if (a === 'master-events-page') {
+    const p = Number(el.dataset.page);
+    if (p >= 1 && p <= masterState.eventTotalPages) {
+      masterState.eventPage = p;
+      render();
+    }
+    return;
+  }
+  } catch (error) {
+    toast(error.message || 'Não foi possível concluir a ação. Tente novamente.');
+  } finally {
+    delete el.dataset.pending;
+    el.disabled = wasDisabled;
+  }
+});
+
+document.addEventListener('submit', async e => {
+  const form = e.target.closest('[data-form]');
+  if (!form) return;
+  e.preventDefault();
+  if (form.dataset.submitting) return;
+  form.querySelector('.form-feedback')?.remove();
+  form.dataset.submitting = 'true';
+  form.setAttribute('aria-busy', 'true');
+  const submitButtons = [...form.querySelectorAll('button[type="submit"]')];
+  const labels = submitButtons.map(button => button.innerHTML);
+  submitButtons.forEach(button => { button.disabled = true; button.textContent = 'Aguarde…'; });
+  try {
+  const d = Object.fromEntries(new FormData(form));
+  const kind = form.dataset.form;
+
+  if (kind === 'login') {
+    try {
+      const res = await api.post('/auth/login', { email: d.email, password: d.password });
+      S.session = true;
+      S.name = res.user.name;
+      S.email = res.user.email;
+      S.role = res.user.role;
+      S.plan = res.tenant.plan;
+      S.store = res.tenant.name;
+      S.initialBalance = res.tenant.initial_balance_cents;
+      api.csrfToken = res.csrf_token;
+      await loadInitialData();
+      if (res.user.role === 'admin') {
+        go('master/overview');
+      } else {
+        go('home');
+      }
+      toast('Bem-vindo(a) ao Venda Todo Dia!');
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+
+  if (kind === 'recovery') {
+    try {
+      await api.post('/auth/forgot-password', { email: d.email });
+      toast('Se o e-mail estiver cadastrado, as instruções foram enviadas.');
+      go('login');
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+
+  if (kind === 'reset-password') {
+    if (d.new_password.length < 6 || d.new_password !== d.confirm_password) {
+      formError(form, 'Informe uma senha com pelo menos 6 caracteres e confirme a mesma senha.');
+      return;
+    }
+    try {
+      await api.post('/auth/reset-password', { token: d.token, new_password: d.new_password });
+      toast('Sua senha foi redefinida com sucesso!');
+      go('login');
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+
+  if (kind === 'profile') {
+    const amount = Number(d.initialBalance);
+    if (!Number.isFinite(amount)) {
+      formError(form, 'Informe um saldo válido.');
+      return;
+    }
+    try {
+      await api.put('/me', {
+        name: d.name.trim(),
+        store: d.store.trim(),
+        email: d.email.trim(),
+        initial_balance_cents: Math.round(amount * 100)
+      });
+      S.name = d.name.trim();
+      S.store = d.store.trim();
+      S.email = d.email.trim();
+      S.initialBalance = Math.round(amount * 100);
+      render();
+      toast('Preferências salvas com sucesso.');
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+
+  if (kind === 'transaction') {
+    const value = Math.round(Number(d.value) * 100);
+    if (!Number.isFinite(value) || value <= 0 || !d.description.trim()) {
+      formError(form, 'Preencha uma descrição e um valor maior que zero.');
+      return;
+    }
+    const payload = {
+      description: d.description.trim(),
+      type: d.type,
+      value_cents: value,
+      category_id: Number(d.category_id),
+      date: d.date,
+      status: d.status
+    };
+    try {
+      if (d.id) {
+        await api.put('/finance/transactions/' + d.id, payload);
+      } else {
+        await api.post('/finance/transactions', payload);
+      }
+      $('#modal').close();
+      await loadFinanceData();
+      render();
+      toast('Lançamento salvo com sucesso.');
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+
+  if (kind === 'settle') {
+    try {
+      await api.post('/finance/transactions/' + d.id + '/settle', { effective_date: d.date });
+      $('#modal').close();
+      await loadFinanceData();
+      render();
+      toast('Quitação registrada com sucesso.');
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+
+  if (kind === 'category') {
+    const c = d.name.trim();
+    if (!c) {
+      toast('Informe um nome de categoria.');
+      return;
+    }
+    try {
+      await api.post('/finance/categories', { name: c });
+      $('#modal').close();
+      await loadFinanceData();
+      render();
+      toast('Categoria criada com sucesso.');
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+
+  if (kind === 'client') {
+    try {
+      if (d.id) {
+        await api.put('/admin/clients/' + d.id, {
+          name: d.name.trim(),
+          email: d.email.trim(),
+          store: d.store.trim(),
+          plan: d.plan,
+          active: d.active === 'true',
+          password: d.password || undefined
+        });
+        toast('Cliente atualizado com sucesso.');
+      } else {
+        await api.post('/admin/clients', {
+          name: d.name.trim(),
+          email: d.email.trim(),
+          password: d.password,
+          store: d.store.trim(),
+          plan: d.plan
+        });
+        toast('Cliente cadastrado com sucesso! As credenciais de acesso foram enviadas por e-mail.');
+      }
+      $('#modal').close();
+      const clients = await api.get('/admin/clients');
+      S.clients = clients;
+      render();
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+
+  if (kind === 'supplier') {
+    try {
+      const payload = {
+        nome: d.nome.trim(),
+        seg: d.seg.trim(),
+        produtos: d.produtos.trim(),
+        categoria: d.categoria.trim(),
+        site: d.site,
+        ig: d.ig,
+        wa: d.wa ? [d.wa] : [],
+        cat: d.cat ? [d.cat] : [],
+        email: d.email,
+        tel: d.tel ? [d.tel] : [],
+        nota: d.nota
+      };
+      if (d.id) await api.put('/admin/suppliers/' + d.id, payload);
+      else await api.post('/admin/suppliers', payload);
+      $('#modal').close();
+      const res = await api.get('/suppliers', { search: state.search, page: state.page, limit: 12 });
+      S.suppliers = res.suppliers;
+      state.totalSuppliers = res.total;
+      state.totalPages = res.total_pages;
+      render();
+      toast(d.id ? 'Fornecedor atualizado com sucesso.' : 'Fornecedor cadastrado com sucesso.');
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+
+  if (kind === 'chapter') {
+    try {
+      await api.put('/admin/chapters/' + d.index, {
+        title: d.title.trim(),
+        body: d.body === chapterText(S.chapters[Number(d.index)].body) ? S.chapters[Number(d.index)].body : d.body.split(/\n\s*\n/).map(p => '<p>' + esc(p) + '</p>').join(''),
+        task: d.task.trim()
+      });
+      $('#modal').close();
+      S.chapters = await api.get('/chapters');
+      render();
+      toast('Capítulo atualizado com sucesso.');
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+
+  if (kind === 'month') {
+    const items = d.items.split('\n').filter(x => x.trim()).map(line => {
+      const [t, k = 'coringa'] = line.split('|');
+      return [t.trim(), ({ 'febre': 'f', 'estação': 'e', 'estacao': 'e', 'coringa': 'c' })[k.trim().toLowerCase()] || 'c'];
+    });
+    if (!items.length) {
+      formError(form, 'Adicione pelo menos um produto ao mês.');
+      return;
+    }
+    try {
+      await api.put('/admin/calendar/' + d.index, {
+        lead: d.lead,
+        buy: d.buy,
+        tip: d.tip,
+        items: items
+      });
+      $('#modal').close();
+      S.months = await api.get('/calendar');
+      render();
+      toast('Mês atualizado com sucesso.');
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+
+  if (kind === 'master-client') {
+    try {
+      const res = await api.post('/master/clients', {
+        name: d.name.trim(),
+        email: d.email.trim(),
+        store: d.store.trim(),
+        offer: d.offer,
+        status: d.status,
+        expires_at: d.expires_at || null,
+        send_invite: form.querySelector('[name="send_invite"]')?.checked ? true : false
+      });
+      $('#modal').close();
+      const inviteMsg = res.invite_message ? ' ' + res.invite_message : '';
+      toast((res.is_existing ? 'Oferta vinculada à conta existente!' : 'Cliente cadastrado com sucesso!') + inviteMsg);
+      render();
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+
+  if (kind === 'master-integration') {
+    const lines = (d.offer_mappings_text || '').split('\n');
+    const mappings = Object.create(null);
+    for (const line of lines) {
+      if (!line.trim()) continue;
+      const parts = line.split('=');
+      if (parts.length === 2) {
+        const k = parts[0].trim();
+        const v = parts[1].trim();
+        if (!k || !['kit-plus', 'kit-essencial'].includes(v) || Object.hasOwn(mappings, k)) {
+          formError(form, 'Cada código externo deve aparecer uma vez e apontar para kit-plus ou kit-essencial.');
+          return;
+        }
+        mappings[k] = v;
+      } else { formError(form, 'Use uma oferta por linha: codigo_externo = kit-plus ou kit-essencial.'); return; }
+    }
+    const payload = {
+      name: d.name.trim(),
+      provider: d.provider,
+      environment: d.environment,
+      status: d.status,
+      offer_mappings: mappings
+    };
+    if (d.secret_key?.trim()) payload.secret_key = d.secret_key.trim();
+    try {
+      if (d.id) {
+        await api.put('/master/integrations/' + d.id, payload);
+        toast('Integração atualizada com sucesso!');
+      } else {
+        await api.post('/master/integrations', payload);
+        toast('Nova integração cadastrada com sucesso!');
+      }
+      $('#modal').close();
+      render();
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+
+  if (kind === 'master-settings') {
+    try {
+      await api.post('/master/settings', {
+        support_email: d.support_email.trim(),
+        support_whatsapp: d.support_whatsapp.trim()
+      });
+      toast('Configurações do Master salvas com sucesso!');
+      render();
+    } catch (err) {
+      toast(err.message);
+    }
+    return;
+  }
+  } catch (error) {
+    formError(form, error.message || 'Não foi possível concluir a ação.');
+  } finally {
+    delete form.dataset.submitting;
+    form.removeAttribute('aria-busy');
+    submitButtons.forEach((button, i) => { button.disabled = false; button.innerHTML = labels[i]; });
+  }
+});
+
+// Inicialização da aplicação
+render();
+,'value','','number')}
+        ${select('Tipo','type',[['expense','Despesa'],['income','Receita']],'expense')}
+        ${select('Categoria','category_id',S.categories.map(c=>[c.id,c.name]),S.categories[0].id)}
+        ${field('Dia do vencimento (1–31)','day_of_month','10','number')}
+        ${field('Começa em','starts_on',today(),'date')}
+      </div>
+      <p class="storage-note">Para meses mais curtos, o vencimento será o último dia do mês.</p>
+    `, 'Criar recorrência', 'recurring');
+    return;
+  }
+  if (a === 'generate-recurring') {
+    try {
+      const res = await api.post('/finance/v2/recurring/generate', {month:state.financeMonth});
+      await loadFinanceData(); render(); toast((res.created || 0)+' lançamento(s) gerado(s).');
+    } catch (e) {toast(e.message);}
+    return;
+  }
+  if (a === 'stop-recurring') {
+    try {
+      await api.post('/finance/v2/recurring/'+encodeURIComponent(id)+'/stop',{});
+      await loadFinanceData(); render(); toast('Recorrência desativada.');
+    } catch(e){toast(e.message);}
     return;
   }
   if (a === 'new-tx' || a === 'edit-tx') {
