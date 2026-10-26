@@ -281,7 +281,7 @@ function shell(body, current) {
       ${S.role === 'admin' ? `<a href="#/master/overview" class="${section === 'master' || section === 'admin' ? 'active' : ''}">${icon('shield')}Painel Master</a>` : ''}
     </nav>
     <div class="side-bottom">
-      <div class="side-note"><b>${S.plan === 'plus' ? 'Kit + Financeiro' : 'Kit Essencial'}</b>${esc(S.store || 'Minha Loja')}</div>
+      <div class="side-note"><b>${S.plan === 'plus' ? 'VTD Completo' : 'VTD — Acesso básico'}</b>${esc(S.store || 'Minha Loja')}</div>
       <a href="#/account">${icon('user')}Minha conta</a>
       <a href="#/help">${icon('help')}Ajuda</a>
       <a href="vendas.html">${icon('external')}Página de vendas</a>
@@ -320,8 +320,8 @@ function login(recovery = false) {
   return `<div class="login">
     <section class="login-visual">
       ${logo()}
-      <h1>Sua próxima venda começa aqui.</h1>
-      <p>Fornecedores, calendário comercial e orientação prática para sua loja.</p>
+      <h1>Seu negócio em uma nova fase.</h1>
+      <p>Tudo para vender melhor, organizar suas finanças e fazer seu negócio crescer.</p>
     </section>
     <section class="login-form">
       <div class="eyebrow">Acesso à Plataforma</div>
@@ -561,6 +561,33 @@ function chapterText(html) {
   return doc.body.textContent.replace(/\n{3,}/g, '\n\n').trim();
 }
 
+function vtdGreeting() {
+  const hour = new Date().getHours();
+  return hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite';
+}
+
+function financeWelcome() {
+  const firstName = esc((S.name || 'lojista').trim().split(/\s+/)[0]);
+  const overdue = Number(S.financeV2?.agenda?.overdue_count || 0);
+  return `<section class="finance-welcome" aria-label="Resumo financeiro">
+    <div class="finance-welcome-copy">
+      <span class="eyebrow">VTD · VISÃO FINANCEIRA</span>
+      <h2>${vtdGreeting()}, ${firstName}! <span aria-hidden="true">👋</span></h2>
+      <p>Seu negócio em movimento. Acompanhe o caixa, organize seus compromissos e planeje o próximo passo.</p>
+      <div class="finance-welcome-actions">
+        ${link(icon('calendar')+' Agenda financeira', 'finance/agenda', 'btn')}
+        ${link(icon('chart')+' Ver relatórios', 'finance/reports', 'btn')}
+      </div>
+    </div>
+    <aside class="finance-welcome-insight">
+      <span class="eyebrow">SALDO PROJETADO</span>
+      <strong>${money(Number(S.financeStats?.projected || 0))}</strong>
+      <span class="finance-insight-caption">Considerando os valores pendentes do mês</span>
+      <span class="finance-insight-status">${overdue ? overdue+' compromisso(s) vencido(s)' : 'Nenhum vencimento atrasado'}</span>
+    </aside>
+  </section>`;
+}
+
 function financeNav(current) {
   return `<nav class="financial-nav" aria-label="Seções financeiras">
     ${[['finance', 'Visão geral'], ['finance/transactions', 'Lançamentos'], ['finance/payable', 'A pagar'], ['finance/receivable', 'A receber'], ['finance/categories', 'Categorias'], ['finance/reports', 'Relatórios'], ['finance/agenda', 'Agenda'], ['finance/recurring', 'Recorrências']].map(([r, t]) => link(t, r, ' ' + (current === r ? 'active' : ''))).join('')}
@@ -570,7 +597,12 @@ function financeNav(current) {
 function stats() {
   const t = S.financeStats;
   return `<div class="stats">
-    ${[['Saldo inicial', t.start, 'wallet'], ['Entradas recebidas', t.inc, 'up'], ['Saídas pagas', t.out, 'down'], ['Saldo atual', t.balance, 'chart']].map(([l, v, i]) => `<div class="stat">${icon(i)}<small>${l}</small><strong>${money(v)}</strong></div>`).join('')}
+    ${[['Saldo inicial', t.start, 'wallet', 'Abertura do período'], ['Entradas recebidas', t.inc, 'up', 'Recebidas no mês'], ['Saídas pagas', t.out, 'down', 'Pagas no mês'], ['Saldo atual', t.balance, 'chart', 'Disponível no período']].map(([l,v,i,d])=>`
+      <div class="stat" aria-label="${l}: ${money(v)}">
+        <div class="stat-icon">${icon(i)}</div>
+        <small>${l}</small><strong>${money(v)}</strong>
+        <span class="stat-meta">${d}</span>
+      </div>`).join('')}
   </div>`;
 }
 
@@ -585,13 +617,13 @@ function chart() {
   const pts = a => a.map((v, i) => `${50 + i * 110},${170 - v / max * 130}`).join(' ');
 
   return `<svg class="chart" viewBox="0 0 530 210" role="img" aria-label="Entradas e saídas pagas por semana do mês">
-    <g stroke="#e9e9e2">${[40, 83, 126, 170].map(y => `<path d="M40 ${y}H505"/>`).join('')}</g>
-    <g font-size="10" fill="#888">${[0, 1, 2, 3, 4].map(i => `<text x="${38 + i * 110}" y="198">${i * 7 + 1}–${Math.min(i * 7 + 7, 31)}</text>`).join('')}</g>
-    <polyline points="${pts(inc)}" fill="none" stroke="#ebc500" stroke-width="3"/>
-    <polyline points="${pts(out)}" fill="none" stroke="#222" stroke-width="2"/>
-    ${inc.map((v, i) => `<circle cx="${50 + i * 110}" cy="${170 - v / max * 130}" r="4" fill="#ebc500"><title>Semana ${i + 1}: entradas ${money(v)}</title></circle>`).join('')}
+    <g stroke="#303538">${[40, 83, 126, 170].map(y => `<path d="M40 ${y}H505"/>`).join('')}</g>
+    <g font-size="10" fill="#929d9a">${[0, 1, 2, 3, 4].map(i => `<text x="${38 + i * 110}" y="198">${i * 7 + 1}–${Math.min(i * 7 + 7, 31)}</text>`).join('')}</g>
+    <polyline points="${pts(inc)}" fill="none" stroke="#ffdc18" stroke-width="3"/>
+    <polyline points="${pts(out)}" fill="none" stroke="#77bd9d" stroke-width="2"/>
+    ${inc.map((v, i) => `<circle cx="${50 + i * 110}" cy="${170 - v / max * 130}" r="4" fill="#ffdc18"><title>Semana ${i + 1}: entradas ${money(v)}</title></circle>`).join('')}
   </svg>
-  <div class="chart-legend"><span><i></i>Entradas recebidas</span><span><i style="background:#222"></i>Saídas pagas</span></div>`;
+  <div class="chart-legend"><span><i></i>Entradas recebidas</span><span><i style="background:#77bd9d"></i>Saídas pagas</span></div>`;
 }
 
 function categoriesChart() {
@@ -669,7 +701,8 @@ function finance(current) {
 
   const suffix = current.split('/')[1] || '';
   const title = { transactions: 'Lançamentos', payable: 'Contas a pagar', receivable: 'Contas a receber', categories: 'Categorias', reports: 'Relatórios', agenda: 'Agenda financeira', recurring: 'Receitas e despesas recorrentes' }[suffix] || 'Seu dinheiro, com clareza.';
-  let html = financeHeader(title, 'Acompanhe os valores realizados e os compromissos previstos da sua loja.') + financeNav(current);
+  let html = financeHeader(title, 'Receitas, despesas e vencimentos da sua loja em um só lugar.') +
+    (!suffix ? financeWelcome() : '') + financeNav(current);
 
   if (suffix === 'agenda') {
     const d = S.financeV2?.agenda || {upcoming:[],overdue:[],overdue_count:0,overdue_cents:0};
@@ -677,7 +710,7 @@ function finance(current) {
     html += `<section class="panel" style="margin-bottom:18px"><div class="panel-head"><h2>Vencimentos e alertas</h2><span class="tag yellow">${d.overdue_count} atrasado(s)</span></div>
       ${alerts.map(a => `<p class="note">${esc(a.message)}</p>`).join('')}
       <p class="small muted">Compromissos atrasados: <strong>${money(d.overdue_cents)}</strong></p></section>
-      <section class="panel"><h2>Calendário do mês</h2>${financeCalendar([...(d.upcoming || []), ...(d.overdue || [])])}<h2 style="margin-top:24px">Vencidos</h2>${financeAgendaList(d.overdue)}
+      <section class="panel finance-calendar-panel"><h2>Calendário do mês</h2>${financeCalendar([...(d.upcoming || []), ...(d.overdue || [])])}<h2 style="margin-top:24px">Vencidos</h2>${financeAgendaList(d.overdue)}
       <h2 style="margin-top:24px">Próximos vencimentos</h2>${financeAgendaList(d.upcoming)}</section>`;
     return html;
   }
@@ -734,8 +767,8 @@ function finance(current) {
   }
 
   html += `<div class="finance-grid">
-    <section class="panel"><div class="panel-head"><h2>Fluxo de caixa</h2><span class="tag yellow">Semanal</span></div>${chart()}</section>
-    <section class="panel"><div class="panel-head"><h2>Despesas por categoria</h2></div>${categoriesChart()}</section>
+    <section class="panel finance-chart-panel"><div class="panel-head"><h2>Fluxo de caixa</h2><span class="tag yellow">Semanal</span></div>${chart()}</section>
+    <section class="panel finance-category-panel"><div class="panel-head"><h2>Despesas por categoria</h2></div>${categoriesChart()}</section>
   </div>`;
 
   html += `<section class="panel" style="margin-bottom:22px">
@@ -775,10 +808,10 @@ function transactionModal(id) {
       ${field('Valor em R$', 'value', t.value ? (t.value / 100).toFixed(2) : '', 'number')}
       ${select('Tipo', 'type', [['income', 'Entrada'], ['expense', 'Saída']], t.type)}
       ${select('Categoria', 'category_id', S.categories.map(c => [c.id, c.name]), t.category_id)}
-      ${field('Data do pagamento / vencimento', 'date', t.date, 'date')}
+      ${field('Data de vencimento', 'date', t.date, 'date')}
       ${select('Status', 'status', [['pending', 'Pendente'], ['paid', 'Realizado (pago / recebido)']], t.status)}
     </div>
-    <p class="storage-note">Data representa o vencimento enquanto pendente e a data de pagamento quando realizado.</p>
+    <p class="storage-note">O vencimento permanece no histórico; ao quitar, você informa a data efetiva de pagamento.</p>
   `, 'Salvar lançamento', 'transaction');
   $('#f-value').min = '0.01';
   $('#f-value').step = '0.01';
@@ -802,7 +835,7 @@ function account() {
         <h2>Seu plano ativo</h2>
         <div class="account-options">
           <div class="option active">
-            <h3>${S.plan === 'plus' ? 'Kit + Financeiro' : 'Kit Essencial'}</h3>
+            <h3>${S.plan === 'plus' ? 'VTD Completo' : 'VTD — Acesso básico'}</h3>
             <p>${S.plan === 'plus' ? 'Acesso completo ao kit de fornecedores, guia, calendário e módulo financeiro.' : 'Acesso completo aos fornecedores, guia e calendário comercial.'}</p>
           </div>
         </div>
