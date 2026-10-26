@@ -243,7 +243,8 @@ class FinanceService
         $status = ($data['status'] ?? 'pending') === 'paid' ? 'paid' : 'pending';
 
         $this->validateFinancialInput($tenantId, $desc, $valueCents, $catId, $date);
-        $settledAt = $status === 'paid' ? (string)($data['paid_at'] ?? date('Y-m-d')) : null;
+        $settledAt = $status === 'paid' ? (string)($data['paid_at'] ?? $date) : null;
+        if ($settledAt !== null && !self::validDate($settledAt)) throw new \InvalidArgumentException('Data de pagamento inválida.');
 
         $this->pdo->beginTransaction();
         try {
@@ -311,7 +312,7 @@ class FinanceService
         $status = ($data['status'] ?? $before['status']) === 'paid' ? 'paid' : 'pending';
 
         $this->validateFinancialInput($tenantId, $desc, $valueCents, $catId, $date);
-        $settledAt = $status === 'paid' ? ($before['settled_at'] ?: date('Y-m-d')) : null;
+        $settledAt = $status === 'paid' ? ($before['settled_at'] ?: $date) : null;
         $this->pdo->beginTransaction();
         try {
             $stmt = $this->pdo->prepare("
