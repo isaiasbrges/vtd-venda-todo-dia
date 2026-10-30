@@ -142,8 +142,21 @@ test('uma tela antiga não sobrescreve a navegação mais recente', async () => 
   await a.run('render()');
   finish(json({ clients: [], total: 0, total_pages: 1 }));
   await oldPage;
-  assert.match(a.elements.get('#app').innerHTML, /Tudo para sua próxima venda/);
+  assert.match(a.elements.get('#app').innerHTML, /class="upv-dashboard"/);
   assert.doesNotMatch(a.elements.get('#app').innerHTML, /Gestão de Clientes/);
+});
+
+test('o dashboard atualiza o progresso após salvar uma tarefa', async () => {
+  const a = app();
+  a.context.fetch = async () => json({});
+  const summary = { textContent: '' };
+  const bar = { style: {} };
+  a.elements.set('.upv-task-summary span:last-child', summary);
+  a.elements.set('.upv-planning-card .progress i', bar);
+  a.run("location.hash = '#/home'; S.checks = { 'home-products': true };");
+  await a.listeners.change({ target: { dataset: { check: 'home-suppliers' }, checked: true } });
+  assert.equal(summary.textContent, '2 de 3 concluídos');
+  assert.ok(Math.abs(parseFloat(bar.style.width) - 200 / 3) < .01);
 });
 
 test('o checklist volta ao valor anterior quando o salvamento falha', async () => {

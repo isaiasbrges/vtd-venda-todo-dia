@@ -174,60 +174,77 @@ const master = {
     };
 
     const m = data.metrics;
+    const firstName = esc((S.name || 'administrador').trim().split(/\s+/)[0]);
+    const today = new Intl.DateTimeFormat('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date());
+    const hasFailures = Number(m.failed_events) > 0;
 
     return `
-      <section class="master-welcome">
-        <span class="master-welcome-eyebrow">PAINEL MASTER · VTD COMPLETO</span>
-        <div class="master-header">
+      <header class="master-header upv-page-header">
         <div>
-          <h1>Bem-vindo de volta, ${esc((S.name || 'administrador').trim().split(/\s+/)[0])}! 👋</h1>
-          <p>Sua operação em um só lugar. Acompanhe clientes, acessos e integrações do VTD.</p>
+          <span class="upv-eyebrow">SEU CENTRO DE OPERAÇÕES</span>
+          <h1>Olá, ${firstName}<span class="upv-greeting-dot">.</span></h1>
+          <p>Uma visão clara do que acontece no seu VTD.</p>
         </div>
-        <div class="master-header-actions">
-          <button class="btn-master-primary" data-action="master-new-client">
-            ${mIcon('plus')} Criar cliente
-          </button>
-          <button class="btn-master-outline" data-action="master-new-integration">
-            ${mIcon('link')} Nova integração
-          </button>
+        <div class="upv-header-aside">
+          <span class="upv-date">${mIcon('calendar')} ${esc(today)}</span>
+          <button class="btn-master-primary" data-action="master-new-client">${mIcon('plus')} Criar cliente</button>
         </div>
+      </header>
+
+      <div class="upv-master-hero">
+        <section class="upv-operation-card" aria-labelledby="upv-operation-title">
+          <div class="upv-card-topline"><span class="upv-eyebrow">VISÃO DA OPERAÇÃO</span><span class="upv-hero-symbol" aria-hidden="true">${mIcon('users')}</span></div>
+          <div class="upv-operation-number">${m.active_accesses}</div>
+          <h2 id="upv-operation-title">Acessos ativos, novas possibilidades.</h2>
+          <p>Acompanhe sua base e mantenha cada cliente conectado ao conteúdo certo.</p>
+          <a href="#/master/clients" class="upv-hero-link">Gerenciar clientes <span aria-hidden="true">↗</span></a>
+        </section>
+        <section class="upv-attention-card ${hasFailures ? 'has-attention' : ''}" aria-labelledby="upv-attention-title">
+          <div class="upv-card-topline"><span class="upv-eyebrow">AGORA NA SUA OPERAÇÃO</span><span class="upv-state-icon">${mIcon(hasFailures ? 'alert' : 'check')}</span></div>
+          <h2 id="upv-attention-title">${hasFailures ? 'Alguns eventos precisam de atenção.' : 'Tudo pronto para acompanhar.'}</h2>
+          <p>${hasFailures ? `${m.failed_events} ${Number(m.failed_events) === 1 ? 'evento com falha aguarda' : 'eventos com falha aguardam'} sua revisão. Confira os detalhes para entender o que aconteceu.` : 'Nenhum evento com falha registrado. Consulte o histórico para acompanhar as movimentações.'}</p>
+          <div class="upv-operation-status"><span class="status-dot ${Number(m.active_integrations) > 0 ? 'active' : 'inactive'}"></span><span>${m.active_integrations} ${Number(m.active_integrations) === 1 ? 'integração ativa' : 'integrações ativas'}</span></div>
+          ${hasFailures ? '<button class="btn-master-outline" data-action="master-goto-failed-events">Revisar eventos <span aria-hidden="true">→</span></button>' : '<a class="upv-text-link" href="#/master/events">Abrir histórico <span aria-hidden="true">→</span></a>'}
+        </section>
       </div>
 
-      </section>
-
       <!-- 4 Cards de Métricas Reais -->
-      <div class="master-metrics-grid">
-        <div class="master-metric-card">
+      <div class="upv-section-heading"><h2>Seus números, sem complicação</h2><span>Resumo atual da plataforma</span></div>
+      <div class="master-metrics-grid upv-metrics-grid">
+        <div class="master-metric-card upv-metric-card">
           <div class="master-metric-icon icon-yellow">
             ${mIcon('users')}
           </div>
           <div class="master-metric-info">
             <span>Clientes cadastrados</span>
             <strong>${m.total_clients}</strong>
+            <small>Na sua base de clientes</small>
           </div>
         </div>
 
-        <div class="master-metric-card">
+        <div class="master-metric-card upv-metric-card">
           <div class="master-metric-icon icon-green">
             ${mIcon('check')}
           </div>
           <div class="master-metric-info">
             <span>Acessos ativos</span>
             <strong>${m.active_accesses}</strong>
+            <small>Conteúdos liberados</small>
           </div>
         </div>
 
-        <div class="master-metric-card">
+        <div class="master-metric-card upv-metric-card">
           <div class="master-metric-icon icon-blue">
             ${mIcon('link')}
           </div>
           <div class="master-metric-info">
             <span>Integrações ativas</span>
             <strong>${m.active_integrations}</strong>
+            <small>Conectadas à plataforma</small>
           </div>
         </div>
 
-        <div class="master-metric-card">
+        <div class="master-metric-card upv-metric-card">
           <div class="master-metric-icon icon-amber">
             ${mIcon('alert')}
           </div>
@@ -237,16 +254,23 @@ const master = {
               <strong>${m.failed_events}</strong>
               ${m.failed_events > 0 ? `<button class="btn-pill-review" data-action="master-goto-failed-events">Revisar</button>` : ''}
             </div>
+            <small>${hasFailures ? 'Aguardam sua revisão' : 'Nenhuma falha registrada'}</small>
           </div>
         </div>
       </div>
 
+      <nav class="upv-quick-actions" aria-label="Acesso rápido administrativo">
+        <a href="#/master/clients"><span class="upv-quick-icon">${mIcon('users')}</span><span><strong>Gerenciar clientes</strong><small>Acessos e contas em um só lugar</small></span><span aria-hidden="true">↗</span></a>
+        <a href="#/master/products"><span class="upv-quick-icon">${mIcon('package')}</span><span><strong>Produtos e acessos</strong><small>Organize o que você oferece</small></span><span aria-hidden="true">↗</span></a>
+        <a href="#/master/integrations"><span class="upv-quick-icon">${mIcon('link')}</span><span><strong>Suas integrações</strong><small>Conecte vendas e novos acessos</small></span><span aria-hidden="true">↗</span></a>
+      </nav>
+
       <!-- Grid Principal: Clientes Recentes (2/3) + Integrações (1/3) -->
       <div class="master-main-grid">
         <!-- Card Clientes Recentes -->
-        <section class="master-card">
+        <section class="master-card upv-clients-card">
           <div class="master-card-header">
-            <h2>Clientes recentes</h2>
+            <div><span class="upv-eyebrow">SUA COMUNIDADE</span><h2>Clientes recentes</h2></div>
             <div class="master-filters-row">
               <div class="master-input-search">
                 <span class="search-icon">${mIcon('search')}</span>
@@ -277,7 +301,7 @@ const master = {
                 </tr>
               </thead>
               <tbody id="master-recent-clients-tbody">
-                ${data.recent_clients.map(c => `
+                ${data.recent_clients.length ? data.recent_clients.map(c => `
                   <tr>
                     <td>
                       <div class="user-cell">
@@ -305,7 +329,7 @@ const master = {
                       </button>
                     </td>
                   </tr>
-                `).join('')}
+                `).join('') : '<tr><td colspan="5"><div class="upv-empty-state"><strong>Sua base começa aqui</strong><p>Crie um cliente ou conecte uma integração para liberar novos acessos.</p><button class="btn-table-action" data-action="master-new-client">Criar primeiro cliente</button></div></td></tr>'}
               </tbody>
             </table>
           </div>
@@ -318,13 +342,13 @@ const master = {
         </section>
 
         <!-- Card Integrações e Webhooks -->
-        <section class="master-card">
+        <section class="master-card upv-integrations-card">
           <div class="master-card-header">
-            <h2>${mIcon('link')} Integrações e webhooks</h2>
+            <div><span class="upv-eyebrow">CONEXÕES</span><h2>Integrações e webhooks</h2></div>
           </div>
 
           <div class="master-integ-list">
-            ${data.integrations.map(i => `
+            ${data.integrations.length ? data.integrations.map(i => `
               <div class="master-integ-item">
                 <div class="master-integ-header">
                   <div class="master-integ-title">
@@ -343,19 +367,20 @@ const master = {
                   </button>
                 </div>
               </div>
-            `).join('')}
+            `).join('') : `<div class="upv-empty-state">${mIcon('link')}<strong>Conecte sua primeira integração</strong><p>Receba novos acessos automaticamente a partir das suas vendas.</p><button class="btn-master-outline" data-action="master-new-integration">${mIcon('plus')} Nova integração</button></div>`}
           </div>
         </section>
       </div>
 
       <!-- Card Inferior: Últimos Eventos -->
-      <section class="master-card">
+      <section class="master-card upv-events-card">
         <div class="master-card-header">
-          <h2>${mIcon('list')} Últimos eventos</h2>
+          <div><span class="upv-eyebrow">ATIVIDADE DA PLATAFORMA</span><h2>Últimos eventos</h2></div>
+          <a class="upv-text-link" href="#/master/events">Ver histórico <span aria-hidden="true">→</span></a>
         </div>
 
         <div class="master-events-table">
-          ${data.recent_events.map(e => `
+          ${data.recent_events.length ? data.recent_events.map(e => `
             <div class="event-row">
               <div class="event-time">${esc(e.time)}</div>
               <div class="event-type-col">
@@ -380,7 +405,7 @@ const master = {
                 `}
               </div>
             </div>
-          `).join('')}
+          `).join('') : `<div class="upv-empty-state">${mIcon('list')}<strong>Sua atividade aparecerá aqui</strong><p>Os próximos eventos da plataforma ficam registrados neste histórico.</p></div>`}
         </div>
       </section>
     `;
