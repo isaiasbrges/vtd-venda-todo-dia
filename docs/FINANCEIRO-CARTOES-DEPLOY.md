@@ -1,6 +1,6 @@
 # Financeiro com cartões - instalação e verificação
 
-## Estado da entrega local (2026-10-31)
+## Estado da versão (2026-10-31)
 
 Implementados formulário em três etapas e modo rápido, categorias sem perda do rascunho, formas de pagamento, cadastro/edição/arquivamento de cartões, compras em até 120 parcelas, ajuste da primeira fatura, consulta de faturas, edição/cancelamento de compras sem parcelas pagas e quitação integral.
 
@@ -26,7 +26,7 @@ Pagamento parcial, rotativo, juros automáticos, estornos e recorrências no car
 8. Repetir --check e o percurso de aceitação. Não deixar scripts de migração acessíveis por HTTP.
 9. Rever o resultado dos testes MySQL no GitHub Actions antes de publicar em produção.
 
-Não executar testes ou seeds com o banco real. Não usar testes/run_all_tests.php como instalador. Nenhuma publicação ou migração de produção foi realizada nesta tarefa.
+Não executar testes ou seeds com o banco real. Não usar testes/run_all_tests.php como instalador. Aplicar migrações de produção somente com backup verificável e conferir a preservação dos registros existentes.
 
 ## Reversão
 

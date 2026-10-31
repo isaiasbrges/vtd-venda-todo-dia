@@ -1,6 +1,6 @@
 # VTD Black Friday — landing de venda
 
-Versão local de 31/10/2026. Oferta aprovada: **R$ 197 por seis meses, pagamento único**, com controle financeiro manual incluído. Nenhuma publicação foi executada. A hero, os botões de compra e o CTA fixo mobile não exibem preço; o valor permanece na seção da oferta e nas condições comerciais.
+Versão local de 31/10/2026. Oferta aprovada: **R$ 197 por seis meses, pagamento único**, com controle financeiro manual incluído. Destinos: sistema em `https://vendatododia.online/` e landing em `https://vendatododia.online/lp/`. A hero, os botões de compra e o CTA fixo mobile não exibem preço; o valor permanece na seção da oferta e nas condições comerciais.
 
 ## Arquivos e organização
 
