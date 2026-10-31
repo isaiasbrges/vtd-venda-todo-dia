@@ -44,7 +44,7 @@ Antes de qualquer uso da nova funcionalidade, é possível restaurar o backup co
 
 A suíte geral prepara um banco descartável antes de cada processo. Suítes antigas que usam vtd_test.sqlite continuam limitadas a esse arquivo de testes. Nenhum teste novo depende de produção.
 
-O GitHub Actions contém uma execução adicional de cartões em MySQL, limitada ao banco descartável vtd_test com VTD_CARDS_TEST_MYSQL=1. MySQL não está instalado na máquina desta execução; sua validação permanece pendente no CI.
+O GitHub Actions contém uma execução adicional de cartões em MySQL, limitada ao banco descartável vtd_test com VTD_CARDS_TEST_MYSQL=1. MySQL não está instalado na máquina desta execução; a validação em MySQL 8 foi aprovada no GitHub Actions em 31/10/2026: https://github.com/isaiasbrges/vtd-venda-todo-dia/actions/runs/41233362125.
 
 ## Aceitação manual
 
@@ -61,4 +61,4 @@ O GitHub Actions contém uma execução adicional de cartões em MySQL, limitada
 
 Prévia local preparada com cópia temporária em http://127.0.0.1:8095/#/finance/cards. Os registros de teste ficam nessa cópia, não no banco original.
 
-Resultados locais: 15 testes Node e 14 suítes PHP aprovados. O CSV também foi baixado pela interface e conferido. As nove telas passaram pela verificação de largura no celular; homologação MySQL permanece pendente.
+Resultados locais: 15 testes Node e 14 suítes PHP aprovados. O CSV também foi baixado pela interface e conferido. As nove telas passaram pela verificação de largura no celular; homologação MySQL 8 aprovada no GitHub Actions.

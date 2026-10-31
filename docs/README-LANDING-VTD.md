@@ -4,7 +4,7 @@ Versão local de 31/10/2026. Oferta aprovada: **R$ 197 por seis meses, pagamento
 
 ## Arquivos e organização
 
-No repositório, a entrada é `vendas.html`; o aplicativo continua usando seu próprio `index.html`. O pacote independente usa `landing-vtd/index.html`, com os mesmos caminhos relativos.
+No repositório, a fonte é `vendas.html` e a versão publicada em `/lp/` é gerada em `lp/index.html` por `node tools/landing/sync-pages.cjs`. O aplicativo continua usando seu próprio `index.html`. O pacote independente usa `landing-vtd/index.html`, com os mesmos caminhos relativos.
 
 - `assets/landing/black-friday.css`: estilos exclusivos da landing, sem alterar o design system do painel.
 - `assets/landing/black-friday.js`: galeria, filtros da amostra, menu e controles do vídeo.
@@ -92,3 +92,5 @@ A seção sobre Matheus utiliza a foto indicada pelo proprietário (`https://mat
 As novas capturas `gestao-cartoes.webp` e `novo-lancamento.webp` foram feitas na interface real, com dois cartões e uma compra de demonstração em banco temporário isolado. Elas aparecem junto ao financeiro e na galeria ampliável. Não foram alterados cartões, compras ou dados de produção.
 
 A landing bloqueia o menu de contexto e o arraste sobre imagens e links da galeria. `draggable="false"`, estilos de toque e eventos delegados dificultam o salvamento casual. A ampliação, o teclado e a seleção de texto continuam disponíveis. **Isso não é proteção contra clonagem completa:** arquivos públicos ainda podem ser acessados pelo navegador, pelas ferramentas de desenvolvimento ou por captura de tela. Nenhuma promessa de DRM ou de bloqueio absoluto foi feita. A proteção está restrita à página de vendas e não interfere nos formulários financeiros.
+
+A publicação Git mantém o sistema na raiz e atualiza a landing em `/lp/` e `vendas.html`, utilizando assets compartilhados na raiz. O canonical das duas versões aponta para `https://vendatododia.online/lp/`. Não editar `lp/index.html` manualmente: após alterar `vendas.html`, executar o sincronizador. A verificação `--check` no CI detecta uma cópia desatualizada.

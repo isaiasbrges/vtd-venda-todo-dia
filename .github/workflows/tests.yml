@@ -25,6 +25,8 @@ jobs:
           node --check master.js
           node --check data.js
           node --check finance-ui.js
+          node --check assets/landing/black-friday.js
+          node tools/landing/sync-pages.cjs --check
       - name: Executar testes PHP
         run: php tests/run_all_tests.php
       - name: Verificar fluxos do frontend

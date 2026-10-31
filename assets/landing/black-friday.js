@@ -1,5 +1,6 @@
 (() => {
   'use strict';
+  const playerIconURL = new URL('../icons/vtd-player.svg', document.currentScript.src).href;
   // Barreiras à cópia casual. Imagens públicas continuam acessíveis ao navegador;
   // isso não é DRM e não impede capturas de tela ou acesso ao arquivo original.
   const imageTarget = target => target instanceof Element && target.closest('img, [data-lightbox]');
@@ -102,7 +103,7 @@
     return apiPromise;
   }
   function icon(name) {
-    return '<svg class="player-icon" aria-hidden="true"><use href="assets/icons/vtd-player.svg#' + name + '"></use></svg>';
+    return '<svg class="player-icon" aria-hidden="true"><use href="' + playerIconURL + '#' + name + '"></use></svg>';
   }
   function sync() {
     if (!player?.getPlayerState) return;

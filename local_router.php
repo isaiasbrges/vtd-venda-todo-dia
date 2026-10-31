@@ -34,6 +34,9 @@ if ($uri === '/' || $uri === '') {
 
 // 4. Arquivos estáticos (app.js, styles.css, data.js, imagens, etc.)
 $filePath = __DIR__ . str_replace('/', DIRECTORY_SEPARATOR, $uri);
+if (is_dir($filePath) && is_file($filePath . DIRECTORY_SEPARATOR . 'index.html')) {
+    return false; // Permite servir a landing em /lp/ sem alterar a aplicação da raiz.
+}
 if (is_file($filePath)) {
     // O servidor embutido do PHP não trata intervalos de MP4. Servir os bytes
     // solicitados permite avançar o vídeo na prévia local, como na hospedagem.

@@ -1,6 +1,6 @@
 {
-  "timestamp": "2026-10-31T18:44:51.282Z",
-  "base": "http://127.0.0.1:8095/vendas.html",
+  "timestamp": "2026-10-31T19:28:20.104Z",
+  "base": "http://127.0.0.1:8095/lp/",
   "errors": [],
   "badResponses": [],
   "results": [
@@ -123,7 +123,7 @@
       "test": "YouTube real: autoplay sem som, pausar/reproduzir, som, busca e tela cheia",
       "ok": true,
       "muted": true,
-      "time": 0.05321788746643066,
+      "time": 0.06634793133544922,
       "duration": 120.201
     },
     {
@@ -191,5 +191,11 @@
         "semRolagemHorizontal": true
       }
     ]
+  },
+  "sistema": {
+    "suitesPHP": 14,
+    "testesNode": 15,
+    "mysqlCI": "https://github.com/isaiasbrges/vtd-venda-todo-dia/actions/runs/41233362125",
+    "conclusao": "success"
   }
 }
