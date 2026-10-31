@@ -6,6 +6,9 @@ echo "      VTD - SUITE GERAL DE TESTES AUTOMATIZADOS     \n";
 echo "====================================================\n\n";
 
 $tests = [
+    'CSV financeiro e compatibilidade PHP'  => 'test_finance_csv.php',
+    'Cartões, parcelas e faturas isolados'    => 'test_finance_cards.php',
+    'Acesso aos cartões, plano e CSRF'       => 'test_finance_cards_access.php',
     'Fundação & PDO Dual-Driver'               => 'test_foundation.php',
     'Migrações & Seeds (234 Fornec / 8 Cap)'  => 'test_migrations_and_seeds.php',
     'Segurança, Sessões & Rate Limiter'        => 'test_auth.php',
@@ -36,7 +39,7 @@ foreach ($tests as $name => $file) {
 
     echo "Executando: {$name}... ";
     
-    $cmd = escapeshellarg($phpBinary) . ' -d zend.assertions=1 -d assert.exception=1 ' . escapeshellarg($fullPath) . ' 2>&1';
+    $cmd = escapeshellarg($phpBinary) . ' -d zend.assertions=1 -d assert.exception=1 -d auto_prepend_file=' . escapeshellarg(__DIR__ . '/bootstrap.php') . ' ' . escapeshellarg($fullPath) . ' 2>&1';
     $output = [];
     $exitCode = 0;
     exec($cmd, $output, $exitCode);

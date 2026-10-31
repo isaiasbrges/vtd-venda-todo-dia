@@ -62,6 +62,7 @@ class FinanceController
 
         $data = [
             'id'          => (string)($request->body('id') ?: ''),
+            'payment_method' => (string)$request->body('payment_method', 'unspecified'),
             'description' => (string)$request->body('description', ''),
             'type'        => (string)$request->body('type', 'expense'),
             'value_cents' => (int)$valCents,
@@ -92,6 +93,7 @@ class FinanceController
         }
 
         $data = [
+            'payment_method' => (string)$request->body('payment_method', 'unspecified'),
             'description' => (string)$request->body('description', ''),
             'type'        => (string)$request->body('type', 'expense'),
             'value_cents' => (int)$valCents,
@@ -184,7 +186,7 @@ class FinanceController
 
         $txs = $this->service->getTransactions($account['tenant_id'], $month);
 
-        $headers = ['Descrição', 'Tipo', 'Categoria', 'Data', 'Valor (R$)', 'Status'];
+        $headers = ['Descrição', 'Tipo', 'Categoria', 'Vencimento', 'Valor (R$)', 'Status', 'Pagamento efetivo', 'Forma', 'Cartão', 'Parcela'];
         $rows = array_map(function($t) {
             $valReais = number_format($t['value'] / 100, 2, ',', '.');
             $statusLabel = $t['status'] === 'paid' ? 'Realizado' : 'Pendente';
@@ -195,7 +197,11 @@ class FinanceController
                 $t['category'],
                 $t['date'],
                 $valReais,
-                $statusLabel
+                $statusLabel,
+                $t['settled_at'] ?? '',
+                $t['payment_method'] ?? '',
+                $t['card']['nickname'] ?? '',
+                isset($t['card']) ? $t['card']['installment_number'].'/'.$t['card']['installments'] : ''
             ];
         }, $txs);
 

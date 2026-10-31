@@ -30,3 +30,164 @@ body,body.master-active{background:radial-gradient(ellipse at 95% 0%,var(--surfa
 .upv-modebar{display:flex;justify-content:space-between;align-items:center;gap:16px;background:var(--surface-muted);border-bottom:1px solid var(--border-subtle);padding:9px 36px;color:var(--text-secondary);font-size:10px}.upv-modebar>span,.upv-modebar>a{display:flex;align-items:center;gap:7px}.upv-modebar .icon{width:13px;height:13px}.upv-modebar>a{font-weight:500;color:var(--text-link)}.upv-profile-label{text-align:right;display:flex;flex-direction:column;gap:2px}.upv-profile-label strong{font-size:12px;font-weight:500}.upv-profile-label span{font-size:10px;color:var(--text-muted)}
 .upv-metric-card small,.upv-store-metric small,.upv-quick-actions small,.upv-task-summary,.upv-discover-foot{font-size:12px}.upv-metric-card .master-metric-info>span,.upv-metric-top{font-size:12px}.upv-store-metric small{line-height:1.5;display:block}.upv-hero-link,.upv-card-link,.upv-text-link{min-height:36px}.upv-operation-status,.upv-operation-card p,.upv-attention-card p{font-size:13px}.upv-discover-foot{max-width:300px;font-size:11px}.upv-task-summary{font-size:11px}.upv-quick-actions small{font-size:11px}.upv-store-metric strong{margin-bottom:7px}
 @media(max-width:760px){.upv-modebar{padding:9px 18px;font-size:9px;gap:12px}.upv-modebar>span>.icon{display:none}.upv-profile-label{display:none}.upv-modebar>a{gap:4px}.upv-modebar .icon{width:12px;height:12px}.upv-store-metric small{font-size:11px}.upv-metric-top{font-size:11px}.upv-metric-card .master-metric-info>span{font-size:11px}.upv-metric-card small{font-size:11px}}
+
+/* Master: proporções compactas, com rolagem da página e tabelas independentes. */
+body.master-active .master-sidebar { padding: 20px 14px; }
+body.master-active .master-logo { gap: 8px; padding: 0 6px; margin-bottom: 20px; }
+body.master-active .master-nav { gap: 4px; }
+body.master-active .master-nav a,
+body.master-active .master-nav button { min-height: 36px; padding: 8px 12px; gap: 10px; font-size: 13px; line-height: 20px; }
+body.master-active .master-nav .icon { width: 18px; height: 18px; }
+body.master-active .master-nav-label { margin-top: 6px; padding: 10px 12px 4px; }
+body.master-active .master-shell { min-width: 0; }
+body.master-active .master-topbar { height: var(--master-topbar-height); min-height: var(--master-topbar-height); padding-inline: 24px; }
+body.master-active .master-content { padding: 24px 28px 32px; }
+body.master-active .master-content > *,
+body.master-active .master-main-grid > *,
+body.master-active .master-products-grid > * { min-width: 0; }
+body.master-active .master-header { gap: 16px; margin-bottom: 20px; }
+body.master-active .master-header h1 { font-size: 32px; line-height: 1.2; margin: 6px 0; }
+body.master-active .master-header p { font-size: 14px; line-height: 1.5; }
+body.master-active .upv-header-aside { gap: 10px; }
+body.master-active .master-header-actions { gap: 8px; flex-wrap: wrap; }
+body.master-active .btn-master-primary,
+body.master-active .btn-master-outline,
+body.master-active .master-header .btn { min-height: 36px; padding: 7px 14px; font-size: 13px; line-height: 20px; }
+body.master-active .master-content input:not([type=checkbox]):not([type=radio]),
+body.master-active .master-content select { min-height: 40px; font-size: 14px; }
+body.master-active .master-card { padding: 20px; }
+body.master-active .master-card-header { gap: 12px; margin-bottom: 14px; }
+body.master-active .master-card-header h2 { font-size: 18px; }
+body.master-active .upv-master-hero { gap: 16px; margin-bottom: 20px; }
+body.master-active .upv-operation-card,
+body.master-active .upv-attention-card { padding: 20px; }
+body.master-active .upv-hero-symbol { width: 32px; height: 32px; }
+body.master-active .upv-operation-number { font-size: 48px; margin: 6px 0; }
+body.master-active .upv-operation-card h2 { max-width: none; font-size: 20px; }
+body.master-active .upv-operation-card p { max-width: 440px; margin: 8px 0 14px; line-height: 1.5; }
+body.master-active .upv-attention-card h2 { max-width: none; font-size: 20px; margin: 14px 0 8px; }
+body.master-active .upv-attention-card p { margin-bottom: 12px; line-height: 1.5; }
+body.master-active .upv-state-icon { width: 32px; height: 32px; }
+body.master-active .upv-operation-status { margin-bottom: 14px; }
+body.master-active .upv-section-heading { margin: 18px 0 12px; }
+body.master-active .upv-section-heading h2 { font-size: 18px; }
+body.master-active .master-metrics-grid { gap: 12px; margin-bottom: 16px; }
+body.master-active .master-metric-card { flex-direction: row; padding: 16px; gap: 12px; }
+body.master-active .master-metric-icon { width: 32px; height: 32px; }
+body.master-active .upv-metric-card .master-metric-info strong { font-size: 28px; margin: 6px 0 4px; }
+body.master-active .upv-quick-actions { gap: 12px; margin-bottom: 20px; }
+body.master-active .upv-quick-actions > a { padding: 14px; gap: 12px; }
+body.master-active .upv-quick-icon { width: 32px; height: 32px; }
+body.master-active .master-main-grid { gap: 16px; margin-bottom: 20px; }
+body.master-active .master-products-grid { gap: 16px; }
+body.master-active .master-integ-item { padding: 14px; }
+body.master-active .master-card-footer { padding-top: 12px; }
+body.master-active .upv-events-card { margin-top: 20px; }
+body.master-active .upv-empty-state { padding: 20px 12px; }
+body.master-active .master-table-wrapper { max-width: 100%; margin-inline: 0; }
+body.master-active .master-table th { padding: 8px 12px; font-size: 12px; }
+body.master-active .master-table td { padding: 10px 12px; font-size: 13px; line-height: 1.5; }
+body.master-active .user-avatar-circle { width: 32px; height: 32px; }
+body.master-active .event-row { gap: 12px; padding-block: 10px; }
+body.master-active .event-row > div { min-width: 0; overflow-wrap: anywhere; }
+
+/* Notebooks baixos: priorizar indicadores e início das listas no primeiro quadro. */
+@media (min-width: 1025px) and (max-height: 800px) {
+  body.master-active .master-content { padding: 20px 24px 28px; }
+  body.master-active .master-header { margin-bottom: 16px; }
+  body.master-active .upv-master-hero { margin-bottom: 16px; }
+  body.master-active .upv-operation-card,
+  body.master-active .upv-attention-card { padding: 16px; }
+  body.master-active .upv-operation-number { font-size: 44px; margin: 4px 0; }
+  body.master-active .upv-hero-symbol { width: 28px; height: 28px; }
+  body.master-active .upv-operation-card p { margin: 6px 0 10px; }
+  body.master-active .upv-attention-card h2 { margin-top: 12px; }
+  body.master-active .upv-section-heading { margin: 14px 0 10px; }
+  body.master-active .master-metric-card { padding: 14px; }
+  body.master-active .upv-quick-actions > a { padding: 12px 14px; }
+}
+@media (min-width: 1600px) {
+  body.master-active .master-content { padding: 28px 32px 40px; }
+  body.master-active .master-header h1 { font-size: 36px; }
+}
+@media (min-width: 769px) and (max-width: 1100px) {
+  body.master-active .upv-master-hero { grid-template-columns: 1fr; }
+  body.master-active .master-metrics-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 768px) {
+  body.master-active .master-sidebar { width: min(280px, calc(100vw - 48px)); }
+  body.master-active .master-sidebar.open { top: var(--master-topbar-height); bottom: 0; height: calc(100dvh - var(--master-topbar-height)); }
+  body.master-active .master-shell { margin-left: 0; }
+  body.master-active .master-topbar { padding-inline: 16px; }
+  body.master-active .master-content { padding: 20px 16px calc(32px + env(safe-area-inset-bottom)); }
+  body.master-active .master-header h1 { font-size: 30px; }
+  body.master-active .master-header .upv-header-aside { max-width: none; }
+  body.master-active .master-nav a,
+  body.master-active .master-nav button,
+  body.master-active .btn-master-primary,
+  body.master-active .btn-master-outline,
+  body.master-active .master-header .btn { min-height: 44px; padding-block: 11px; }
+  body.master-active .master-content input:not([type=checkbox]):not([type=radio]),
+  body.master-active .master-content select { min-height: 44px; font-size: 16px; }
+  body.master-active .master-input-search input,
+  body.master-active .master-select-filter { min-height: 44px !important; font-size: 16px !important; }
+  body.master-active .master-input-search .search-icon { top: 14px; }
+  body.master-active .master-card { padding: 16px; }
+  body.master-active .master-metric-card { flex-direction: column; }
+  body.master-active .upv-quick-actions { grid-template-columns: 1fr; }
+  body.master-active .event-row { padding-block: 12px; }
+}
+
+/* No diálogo, manter apenas a rolagem do formulário em primeiro plano. */
+html:has(body.master-active dialog[open]) { overflow-y: hidden; }
+
+/* Considerar também a altura útil menor que a resolução por causa do navegador. */
+@media (min-width: 769px) and (max-height: 700px) {
+  body.master-active .master-sidebar { padding-block: 16px; }
+  body.master-active .master-logo { margin-bottom: 12px; }
+  body.master-active .master-nav { gap: 2px; }
+  body.master-active .master-nav-label { margin-top: 4px; padding-top: 8px; }
+}
+
+/* Guia do Matheus: vídeo sob demanda, sem ocupar a área de leitura ao entrar. */
+.guide-video { padding: 0; margin-bottom: 24px; overflow: hidden; }
+.guide-video > summary { display: flex; align-items: center; gap: 16px; padding: 16px 20px; list-style: none; cursor: pointer; }
+.guide-video > summary::-webkit-details-marker { display: none; }
+.guide-video-preview { position: relative; flex: 0 0 112px; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 8px; background: var(--surface-inverse); }
+.guide-video-preview img { width: 100%; height: 100%; object-fit: cover; }
+.guide-video-play { position: absolute; inset: 50% auto auto 50%; translate: -50% -50%; display: grid; place-items: center; width: 30px; height: 30px; padding-left: 2px; border-radius: 50%; background: var(--primary); color: var(--on-primary); font-size: 12px; }
+.guide-video-copy { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 4px; }
+.guide-video-copy .eyebrow { font-size: 10px; }
+.guide-video-copy > strong { font-family: var(--font-display); font-weight: 600; font-size: 18px; line-height: 1.3; color: var(--text-primary); }
+.guide-video-copy > span:last-child { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+.guide-video-action { flex: none; padding: 10px 14px; border: 1px solid var(--primary-border); border-radius: 8px; background: var(--primary-subtle); color: var(--primary-text); font-size: 12px; font-weight: 600; }
+.guide-video-caret { flex: none; color: var(--text-secondary); font-size: 22px; line-height: 1; }
+.guide-video-close, .guide-video[open] .guide-video-open { display: none; }
+.guide-video[open] .guide-video-close { display: inline; }
+.guide-video[open] .guide-video-caret { rotate: 180deg; }
+.guide-video-content { padding: 0 20px 20px; border-top: 1px solid var(--border-subtle); }
+.guide-video-frame { max-width: 800px; margin: 20px auto 0; overflow: hidden; border: 1px solid var(--border-inverse); border-radius: 12px; background: var(--surface-inverse); color-scheme: dark; }
+.guide-video-brand { display: flex; align-items: center; gap: 12px; padding: 10px 14px; color: var(--text-inverse); font-size: 10px; letter-spacing: .08em; }
+.guide-video-brand strong { color: var(--primary); font-size: 16px; letter-spacing: -.04em; }
+.guide-video-frame video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; background: #0d0d0d; accent-color: var(--primary); }
+.guide-video-help { max-width: 800px; margin: 12px auto 0; font-size: 12px; line-height: 1.7; color: var(--text-secondary); }
+.guide-video-help a { display: inline-block; text-decoration: underline; text-underline-offset: 3px; margin-left: 8px; }
+@media (max-width: 760px) {
+  .guide-video { margin-bottom: 18px; }
+  .guide-video > summary { padding: 14px; gap: 10px; }
+  .guide-video-preview { flex-basis: 80px; }
+  .guide-video-copy > strong { font-size: 15px; }
+  .guide-video-copy .eyebrow { font-size: 9px; }
+  .guide-video-copy > span:last-child { font-size: 12px; }
+  .guide-video-action { display: none; }
+  .guide-video-content { padding: 0 12px 16px; }
+  .guide-video-frame { margin-top: 12px; border-radius: 8px; }
+  .guide-video-help a { margin-left: 0; }
+}
+
+/* Manter o carrossel de capítulos dentro da largura do celular. */
+.reading > .panel { min-width: 0; }
+.reading .chapters-list { min-width: 0; max-width: 100%; }
+@media (max-width: 760px) {
+  .reading { grid-template-columns: minmax(0, 1fr); }
+}

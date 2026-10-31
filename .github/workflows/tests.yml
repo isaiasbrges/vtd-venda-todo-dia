@@ -24,10 +24,11 @@ jobs:
           node --check app.js
           node --check master.js
           node --check data.js
+          node --check finance-ui.js
       - name: Executar testes PHP
         run: php tests/run_all_tests.php
       - name: Verificar fluxos do frontend
-        run: node --test tests/frontend.test.cjs
+        run: node --test tests/frontend.test.cjs tests/finance-ui.test.cjs
 
   mysql:
     runs-on: ubuntu-latest
@@ -59,3 +60,8 @@ jobs:
           extensions: pdo_mysql
       - name: Verificar instalação e operações do Master no MySQL
         run: php -d zend.assertions=1 -d assert.exception=1 tests/test_master_integrations.php
+
+      - name: Verificar cartões e faturas no MySQL
+        env:
+          VTD_CARDS_TEST_MYSQL: '1'
+        run: php -d zend.assertions=1 -d assert.exception=1 tests/test_finance_cards.php

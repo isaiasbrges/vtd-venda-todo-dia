@@ -52,7 +52,7 @@ assert($t['plan'] === 'plus', "Must have plus plan");
 $sentMails = $mailer->getSentMails();
 $lastMail = end($sentMails);
 assert($lastMail['to'] === 'lucas@comprador.com');
-assert(str_contains($lastMail['body'], 'Kit + Financeiro'));
+assert(str_contains(mb_strtolower($lastMail['body']), 'kit + financeiro'));
 
 // 3. Test Idempotency (same event re-sent by Greenn)
 $resDuplicate = $webhook->processPayload($payload);

@@ -1,0 +1,383 @@
+{
+  "source": "https://www.bcb.gov.br/content/estabilidadefinanceira/str1/ParticipantesSTR.csv",
+  "source_scope": "Participantes STR; não é uma lista de emissores de cartão",
+  "retrieved_on": "2026-10-31",
+  "institutions": 468,
+  "logos": 50,
+  "entries": {
+    "00000000": {
+      "name": "Banco do Brasil",
+      "logo": "assets/banks/00000000.ico",
+      "logo_source": "https://www.bb.com.br/favicon.ico"
+    },
+    "92702067": {
+      "name": "Banrisul",
+      "logo": "assets/banks/92702067.svg",
+      "logo_source": "https://banrisul.com.br/bob/data/Simbolo-Banrisul.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "30d8f2133656e0d5debf108dbd7c927ecf4f2a944b552b812ea723a48ced9b14",
+      "source_sha256": "e6568098371a05f49599e45741b57da407cc27271525fa436cfef776090da87d"
+    },
+    "60746948": {
+      "name": "Bradesco",
+      "logo": "assets/banks/60746948.ico",
+      "logo_source": "https://banco.bradesco/favicon.ico"
+    },
+    "00000208": {
+      "name": "BRB",
+      "logo": "assets/banks/00000208.ico",
+      "logo_source": "https://novo.brb.com.br/wp-content/themes/oceanwp-child-nbr/images/favicon.ico"
+    },
+    "31872495": {
+      "name": "C6 Bank",
+      "logo": "assets/banks/31872495.svg",
+      "logo_source": "https://cdn.c6bank.com.br/open-banking/c6bank-logo.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "1d2f811698e0a15204fc4814ecec2bea332d766e313025815426409a27fb4453",
+      "source_sha256": "deb2fd2d220ad11000f97f2ee553308c1e98311c979a0a003530aca76f83b011"
+    },
+    "00360305": {
+      "name": "Caixa",
+      "logo": "assets/banks/00360305.svg",
+      "logo_source": "https://consentimento.openbanking.caixa.gov.br/assets/images/logomarca_caixa.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "01e2a2bb8c02c4f606c6c61e682bb0b1c1f924f83dd22b0cee9ea8d88599c20a",
+      "source_sha256": "3073827b49f87a32f69c93d8008583a1af2f2498b873eabd9f9d64d130c70dfd"
+    },
+    "00416968": {
+      "name": "Inter",
+      "logo": "assets/banks/00416968.svg",
+      "logo_source": "https://inter.co/favicon.svg"
+    },
+    "60701190": {
+      "name": "Itaú",
+      "logo": "assets/banks/60701190.png",
+      "logo_source": "https://raw.githubusercontent.com/rzmt/logos-bancos-br/main/logos/png/60701190.png",
+      "logo_official_source": "https://www.itau.com.br/media/dam/m/4ee2c952e1fa91a2/original/Novo_itau.svg",
+      "logo_provenance": "https://raw.githubusercontent.com/rzmt/logos-bancos-br/main/data/bancos.json",
+      "logo_sha256": "bae3af73a45838ae7cffdfcf9dec281d892fc952efc0980c9b8985c1d329039b"
+    },
+    "10573521": {
+      "name": "Mercado Pago",
+      "logo": "assets/banks/10573521.svg",
+      "logo_source": "https://http2.mlstatic.com/frontend-assets/mp-web-navigation/ui-navigation/7.8.2/mercadopago/favicon.svg"
+    },
+    "20855875": {
+      "name": "Neon",
+      "logo": "assets/banks/20855875.png",
+      "logo_source": "https://static-portal.neon.com.br/assets/logos/neon/favicon.png"
+    },
+    "18236120": {
+      "name": "Nubank",
+      "logo": "assets/banks/18236120.ico",
+      "logo_source": "https://nubank.com.br/favicon.ico"
+    },
+    "22896431": {
+      "name": "PicPay",
+      "logo": "assets/banks/22896431.svg",
+      "logo_source": "https://picpay.s3.sa-east-1.amazonaws.com/openbanking/picpay-logo-icon-pf.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "adb6c4f794c2754d1142f77f1225354ccad67b9d981ed2b5f6c75b53ac21a3a9",
+      "source_sha256": "5dda49002fc6d9b323a30d88afd7e9ba5b54982dc5ffcf630364aa94bfcf43b8"
+    },
+    "90400888": {
+      "name": "Santander",
+      "logo": "assets/banks/90400888.svg",
+      "logo_source": "https://cms.santander.com.br/sites/WPS/imagem/santander_chama/23-10-31_194829_P_santander_chama.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "31f6baba2ffe3e8bd04e58bc30eb400e3a386ea406aa376bf525e8bf8baf06a6",
+      "source_sha256": "3db65acca8651f09096f81c004513586b3b22075041afe7e29df16f658b7d766"
+    },
+    "02038232": {
+      "name": "Sicoob",
+      "logo": "assets/banks/02038232.png",
+      "logo_source": "https://www.sicoob.com.br/o/sicoob-theme/images/favicon/apple-icon-57x57.png"
+    },
+    "01181521": {
+      "name": "Sicredi",
+      "logo": "assets/banks/01181521.ico",
+      "logo_source": "https://www.sicredi.com.br/home/static/favicon.ico"
+    },
+    "13140088": {
+      "name": "ACESSO SOLUÇÕES DE PAGAMENTO S.A. - INSTITUIÇÃO DE PAGAMENTO",
+      "logo": "assets/banks/13140088.svg",
+      "logo_source": "https://emcash-templates.s3.us-east-2.amazonaws.com/imgs/emcash_fundobranco.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "743e541d4b8a01eed1070a14614a4c276cbd6d5a59a7a730c17ace7f65b5a597",
+      "source_sha256": "b0385d0789ef09fc353ef2f3f11bf111ece1e83d15e9bf0b6f5c56bd36055cf4"
+    },
+    "10664513": {
+      "name": "Banco Agibank S.A.",
+      "logo": "assets/banks/10664513.svg",
+      "logo_source": "https://agibank.com.br/logo.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "b9ee532b079b7ecbd40ed9d4d4cb1dab16be96f6167aedf8171102a998ca20bf",
+      "source_sha256": "e69032229fdc5d5b74321812ffa29a0cdcecd768ee736fdfff85e2609654eefa"
+    },
+    "61186680": {
+      "name": "Banco BMG S.A.",
+      "logo": "assets/banks/61186680.svg",
+      "logo_source": "https://www.bancobmg.com.br/data/files/8C/A2/7F/0A/FBA318104A94D208970BE9C2/bmg_open_finance.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "66fa5c65deb6bf48585284aef7b22a6d53a160e415d85bfad0d5e4dc37cfc867",
+      "source_sha256": "47cce73d983327a047fc75bcbf2307a5b2014020c3e2131644bcd354b84898eb"
+    },
+    "04184779": {
+      "name": "Banco Bradescard S.A.",
+      "logo": "assets/banks/04184779.svg",
+      "logo_source": "https://banco.bradesco/open-finance/logo/icones_vetorial-pf.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "f58f6ca21ec88edd213e327dd0cdf8b197bd7f903ed1b30ecc6a52e204d0fafa",
+      "source_sha256": "eab31731175c5229512016c2cdf98f38affecb891c217bbe6ea6b83e4c5bdb38"
+    },
+    "30306294": {
+      "name": "Banco BTG Pactual S.A.",
+      "logo": "assets/banks/30306294.svg",
+      "logo_source": "https://banking-public-prd.s3.sa-east-1.amazonaws.com/open-finance/logo/btgempresas/btgempresas.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "f16276d504c826bba8df39e65a509bea6690d07b19934a25ea8800af37dafc04",
+      "source_sha256": "ac521163417436f99df1bd1cb2512fe75ff55041bb9345f0394deb2d5634da6d"
+    },
+    "33479023": {
+      "name": "Banco Citibank S.A.",
+      "logo": "assets/banks/33479023.svg",
+      "logo_source": "https://corporateportal.brazil.citibank.com/resources-responsive/img/Citi_Blue-RedArc_RGB.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "49d08e2fd9d57b0324103fe64edac2102adbe6ccd379509ae9bca60a425dac53",
+      "source_sha256": "84e7b604b27ab997e27b234db4c3bbdedddd45d3b9eebd29a816517ef8556a45"
+    },
+    "61033106": {
+      "name": "Banco Crefisa S.A.",
+      "logo": "assets/banks/61033106.svg",
+      "logo_source": "https://www.crefisa.com.br/wp-content/uploads/2019/05/Logo.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "0bd182a6ee8c0d4329396e28384cdfe1f9b61baf4db9e3bdda348715332f174f",
+      "source_sha256": "6d1f7f70293767ef1c60c4ad7bba6d730e91a72780a8ecc44d2894d00f04ac12"
+    },
+    "04902979": {
+      "name": "BANCO DA AMAZONIA S.A.",
+      "logo": "assets/banks/04902979.svg",
+      "logo_source": "https://d1rb2uej4kk1a4.cloudfront.net/bancoamazonia/Logo_SVG_2025_06db299653.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "dbd7522ac50b96fe41deab23c1b95a161a770fa53253dc631d75bb023f33a273",
+      "source_sha256": "5d9e4d900c763711fe04309b52bbb574927661315b9546751a80ba8f037cce03"
+    },
+    "33042151": {
+      "name": "Banco de la Nacion Argentina",
+      "logo": "assets/banks/33042151.svg",
+      "logo_source": "https://qr-h.cornerpix.com.br/public/images/logo_banco_nacional_argentina.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "92113219d67c5acb288e75c90b28140a6b9c5ac9d90cca90a1cd41c107fea78d",
+      "source_sha256": "83b857f155573533873871c680f200199cda3888c15bbd8b29121f3db7fb4d71"
+    },
+    "27098060": {
+      "name": "Banco Digio S.A.",
+      "logo": "assets/banks/27098060.svg",
+      "logo_source": "https://static.digio.com.br/media/logo_81e95ae2ab.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "d85615f6d86ece6682abbfedf46cbec96e3cff8ce5671525fcf983045af69da5",
+      "source_sha256": "61ad96629a7f2b02bd009b74101f7b540d7bbd09a1d78442e4b198c0cfb1a15a"
+    },
+    "04913711": {
+      "name": "Banco do Estado do Pará S.A.",
+      "logo": "assets/banks/04913711.svg",
+      "logo_source": "https://www.banpara.b.br/PortalImagens/52jlv5s3/logobanparaos5415-01.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "232edfed7c7ea8a61cd5008c9083437463e446376093b62efdbc24472b9f10bd",
+      "source_sha256": "dd85c7e5970c715f30784e8d2525592b7e06b094acfb42e5e9096d1fa8ecd848"
+    },
+    "07237373": {
+      "name": "Banco do Nordeste do Brasil S.A.",
+      "logo": "assets/banks/07237373.svg",
+      "logo_source": "https://consentimento.openfinance.bnb.gov.br/logo_bnb.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "dba55bc4b7e3cb32d8572afd46458f3f6db32d34e0c5ee633a02c9d8658c888f",
+      "source_sha256": "e07c03253a3b5f81dd890ec3d2f304f641d502e1d968f8ad8d76e4fb8732a997"
+    },
+    "45246410": {
+      "name": "BANCO GENIAL S.A.",
+      "logo": "assets/banks/45246410.svg",
+      "logo_source": "https://media-genial-cms.genialinvestimentos.com.br/wp-content/uploads/2021/08/20161050/logo-genial.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "9be46901d5c161fb535e40fe7c5e1b9becb74da9c3a033c4cc4b05d5c7088cd7",
+      "source_sha256": "e67e2bb3fab72c3165471ad1c44884775a7588177febcbaa7d343062fb567533"
+    },
+    "17184037": {
+      "name": "Banco Mercantil do Brasil S.A.",
+      "logo": "assets/banks/17184037.svg",
+      "logo_source": "https://www.bancomercantil.com.br/imagens/openbanking/mercantil.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "83a7935d791ce294c2035437c8cec71fc1a2f6538e185ae5e2ac3a3113ed7e95",
+      "source_sha256": "ce244740d6ba638b7c82da17b7025cfa9f2756d9c59177181b18d2ca7fe3fabd"
+    },
+    "59285411": {
+      "name": "Banco Pan S.A.",
+      "logo": "assets/banks/59285411.svg",
+      "logo_source": "https://www.bancopan.com.br/content/dam/documentos/outros-produtos/open-banking/logo_pan_openbanking.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "e991ec8c91a0d81dd1c69f1fb69acfb5be5235e7b58a55c0fb56550d62cfa3e6",
+      "source_sha256": "4ca9e04c2f27ab627ff54dbd2d31a26640e29d431808e3ff78e724fce28d16ab"
+    },
+    "58160789": {
+      "name": "Banco Safra S.A.",
+      "logo": "assets/banks/58160789.svg",
+      "logo_source": "https://www.safra.com.br/shared/assets/img/safra-of.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "e54adf402dc6a1ca60402cded5eff8b62165c11b6d687e7aaf0c30d9be233627",
+      "source_sha256": "9c25f4839fe8a258db6c0a59f192120f97f5ef49830f3db05ebd6cac82e02e50"
+    },
+    "60889128": {
+      "name": "BANCO SOFISA S.A.",
+      "logo": "assets/banks/60889128.svg",
+      "logo_source": "https://www.sofisa.com.br/openbanking/logo_sofisa.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "4981ef30e71424e7527b8fb83fd374f332bbff2021fdf0863eb838cb5f4b1a7a",
+      "source_sha256": "8e8037f1bd61964c959251bad1b16b5941ab8d950487ec1945f7402867a3deed"
+    },
+    "59588111": {
+      "name": "Banco Votorantim S.A.",
+      "logo": "assets/banks/59588111.svg",
+      "logo_source": "https://www.bv.com.br/ng15-open-base-recepcao-jornada/assets/images/logo-bv.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "27c285329e0320b070983b769fd8fc1b493da7e5f99374e81a8cd5742b5d07c3",
+      "source_sha256": "936bddaa9bcebeccd0ed3274560389efec07868a1c2e8d0f3b921f54664d69f3"
+    },
+    "33264668": {
+      "name": "Banco XP S.A.",
+      "logo": "assets/banks/33264668.svg",
+      "logo_source": "https://openbanking-redirect.xpi.com.br/assets/xpi.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "2eb1da736a5fd1769f60988a072eb45b234b61b9db7e90a59d54addaa78219fa",
+      "source_sha256": "7f75762e82f828eb401dbc27d38b2d57eda0b14d5662a89315bb756ade7b5566"
+    },
+    "28127603": {
+      "name": "BANESTES S.A. BANCO DO ESTADO DO ESPIRITO SANTO",
+      "logo": "assets/banks/28127603.svg",
+      "logo_source": "https://cdn.banestes.b.br/openbanking/img/logo_centralizada.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "5fb4b89227c4f1a6f6617d98026c30d56cf3c73abc4be6c70cfa27c00b3e3c27",
+      "source_sha256": "011b293dd99bc4488d61ec98eae5d11ed7dfe0043d09e2f45b7b34044ca496ae"
+    },
+    "01027058": {
+      "name": "CIELO S.A. - INSTITUIÇÃO DE PAGAMENTO",
+      "logo": "assets/banks/01027058.svg",
+      "logo_source": "https://www.cielo.com.br/assets_cielo/logo_footer_cielo.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "486ef72663a420201a99db8adcf71f81a6adbdccab7b49e5b0d31f95a05b957e",
+      "source_sha256": "541a6d62016ae0fb12c7eb16e23501e2f97ad377faaa2d52c9425b41703f8f7b"
+    },
+    "10398952": {
+      "name": "CONFEDERAÇÃO NACIONAL DAS COOPERATIVAS CENTRAIS DE CRÉDITO E ECONOMIA FAMILIAR E SOLIDÁRIA - CRESOL CONFEDERAÇÃO",
+      "logo": "assets/banks/10398952.svg",
+      "logo_source": "https://cresol.com.br/util/cresol-logo-obk.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "3c52a6d5072f1358aeb9fc3645afd09d2d4ca724926ad4df65bbfb8efa449f1c",
+      "source_sha256": "431bbb26f8526ad35c2f75450c4e68ff24161ce66f58bad03de01bbec71c66db"
+    },
+    "05463212": {
+      "name": "Cooperativa Central de Crédito - Ailos",
+      "logo": "assets/banks/05463212.svg",
+      "logo_source": "https://www.ailos.coop.br/wp-content/uploads/2023/06/Logos_512x512px_Ailos.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "df3f66386a2e860438bd92d51c9951f470ba12a17b48dde2fcffc0df1aced746",
+      "source_sha256": "ca043b92fd666a4f4ec01162b8eaec0b96eb69d599e477b73fa2ba9fe8f83664"
+    },
+    "00315557": {
+      "name": "COOPERATIVA CENTRAL DE CRÉDITO UNICRED DO BRASIL - UNICRED DO BRASIL",
+      "logo": "assets/banks/00315557.svg",
+      "logo_source": "https://unicred.com.br/site/logo_unicred_vertical-margem90px.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "517e3f9cbb41ac91d26fcb414d5827e1bcd30c45ecd7686c20da0aec0865beb8",
+      "source_sha256": "6a4f9713f091dcba81fb5a08c84168925f9bdf48fd6e2d1e1a939e3281922ec4"
+    },
+    "37880206": {
+      "name": "CORA SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTO S.A.",
+      "logo": "assets/banks/37880206.svg",
+      "logo_source": "https://corastatic.com/openbank/img/logo-cora.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "a869a6f9d8b63769a82b241497bb704c06f6f6ea6dc7f319b86a48cd65ef4508",
+      "source_sha256": "251c9f35b91fa264f8fd3d4e8b51bf71c4aad35f3379c206bad3f31cb0e6d13a"
+    },
+    "13370835": {
+      "name": "DOCK INSTITUIÇÃO DE PAGAMENTO S.A.",
+      "logo": "assets/banks/13370835.svg",
+      "logo_source": "https://statics.contabemol.com.br/images/contabemol/emails/Sem_fundo_Azul_Versao_reduzida.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "e6930e224024cb1bf05bf9045137839d8977e45bc273f53549771456e1fd3cc3",
+      "source_sha256": "839ce4d676c0ac0f94b22fdfe8e7c4c631b60d8c1d9d81ee583bfc2f91c52b98"
+    },
+    "21018182": {
+      "name": "EBANX INSTITUICAO DE PAGAMENTOS LTDA.",
+      "logo": "assets/banks/21018182.svg",
+      "logo_source": "https://cdn-assets.ebanx.com/images/ebanx-ip-blue.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "9e588274139d057c6b8dba8359a184a8a2efbc74e7d3e68772852b400c9a353f",
+      "source_sha256": "42237c446a6a8b607bbc7d1de7bb6d5db3514548e8a335e6a9d7c03349802cd1"
+    },
+    "09089356": {
+      "name": "EFÍ S.A. - INSTITUIÇÃO DE PAGAMENTO",
+      "logo": "assets/banks/09089356.svg",
+      "logo_source": "https://gerencianet-pub-prod-1.s3.amazonaws.com/openbanking/efi-by-gn-512x512.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "f7a2421875f54e1f68162bb5d9cde0d8463bcdaf7247ea4af59cf9b488af5fc4",
+      "source_sha256": "185517da3805bc5c910f62920d22b2d69651f70dcd380ce1ec9ba8b242d2f8c0"
+    },
+    "10440482": {
+      "name": "GETNET ADQUIRÊNCIA E SERVIÇOS PARA MEIOS DE PAGAMENTO S.A. INSTITUIÇÃO DE PAGAMENTO",
+      "logo": "assets/banks/10440482.svg",
+      "logo_source": "https://site.getnet.com.br/wp-content/uploads/2021/07/logo_reduzido_getnet.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "6b5edf8b0e8fae1331f5ee8376f70cd9f742194db6501d08419e105becbec2d1",
+      "source_sha256": "59f8d11c1ec4d7016e6e89623f0002ef007c19e64e49ce5a465bc80390cf48b3"
+    },
+    "09464032": {
+      "name": "MIDWAY S.A. - SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTO",
+      "logo": "assets/banks/09464032.svg",
+      "logo_source": "https://openfinance.midway.com.br/midway.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "5ea74fd259ae05fafc05c7966da5d9df05f4ab633934c65d450aeadfd80ca05f",
+      "source_sha256": "50b86169b87b491532466436345b12f654808c292895af2c94a92bf48e83fee7"
+    },
+    "08561701": {
+      "name": "PAGSEGURO INTERNET INSTITUIÇÃO DE PAGAMENTO S.A.",
+      "logo": "assets/banks/08561701.svg",
+      "logo_source": "https://api.open-finance.pagbank.com.br/img/logo_pagbank.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "d53d0799380b3568d444d950338ab1eea1a6c91b8679bcba18a798349ecf643f",
+      "source_sha256": "ea47e0f0d6687547248eadbafbd867e7e3954b70b96b2cc3284724a22d47d7c4"
+    },
+    "43180355": {
+      "name": "PEFISA S.A. - CRÉDITO, FINANCIAMENTO E INVESTIMENTO",
+      "logo": "assets/banks/43180355.svg",
+      "logo_source": "https://storage.googleapis.com/pnb-openbank-pefisa-prd/LOGO_PNB_Prancheta.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "17f07afadcd72564f80da0955f2b6fee87fbf9b3fe05addd8a6c29362932bd2b",
+      "source_sha256": "8f03c2a4814e9d766472d5c8592277e265c61124768b7e685ea7a7884bf1f786"
+    },
+    "32402502": {
+      "name": "QI Sociedade de Crédito Direto S.A.",
+      "logo": "assets/banks/32402502.svg",
+      "logo_source": "https://storage.googleapis.com/qitech-website-documents/qi_logo_blue.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "23944945591d7bb9d049e22c940652787e4376624cd9fd03b60066522832f621",
+      "source_sha256": "5e069eed5c4bade949d52f5ad1572b712947fdf30523f4bfce0132f580e19d9e"
+    },
+    "16501555": {
+      "name": "STONE INSTITUIÇÃO DE PAGAMENTO S.A.",
+      "logo": "assets/banks/16501555.svg",
+      "logo_source": "https://public-assets.stone.com.br/openfinance/stone-logo.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "b17e70199e3c2cea18c0052fb8b62f946460c1b7113e600c13ab90d1a0dcdf7a",
+      "source_sha256": "c9ea826d048365162288b9d7d4e45ee527275315355fb491c45cfabdbbc0c6a3"
+    },
+    "37241230": {
+      "name": "SUMUP SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTO S.A.",
+      "logo": "assets/banks/37241230.svg",
+      "logo_source": "https://sumup-openbanking-staticfiles.s3.amazonaws.com/logo.svg",
+      "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+      "logo_sha256": "8426e85e7ed6d546f7bbdb1c73811aa9d0ee03c86b2b6e7d4b598dfb0adafb81",
+      "source_sha256": "7f22b00cfe40948e03b7405a1f02f63f9e29ea05984cf6497a31ca2b0d3c2cb8"
+    }
+  },
+  "directory": "https://data.directory.openbankingbrasil.org.br/participants"
+}

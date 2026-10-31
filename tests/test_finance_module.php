@@ -68,9 +68,11 @@ assert(!empty($audit), "Audit log must be recorded on creation");
 
 // 3. Test settlement of pending account with effective date in next month (November 2026)
 // Settle t7 (Energia elétrica: 20000) with effective date 2026-11-02
+$originalDue = $pdo->query("SELECT date FROM financial_transactions WHERE id='t7'")->fetchColumn();
 $settled = $service->settleTransaction($tenantPlus, 't7', '2026-11-02', $userPlus);
 assert($settled['status'] === 'paid');
-assert($settled['date'] === '2026-11-02');
+assert($settled['date'] === $originalDue);
+assert($settled['settled_at'] === '2026-11-02');
 
 // Now October start/inc/out should NOT include t7, but November start balance will reflect October realized
 $novOverview = $service->calculateMonthOverview($tenantPlus, '2026-11');

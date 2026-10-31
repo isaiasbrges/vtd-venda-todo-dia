@@ -30,7 +30,7 @@ function app() {
     clearTimeout,
     fetch: async () => { throw new Error('Unexpected request'); }
   });
-  for (const file of ['master.js', 'app.js']) vm.runInContext(fs.readFileSync(path.join(__dirname, '..', file), 'utf8'), context);
+  for (const file of ['master.js', 'finance-ui.js', 'app.js']) vm.runInContext(fs.readFileSync(path.join(__dirname, '..', file), 'utf8'), context);
   return { context, listeners, elements, run: source => vm.runInContext(source, context) };
 }
 

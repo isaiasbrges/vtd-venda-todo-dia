@@ -1,0 +1,4435 @@
+[
+  {
+    "id": "00000000",
+    "name": "Banco do Brasil",
+    "aliases": [
+      "BCO DO BRASIL S.A.",
+      "001",
+      "Banco do Brasil"
+    ],
+    "logo": "assets/banks/00000000.ico",
+    "logo_source": "https://www.bb.com.br/favicon.ico",
+    "website": "https://www.bb.com.br",
+    "display_name": "Banco do Brasil"
+  },
+  {
+    "id": "92894922",
+    "name": "Banco Original",
+    "aliases": [
+      "BANCO ORIGINAL",
+      "212",
+      "Banco Original"
+    ],
+    "logo": null,
+    "website": "https://www.original.com.br",
+    "display_name": "Banco Original"
+  },
+  {
+    "id": "92702067",
+    "name": "Banrisul",
+    "aliases": [
+      "BCO DO ESTADO DO RS S.A.",
+      "041",
+      "Banrisul"
+    ],
+    "logo": "assets/banks/92702067.svg",
+    "website": "https://www.banrisul.com.br",
+    "display_name": "Banrisul",
+    "logo_source": "https://banrisul.com.br/bob/data/Simbolo-Banrisul.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "30d8f2133656e0d5debf108dbd7c927ecf4f2a944b552b812ea723a48ced9b14",
+    "source_sha256": "e6568098371a05f49599e45741b57da407cc27271525fa436cfef776090da87d"
+  },
+  {
+    "id": "60746948",
+    "name": "Bradesco",
+    "aliases": [
+      "BCO BRADESCO S.A.",
+      "237",
+      "Bradesco"
+    ],
+    "logo": "assets/banks/60746948.ico",
+    "logo_source": "https://banco.bradesco/favicon.ico",
+    "website": "https://banco.bradesco",
+    "display_name": "Bradesco"
+  },
+  {
+    "id": "00000208",
+    "name": "BRB",
+    "aliases": [
+      "BRB - BCO DE BRASILIA S.A.",
+      "070",
+      "BRB"
+    ],
+    "logo": "assets/banks/00000208.ico",
+    "logo_source": "https://novo.brb.com.br/wp-content/themes/oceanwp-child-nbr/images/favicon.ico",
+    "website": "https://brb.com.br",
+    "display_name": "BRB"
+  },
+  {
+    "id": "31872495",
+    "name": "C6 Bank",
+    "aliases": [
+      "BCO C6 S.A.",
+      "336",
+      "C6 Bank"
+    ],
+    "logo": "assets/banks/31872495.svg",
+    "website": "https://www.c6bank.com.br",
+    "display_name": "C6 Bank",
+    "logo_source": "https://cdn.c6bank.com.br/open-banking/c6bank-logo.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "1d2f811698e0a15204fc4814ecec2bea332d766e313025815426409a27fb4453",
+    "source_sha256": "deb2fd2d220ad11000f97f2ee553308c1e98311c979a0a003530aca76f83b011"
+  },
+  {
+    "id": "00360305",
+    "name": "Caixa",
+    "aliases": [
+      "CAIXA ECONOMICA FEDERAL",
+      "104",
+      "Caixa"
+    ],
+    "logo": "assets/banks/00360305.svg",
+    "website": "https://www.caixa.gov.br",
+    "display_name": "Caixa",
+    "logo_source": "https://consentimento.openbanking.caixa.gov.br/assets/images/logomarca_caixa.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "01e2a2bb8c02c4f606c6c61e682bb0b1c1f924f83dd22b0cee9ea8d88599c20a",
+    "source_sha256": "3073827b49f87a32f69c93d8008583a1af2f2498b873eabd9f9d64d130c70dfd"
+  },
+  {
+    "id": "00416968",
+    "name": "Inter",
+    "aliases": [
+      "BANCO INTER",
+      "077",
+      "Inter"
+    ],
+    "logo": "assets/banks/00416968.svg",
+    "logo_source": "https://inter.co/favicon.svg",
+    "website": "https://inter.co",
+    "display_name": "Inter"
+  },
+  {
+    "id": "60701190",
+    "name": "Itaú",
+    "aliases": [
+      "ITAÚ UNIBANCO S.A.",
+      "341",
+      "Itaú"
+    ],
+    "logo": "assets/banks/60701190.png",
+    "website": "https://www.itau.com.br",
+    "display_name": "Itaú",
+    "logo_source": "https://raw.githubusercontent.com/rzmt/logos-bancos-br/main/logos/png/60701190.png",
+    "logo_official_source": "https://www.itau.com.br/media/dam/m/4ee2c952e1fa91a2/original/Novo_itau.svg",
+    "logo_provenance": "https://raw.githubusercontent.com/rzmt/logos-bancos-br/main/data/bancos.json",
+    "logo_sha256": "bae3af73a45838ae7cffdfcf9dec281d892fc952efc0980c9b8985c1d329039b"
+  },
+  {
+    "id": "10573521",
+    "name": "Mercado Pago",
+    "aliases": [
+      "MERCADO PAGO IP LTDA.",
+      "323",
+      "Mercado Pago"
+    ],
+    "logo": "assets/banks/10573521.svg",
+    "logo_source": "https://http2.mlstatic.com/frontend-assets/mp-web-navigation/ui-navigation/7.8.2/mercadopago/favicon.svg",
+    "website": "https://www.mercadopago.com.br",
+    "display_name": "Mercado Pago"
+  },
+  {
+    "id": "20855875",
+    "name": "Neon",
+    "aliases": [
+      "NEON PAGAMENTOS S.A. IP",
+      "536",
+      "Neon"
+    ],
+    "logo": "assets/banks/20855875.png",
+    "logo_source": "https://static-portal.neon.com.br/assets/logos/neon/favicon.png",
+    "website": "https://neon.com.br",
+    "display_name": "Neon"
+  },
+  {
+    "id": "18236120",
+    "name": "Nubank",
+    "aliases": [
+      "NU PAGAMENTOS - IP",
+      "260",
+      "Nubank"
+    ],
+    "logo": "assets/banks/18236120.ico",
+    "logo_source": "https://nubank.com.br/favicon.ico",
+    "website": "https://nubank.com.br",
+    "display_name": "Nubank"
+  },
+  {
+    "id": "22896431",
+    "name": "PicPay",
+    "aliases": [
+      "PICPAY",
+      "380",
+      "PicPay"
+    ],
+    "logo": "assets/banks/22896431.svg",
+    "website": "https://picpay.com",
+    "display_name": "PicPay",
+    "logo_source": "https://picpay.s3.sa-east-1.amazonaws.com/openbanking/picpay-logo-icon-pf.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "adb6c4f794c2754d1142f77f1225354ccad67b9d981ed2b5f6c75b53ac21a3a9",
+    "source_sha256": "5dda49002fc6d9b323a30d88afd7e9ba5b54982dc5ffcf630364aa94bfcf43b8"
+  },
+  {
+    "id": "90400888",
+    "name": "Santander",
+    "aliases": [
+      "BCO SANTANDER (BRASIL) S.A.",
+      "033",
+      "Santander"
+    ],
+    "logo": "assets/banks/90400888.svg",
+    "website": "https://www.santander.com.br",
+    "display_name": "Santander",
+    "logo_source": "https://cms.santander.com.br/sites/WPS/imagem/santander_chama/23-10-31_194829_P_santander_chama.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "31f6baba2ffe3e8bd04e58bc30eb400e3a386ea406aa376bf525e8bf8baf06a6",
+    "source_sha256": "3db65acca8651f09096f81c004513586b3b22075041afe7e29df16f658b7d766"
+  },
+  {
+    "id": "02038232",
+    "name": "Sicoob",
+    "aliases": [
+      "BANCO SICOOB S.A.",
+      "756",
+      "Sicoob"
+    ],
+    "logo": "assets/banks/02038232.png",
+    "logo_source": "https://www.sicoob.com.br/o/sicoob-theme/images/favicon/apple-icon-57x57.png",
+    "website": "https://www.sicoob.com.br",
+    "display_name": "Sicoob"
+  },
+  {
+    "id": "01181521",
+    "name": "Sicredi",
+    "aliases": [
+      "BANCO COOPERATIVO SICREDI",
+      "748",
+      "Sicredi"
+    ],
+    "logo": "assets/banks/01181521.ico",
+    "logo_source": "https://www.sicredi.com.br/home/static/favicon.ico",
+    "website": "https://www.sicredi.com.br",
+    "display_name": "Sicredi"
+  },
+  {
+    "id": "54647259",
+    "name": "321 SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "321 SCD S.A.",
+      "644"
+    ],
+    "logo": null
+  },
+  {
+    "id": "24313102",
+    "name": "99PAY INSTITUICAO DE PAGAMENTO S.A.",
+    "aliases": [
+      "99PAY IP S.A.",
+      "769"
+    ],
+    "logo": null
+  },
+  {
+    "id": "48756121",
+    "name": "A55 SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "A55 SCD S.A.",
+      "574"
+    ],
+    "logo": null
+  },
+  {
+    "id": "37715993",
+    "name": "ACCREDITO - SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "ACCREDITO SCD S.A.",
+      "406"
+    ],
+    "logo": null
+  },
+  {
+    "id": "13140088",
+    "name": "ACESSO SOLUÇÕES DE PAGAMENTO S.A. - INSTITUIÇÃO DE PAGAMENTO",
+    "aliases": [
+      "ACESSO SOLUÇÕES DE PAGAMENTO S.A. - INSTITUIÇÃO DE PAGAMENTO",
+      "332"
+    ],
+    "logo": "assets/banks/13140088.svg",
+    "logo_source": "https://emcash-templates.s3.us-east-2.amazonaws.com/imgs/emcash_fundobranco.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "743e541d4b8a01eed1070a14614a4c276cbd6d5a59a7a730c17ace7f65b5a597",
+    "source_sha256": "b0385d0789ef09fc353ef2f3f11bf111ece1e83d15e9bf0b6f5c56bd36055cf4"
+  },
+  {
+    "id": "44782130",
+    "name": "ACTUAL DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS S.A.",
+    "aliases": [
+      "ACTUAL DTVM S.A.",
+      "663"
+    ],
+    "logo": null
+  },
+  {
+    "id": "00250699",
+    "name": "AGK CORRETORA DE CAMBIO S.A.",
+    "aliases": [
+      "AGK CC S.A.",
+      "272"
+    ],
+    "logo": null
+  },
+  {
+    "id": "36321990",
+    "name": "AGORACRED S/A SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTO",
+    "aliases": [
+      "AGORACRED S/A SCFI",
+      "599"
+    ],
+    "logo": null
+  },
+  {
+    "id": "27214112",
+    "name": "AL5 S.A. SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTO",
+    "aliases": [
+      "AL5 S.A. SCFI",
+      "349"
+    ],
+    "logo": null
+  },
+  {
+    "id": "51414521",
+    "name": "ALL IN CRED SOCIEDADE DE CREDITO DIRETO S.A.",
+    "aliases": [
+      "ALL IN CRED SCD S.A.",
+      "572"
+    ],
+    "logo": null
+  },
+  {
+    "id": "63019146",
+    "name": "ANKOR CAPITAL - SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTO S/A",
+    "aliases": [
+      "ANKOR CFI S.A.",
+      "564"
+    ],
+    "logo": null
+  },
+  {
+    "id": "36864992",
+    "name": "APEX DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS S.A.",
+    "aliases": [
+      "APEX DTVM",
+      "484"
+    ],
+    "logo": null
+  },
+  {
+    "id": "13486793",
+    "name": "APEX GROUP DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS S.A.",
+    "aliases": [
+      "APEX GROUP DTVM",
+      "173"
+    ],
+    "logo": null
+  },
+  {
+    "id": "57654096",
+    "name": "APUSDIGITAL INSTITUICAO DE PAGAMENTO LTDA",
+    "aliases": [
+      "APUSDIGITAL IP LTDA.",
+      "789"
+    ],
+    "logo": null
+  },
+  {
+    "id": "42259084",
+    "name": "ARTTA SOCIEDADE DE CRÉDITO DIRETO S.A",
+    "aliases": [
+      "ARTTA SCD",
+      "482"
+    ],
+    "logo": null
+  },
+  {
+    "id": "48703388",
+    "name": "ASA SOCIEDADE DE CRÉDITO FINANCIAMENTO E INVESTIMENTO S.A.",
+    "aliases": [
+      "ASA SCFI S.A.",
+      "594"
+    ],
+    "logo": null
+  },
+  {
+    "id": "19540550",
+    "name": "ASAAS GESTÃO FINANCEIRA INSTITUIÇÃO DE PAGAMENTO S.A.",
+    "aliases": [
+      "ASAAS IP S.A.",
+      "461"
+    ],
+    "logo": null
+  },
+  {
+    "id": "44728700",
+    "name": "ATF SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "ATF SCD S.A.",
+      "513"
+    ],
+    "logo": null
+  },
+  {
+    "id": "44478623",
+    "name": "ATICCA - SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "ATICCA SCD S.A.",
+      "527"
+    ],
+    "logo": null
+  },
+  {
+    "id": "33775974",
+    "name": "ATIVA INVESTIMENTOS S.A. CORRETORA DE TÍTULOS, CÂMBIO E VALORES",
+    "aliases": [
+      "ATIVA S.A. INVESTIMENTOS CCTVM",
+      "188"
+    ],
+    "logo": null
+  },
+  {
+    "id": "10789035",
+    "name": "ATTRUS INSTITUIÇÃO DE PAGAMENTO S/A",
+    "aliases": [
+      "ATTRUS IP S/A",
+      "787"
+    ],
+    "logo": null
+  },
+  {
+    "id": "44323831",
+    "name": "ATUAL SOCIEDADE CORRETORA DE CÂMBIO LTDA",
+    "aliases": [
+      "ATUAL CC LTDA",
+      "794"
+    ],
+    "logo": null
+  },
+  {
+    "id": "20308187",
+    "name": "AVANCARD PROVER INSTITUIÇÃO DE PAGAMENTO LTDA",
+    "aliases": [
+      "AVANCARD PROVER IP LTDA",
+      "588"
+    ],
+    "logo": null
+  },
+  {
+    "id": "61384004",
+    "name": "AVENUE SECURITIES BANCO DE INVESTIMENTO S.A.",
+    "aliases": [
+      "AVENUE SECURITIES BI S.A.",
+      "508"
+    ],
+    "logo": null
+  },
+  {
+    "id": "52076716",
+    "name": "AWX BRASIL  INSTITUICAO DE PAGAMENTO LTDA",
+    "aliases": [
+      "AWX BRASIL IP LTDA.",
+      "786"
+    ],
+    "logo": null
+  },
+  {
+    "id": "18684408",
+    "name": "AZIMUT BRASIL DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS LTDA",
+    "aliases": [
+      "AZIMUT BRASIL DTVM LTDA",
+      "562"
+    ],
+    "logo": null
+  },
+  {
+    "id": "40434681",
+    "name": "AZUMI DISTRIBUIDORA DE TíTULOS E VALORES MOBILIáRIOS LTDA.",
+    "aliases": [
+      "AZUMI DTVM",
+      "463"
+    ],
+    "logo": null
+  },
+  {
+    "id": "28195667",
+    "name": "Banco ABC Brasil S.A.",
+    "aliases": [
+      "BCO ABC BRASIL S.A.",
+      "246"
+    ],
+    "logo": null
+  },
+  {
+    "id": "03532415",
+    "name": "BANCO ABN AMRO CLEARING S.A.",
+    "aliases": [
+      "BANCO ABN AMRO CLEARING S.A.",
+      "075"
+    ],
+    "logo": null
+  },
+  {
+    "id": "04814563",
+    "name": "BANCO AFINZ S.A. - BANCO MÚLTIPLO",
+    "aliases": [
+      "BCO AFINZ S.A. - BM",
+      "299"
+    ],
+    "logo": null
+  },
+  {
+    "id": "10664513",
+    "name": "Banco Agibank S.A.",
+    "aliases": [
+      "BCO AGIBANK S.A.",
+      "121"
+    ],
+    "logo": "assets/banks/10664513.svg",
+    "logo_source": "https://agibank.com.br/logo.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "b9ee532b079b7ecbd40ed9d4d4cb1dab16be96f6167aedf8171102a998ca20bf",
+    "source_sha256": "e69032229fdc5d5b74321812ffa29a0cdcecd768ee736fdfff85e2609654eefa"
+  },
+  {
+    "id": "03323840",
+    "name": "Banco Alfa S.A.",
+    "aliases": [
+      "BCO ALFA S.A.",
+      "025"
+    ],
+    "logo": null
+  },
+  {
+    "id": "48795256",
+    "name": "Banco AndBank (Brasil) S.A.",
+    "aliases": [
+      "BCO ANDBANK S.A.",
+      "065"
+    ],
+    "logo": null
+  },
+  {
+    "id": "54403563",
+    "name": "Banco Arbi S.A.",
+    "aliases": [
+      "BCO ARBI S.A.",
+      "213"
+    ],
+    "logo": null
+  },
+  {
+    "id": "00997185",
+    "name": "Banco B3 S.A.",
+    "aliases": [
+      "BCO B3 S.A.",
+      "096"
+    ],
+    "logo": null
+  },
+  {
+    "id": "10866788",
+    "name": "Banco Bandepe S.A.",
+    "aliases": [
+      "BCO BANDEPE S.A.",
+      "024"
+    ],
+    "logo": null
+  },
+  {
+    "id": "00556603",
+    "name": "BANCO BARI DE INVESTIMENTOS E FINANCIAMENTOS S.A.",
+    "aliases": [
+      "BANCO BARI S.A.",
+      "330"
+    ],
+    "logo": null
+  },
+  {
+    "id": "15124464",
+    "name": "BANCO BESA S.A.",
+    "aliases": [
+      "BANCO BESA S.A.",
+      "334"
+    ],
+    "logo": null
+  },
+  {
+    "id": "50585090",
+    "name": "BANCO BMG CONSIGNADO S.A.",
+    "aliases": [
+      "BANCO BMG CONSIGNADO S.A.",
+      "250"
+    ],
+    "logo": null
+  },
+  {
+    "id": "61186680",
+    "name": "Banco BMG S.A.",
+    "aliases": [
+      "BCO BMG S.A.",
+      "318"
+    ],
+    "logo": "assets/banks/61186680.svg",
+    "logo_source": "https://www.bancobmg.com.br/data/files/8C/A2/7F/0A/FBA318104A94D208970BE9C2/bmg_open_finance.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "66fa5c65deb6bf48585284aef7b22a6d53a160e415d85bfad0d5e4dc37cfc867",
+    "source_sha256": "47cce73d983327a047fc75bcbf2307a5b2014020c3e2131644bcd354b84898eb"
+  },
+  {
+    "id": "62421979",
+    "name": "BANCO BMG SOLUÇÕES FINANCEIRAS S.A.",
+    "aliases": [
+      "BANCO BMG SOLUÇÕES FINANCEIRAS S.A.",
+      "233"
+    ],
+    "logo": null
+  },
+  {
+    "id": "01522368",
+    "name": "Banco BNP Paribas Brasil S.A.",
+    "aliases": [
+      "BCO BNP PARIBAS BRASIL S A",
+      "752"
+    ],
+    "logo": null
+  },
+  {
+    "id": "15114366",
+    "name": "Banco Bocom BBM S.A.",
+    "aliases": [
+      "BCO BOCOM BBM S.A.",
+      "107"
+    ],
+    "logo": null
+  },
+  {
+    "id": "04184779",
+    "name": "Banco Bradescard S.A.",
+    "aliases": [
+      "BANCO BRADESCARD",
+      "063"
+    ],
+    "logo": "assets/banks/04184779.svg",
+    "logo_source": "https://banco.bradesco/open-finance/logo/icones_vetorial-pf.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "f58f6ca21ec88edd213e327dd0cdf8b197bd7f903ed1b30ecc6a52e204d0fafa",
+    "source_sha256": "eab31731175c5229512016c2cdf98f38affecb891c217bbe6ea6b83e4c5bdb38"
+  },
+  {
+    "id": "06271464",
+    "name": "Banco Bradesco BBI S.A.",
+    "aliases": [
+      "BCO BBI S.A.",
+      "036"
+    ],
+    "logo": null
+  },
+  {
+    "id": "33147315",
+    "name": "Banco Bradesco BERJ S.A.",
+    "aliases": [
+      "BCO BRADESCO BERJ S.A.",
+      "122"
+    ],
+    "logo": null
+  },
+  {
+    "id": "07207996",
+    "name": "Banco Bradesco Financiamentos S.A.",
+    "aliases": [
+      "BCO BRADESCO FINANC. S.A.",
+      "394"
+    ],
+    "logo": null
+  },
+  {
+    "id": "01852137",
+    "name": "BANCO BRASILEIRO DE CRÉDITO SOCIEDADE ANÔNIMA",
+    "aliases": [
+      "BCO BRASILEIRO DE CRÉDITO S.A.",
+      "378"
+    ],
+    "logo": null
+  },
+  {
+    "id": "71027866",
+    "name": "Banco BS2 S.A.",
+    "aliases": [
+      "BCO BS2 S.A.",
+      "218"
+    ],
+    "logo": null
+  },
+  {
+    "id": "30306294",
+    "name": "Banco BTG Pactual S.A.",
+    "aliases": [
+      "BANCO BTG PACTUAL S.A.",
+      "208"
+    ],
+    "logo": "assets/banks/30306294.svg",
+    "logo_source": "https://banking-public-prd.s3.sa-east-1.amazonaws.com/open-finance/logo/btgempresas/btgempresas.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "f16276d504c826bba8df39e65a509bea6690d07b19934a25ea8800af37dafc04",
+    "source_sha256": "ac521163417436f99df1bd1cb2512fe75ff55041bb9345f0394deb2d5634da6d"
+  },
+  {
+    "id": "01858774",
+    "name": "BANCO BV S.A.",
+    "aliases": [
+      "BCO BV S.A.",
+      "413"
+    ],
+    "logo": null
+  },
+  {
+    "id": "61348538",
+    "name": "BANCO C6 CONSIGNADO S.A.",
+    "aliases": [
+      "BCO C6 CONSIG",
+      "626"
+    ],
+    "logo": null
+  },
+  {
+    "id": "33466988",
+    "name": "Banco Caixa Geral - Brasil S.A.",
+    "aliases": [
+      "BCO CAIXA GERAL BRASIL S.A.",
+      "473"
+    ],
+    "logo": null
+  },
+  {
+    "id": "03609817",
+    "name": "Banco Cargill S.A.",
+    "aliases": [
+      "BCO CARGILL S.A.",
+      "040"
+    ],
+    "logo": null
+  },
+  {
+    "id": "33132044",
+    "name": "BANCO CEDULA S.A.",
+    "aliases": [
+      "BCO CEDULA S.A.",
+      "266"
+    ],
+    "logo": null
+  },
+  {
+    "id": "33479023",
+    "name": "Banco Citibank S.A.",
+    "aliases": [
+      "BCO CITIBANK S.A.",
+      "745"
+    ],
+    "logo": "assets/banks/33479023.svg",
+    "logo_source": "https://corporateportal.brazil.citibank.com/resources-responsive/img/Citi_Blue-RedArc_RGB.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "49d08e2fd9d57b0324103fe64edac2102adbe6ccd379509ae9bca60a425dac53",
+    "source_sha256": "84e7b604b27ab997e27b234db4c3bbdedddd45d3b9eebd29a816517ef8556a45"
+  },
+  {
+    "id": "31597552",
+    "name": "BANCO CLASSICO S.A.",
+    "aliases": [
+      "BCO CLASSICO S.A.",
+      "241"
+    ],
+    "logo": null
+  },
+  {
+    "id": "61033106",
+    "name": "Banco Crefisa S.A.",
+    "aliases": [
+      "BCO CREFISA S.A.",
+      "069"
+    ],
+    "logo": "assets/banks/61033106.svg",
+    "logo_source": "https://www.crefisa.com.br/wp-content/uploads/2019/05/Logo.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "0bd182a6ee8c0d4329396e28384cdfe1f9b61baf4db9e3bdda348715332f174f",
+    "source_sha256": "6d1f7f70293767ef1c60c4ad7bba6d730e91a72780a8ecc44d2894d00f04ac12"
+  },
+  {
+    "id": "75647891",
+    "name": "BANCO CRÉDIT AGRICOLE BRASIL S.A.",
+    "aliases": [
+      "BCO CRÉDIT AGRICOLE BR S.A.",
+      "222"
+    ],
+    "logo": null
+  },
+  {
+    "id": "08357240",
+    "name": "Banco CSF S.A.",
+    "aliases": [
+      "BCO CSF S.A.",
+      "368"
+    ],
+    "logo": null
+  },
+  {
+    "id": "04902979",
+    "name": "BANCO DA AMAZONIA S.A.",
+    "aliases": [
+      "BCO DA AMAZONIA S.A.",
+      "003"
+    ],
+    "logo": "assets/banks/04902979.svg",
+    "logo_source": "https://d1rb2uej4kk1a4.cloudfront.net/bancoamazonia/Logo_SVG_2025_06db299653.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "dbd7522ac50b96fe41deab23c1b95a161a770fa53253dc631d75bb023f33a273",
+    "source_sha256": "5d9e4d900c763711fe04309b52bbb574927661315b9546751a80ba8f037cce03"
+  },
+  {
+    "id": "10690848",
+    "name": "Banco da China Brasil S.A.",
+    "aliases": [
+      "BCO DA CHINA BRASIL S.A.",
+      "083"
+    ],
+    "logo": null
+  },
+  {
+    "id": "62232889",
+    "name": "Banco Daycoval S.A.",
+    "aliases": [
+      "BCO DAYCOVAL S.A",
+      "707"
+    ],
+    "logo": null
+  },
+  {
+    "id": "38486817",
+    "name": "BANCO DE DESENVOLVIMENTO DE MINAS GERAIS S.A.-BDMG",
+    "aliases": [
+      "BCO DES. DE MG S.A.",
+      "805"
+    ],
+    "logo": null
+  },
+  {
+    "id": "33042151",
+    "name": "Banco de la Nacion Argentina",
+    "aliases": [
+      "BCO LA NACION ARGENTINA",
+      "300"
+    ],
+    "logo": "assets/banks/33042151.svg",
+    "logo_source": "https://qr-h.cornerpix.com.br/public/images/logo_banco_nacional_argentina.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "92113219d67c5acb288e75c90b28140a6b9c5ac9d90cca90a1cd41c107fea78d",
+    "source_sha256": "83b857f155573533873871c680f200199cda3888c15bbd8b29121f3db7fb4d71"
+  },
+  {
+    "id": "44189447",
+    "name": "Banco de La Provincia de Buenos Aires",
+    "aliases": [
+      "BCO LA PROVINCIA B AIRES BCE",
+      "495"
+    ],
+    "logo": null
+  },
+  {
+    "id": "92874270",
+    "name": "BANCO DIGIMAIS S.A.",
+    "aliases": [
+      "BCO DIGIMAIS S.A.",
+      "654"
+    ],
+    "logo": null
+  },
+  {
+    "id": "27098060",
+    "name": "Banco Digio S.A.",
+    "aliases": [
+      "BANCO DIGIO",
+      "335"
+    ],
+    "logo": "assets/banks/27098060.svg",
+    "logo_source": "https://static.digio.com.br/media/logo_81e95ae2ab.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "d85615f6d86ece6682abbfedf46cbec96e3cff8ce5671525fcf983045af69da5",
+    "source_sha256": "61ad96629a7f2b02bd009b74101f7b540d7bbd09a1d78442e4b198c0cfb1a15a"
+  },
+  {
+    "id": "13009717",
+    "name": "Banco do Estado de Sergipe S.A.",
+    "aliases": [
+      "BCO DO EST. DE SE S.A.",
+      "047"
+    ],
+    "logo": null
+  },
+  {
+    "id": "04913711",
+    "name": "Banco do Estado do Pará S.A.",
+    "aliases": [
+      "BCO DO EST. DO PA S.A.",
+      "037"
+    ],
+    "logo": "assets/banks/04913711.svg",
+    "logo_source": "https://www.banpara.b.br/PortalImagens/52jlv5s3/logobanparaos5415-01.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "232edfed7c7ea8a61cd5008c9083437463e446376093b62efdbc24472b9f10bd",
+    "source_sha256": "dd85c7e5970c715f30784e8d2525592b7e06b094acfb42e5e9096d1fa8ecd848"
+  },
+  {
+    "id": "07237373",
+    "name": "Banco do Nordeste do Brasil S.A.",
+    "aliases": [
+      "BCO DO NORDESTE DO BRASIL S.A.",
+      "004"
+    ],
+    "logo": "assets/banks/07237373.svg",
+    "logo_source": "https://consentimento.openfinance.bnb.gov.br/logo_bnb.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "dba55bc4b7e3cb32d8572afd46458f3f6db32d34e0c5ee633a02c9d8658c888f",
+    "source_sha256": "e07c03253a3b5f81dd890ec3d2f304f641d502e1d968f8ad8d76e4fb8732a997"
+  },
+  {
+    "id": "33644196",
+    "name": "Banco Fator S.A.",
+    "aliases": [
+      "BCO FATOR S.A.",
+      "265"
+    ],
+    "logo": null
+  },
+  {
+    "id": "58616418",
+    "name": "Banco Fibra S.A.",
+    "aliases": [
+      "BCO FIBRA S.A.",
+      "224"
+    ],
+    "logo": null
+  },
+  {
+    "id": "11758741",
+    "name": "Banco Finaxis S.A.",
+    "aliases": [
+      "BANCO FINAXIS",
+      "094"
+    ],
+    "logo": null
+  },
+  {
+    "id": "45246410",
+    "name": "BANCO GENIAL S.A.",
+    "aliases": [
+      "BANCO GENIAL",
+      "125"
+    ],
+    "logo": "assets/banks/45246410.svg",
+    "logo_source": "https://media-genial-cms.genialinvestimentos.com.br/wp-content/uploads/2021/08/20161050/logo-genial.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "9be46901d5c161fb535e40fe7c5e1b9becb74da9c3a033c4cc4b05d5c7088cd7",
+    "source_sha256": "e67e2bb3fab72c3165471ad1c44884775a7588177febcbaa7d343062fb567533"
+  },
+  {
+    "id": "59274605",
+    "name": "BANCO GM S.A.",
+    "aliases": [
+      "BCO GM S.A.",
+      "390"
+    ],
+    "logo": null
+  },
+  {
+    "id": "31880826",
+    "name": "Banco Guanabara S.A.",
+    "aliases": [
+      "BCO GUANABARA S.A.",
+      "612"
+    ],
+    "logo": null
+  },
+  {
+    "id": "53518684",
+    "name": "BANCO HSBC S.A.",
+    "aliases": [
+      "BCO HSBC S.A.",
+      "269"
+    ],
+    "logo": null
+  },
+  {
+    "id": "04866275",
+    "name": "Banco Inbursa S.A.",
+    "aliases": [
+      "BANCO INBURSA",
+      "012"
+    ],
+    "logo": null
+  },
+  {
+    "id": "33588252",
+    "name": "BANCO INDUSCRED DE INVESTIMENTO S.A.",
+    "aliases": [
+      "BCO INDUSCRED DE INVESTIM. S/A",
+      "708"
+    ],
+    "logo": null
+  },
+  {
+    "id": "31895683",
+    "name": "Banco Industrial do Brasil S.A.",
+    "aliases": [
+      "BCO INDUSTRIAL DO BRASIL S.A.",
+      "604"
+    ],
+    "logo": null
+  },
+  {
+    "id": "61182408",
+    "name": "Banco Investcred Unibanco S.A.",
+    "aliases": [
+      "BANCO INVESTCRED UNIBANCO S.A.",
+      "249"
+    ],
+    "logo": null
+  },
+  {
+    "id": "60394079",
+    "name": "Banco ItauBank S.A.",
+    "aliases": [
+      "BCO ITAUBANK S.A.",
+      "479"
+    ],
+    "logo": null
+  },
+  {
+    "id": "03017677",
+    "name": "Banco J. Safra S.A.",
+    "aliases": [
+      "BCO. J.SAFRA S.A.",
+      "074"
+    ],
+    "logo": null
+  },
+  {
+    "id": "33172537",
+    "name": "BANCO J.P. MORGAN S.A.",
+    "aliases": [
+      "BCO J.P. MORGAN S.A.",
+      "376"
+    ],
+    "logo": null
+  },
+  {
+    "id": "91884981",
+    "name": "Banco John Deere S.A.",
+    "aliases": [
+      "BANCO JOHN DEERE S.A.",
+      "217"
+    ],
+    "logo": null
+  },
+  {
+    "id": "07656500",
+    "name": "Banco KDB do Brasil S.A.",
+    "aliases": [
+      "BCO KDB BRASIL S.A.",
+      "076"
+    ],
+    "logo": null
+  },
+  {
+    "id": "02318507",
+    "name": "BANCO KEB HANA DO BRASIL S.A.",
+    "aliases": [
+      "BCO KEB HANA DO BRASIL S.A.",
+      "757"
+    ],
+    "logo": null
+  },
+  {
+    "id": "58497702",
+    "name": "BANCO LETSBANK S.A. - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+    "aliases": [
+      "BANCO LETSBANK S.A. - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+      "630"
+    ],
+    "logo": null
+  },
+  {
+    "id": "59118133",
+    "name": "Banco Luso Brasileiro S.A.",
+    "aliases": [
+      "BCO LUSO BRASILEIRO S.A.",
+      "600"
+    ],
+    "logo": null
+  },
+  {
+    "id": "09526594",
+    "name": "BANCO MASTER DE INVESTIMENTO S.A. - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+    "aliases": [
+      "MASTER BI S.A. - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+      "141"
+    ],
+    "logo": null
+  },
+  {
+    "id": "33884941",
+    "name": "BANCO MASTER MÚLTIPLO S.A. - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+    "aliases": [
+      "BANCO MASTER MÚLTIPLO - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+      "719"
+    ],
+    "logo": null
+  },
+  {
+    "id": "33923798",
+    "name": "BANCO MASTER S/A - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+    "aliases": [
+      "BANCO MASTER - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+      "243"
+    ],
+    "logo": null
+  },
+  {
+    "id": "17184037",
+    "name": "Banco Mercantil do Brasil S.A.",
+    "aliases": [
+      "BCO MERCANTIL DO BRASIL S.A.",
+      "389"
+    ],
+    "logo": "assets/banks/17184037.svg",
+    "logo_source": "https://www.bancomercantil.com.br/imagens/openbanking/mercantil.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "83a7935d791ce294c2035437c8cec71fc1a2f6538e185ae5e2ac3a3113ed7e95",
+    "source_sha256": "ce244740d6ba638b7c82da17b7025cfa9f2756d9c59177181b18d2ca7fe3fabd"
+  },
+  {
+    "id": "60814191",
+    "name": "BANCO MERCEDES-BENZ DO BRASIL S.A.",
+    "aliases": [
+      "BCO MERCEDES-BENZ S.A.",
+      "381"
+    ],
+    "logo": null
+  },
+  {
+    "id": "61088183",
+    "name": "Banco Mizuho do Brasil S.A.",
+    "aliases": [
+      "BCO MIZUHO S.A.",
+      "370"
+    ],
+    "logo": null
+  },
+  {
+    "id": "02801938",
+    "name": "BANCO MORGAN STANLEY S.A.",
+    "aliases": [
+      "BCO MORGAN STANLEY S.A.",
+      "066"
+    ],
+    "logo": null
+  },
+  {
+    "id": "60498557",
+    "name": "Banco MUFG Brasil S.A.",
+    "aliases": [
+      "BCO MUFG BRASIL S.A.",
+      "456"
+    ],
+    "logo": null
+  },
+  {
+    "id": "33657248",
+    "name": "BANCO NACIONAL DE DESENVOLVIMENTO ECONOMICO E SOCIAL",
+    "aliases": [
+      "BNDES",
+      "007"
+    ],
+    "logo": null
+  },
+  {
+    "id": "17157777",
+    "name": "BANCO NACIONAL S.A.",
+    "aliases": [
+      "BCO NACIONAL",
+      "415"
+    ],
+    "logo": null
+  },
+  {
+    "id": "59285411",
+    "name": "Banco Pan S.A.",
+    "aliases": [
+      "BANCO PAN",
+      "623"
+    ],
+    "logo": "assets/banks/59285411.svg",
+    "logo_source": "https://www.bancopan.com.br/content/dam/documentos/outros-produtos/open-banking/logo_pan_openbanking.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "e991ec8c91a0d81dd1c69f1fb69acfb5be5235e7b58a55c0fb56550d62cfa3e6",
+    "source_sha256": "4ca9e04c2f27ab627ff54dbd2d31a26640e29d431808e3ff78e724fce28d16ab"
+  },
+  {
+    "id": "61820817",
+    "name": "Banco Paulista S.A.",
+    "aliases": [
+      "BCO PAULISTA S.A.",
+      "611"
+    ],
+    "logo": null
+  },
+  {
+    "id": "62144175",
+    "name": "Banco Pine S.A.",
+    "aliases": [
+      "BCO PINE S.A.",
+      "643"
+    ],
+    "logo": null
+  },
+  {
+    "id": "61024352",
+    "name": "BANCO PLENO S.A. - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+    "aliases": [
+      "BM PLENO S.A. - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+      "653"
+    ],
+    "logo": null
+  },
+  {
+    "id": "01023570",
+    "name": "Banco Rabobank International Brasil S.A.",
+    "aliases": [
+      "BCO RABOBANK INTL BRASIL S.A.",
+      "747"
+    ],
+    "logo": null
+  },
+  {
+    "id": "68900810",
+    "name": "Banco Rendimento S.A.",
+    "aliases": [
+      "BCO RENDIMENTO S.A.",
+      "633"
+    ],
+    "logo": null
+  },
+  {
+    "id": "00517645",
+    "name": "BANCO RIBEIRAO PRETO S.A.",
+    "aliases": [
+      "BCO RIBEIRAO PRETO S.A.",
+      "741"
+    ],
+    "logo": null
+  },
+  {
+    "id": "33603457",
+    "name": "BANCO RODOBENS S.A.",
+    "aliases": [
+      "BCO RODOBENS S.A.",
+      "120"
+    ],
+    "logo": null
+  },
+  {
+    "id": "58160789",
+    "name": "Banco Safra S.A.",
+    "aliases": [
+      "BCO SAFRA S.A.",
+      "422"
+    ],
+    "logo": "assets/banks/58160789.svg",
+    "logo_source": "https://www.safra.com.br/shared/assets/img/safra-of.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "e54adf402dc6a1ca60402cded5eff8b62165c11b6d687e7aaf0c30d9be233627",
+    "source_sha256": "9c25f4839fe8a258db6c0a59f192120f97f5ef49830f3db05ebd6cac82e02e50"
+  },
+  {
+    "id": "00795423",
+    "name": "Banco Semear S.A.",
+    "aliases": [
+      "BANCO SEMEAR",
+      "743"
+    ],
+    "logo": null
+  },
+  {
+    "id": "11970623",
+    "name": "BANCO SENFF S.A.",
+    "aliases": [
+      "BCO SENFF S.A.",
+      "276"
+    ],
+    "logo": null
+  },
+  {
+    "id": "76543115",
+    "name": "Banco Sistema S.A.",
+    "aliases": [
+      "BANCO SISTEMA",
+      "754"
+    ],
+    "logo": null
+  },
+  {
+    "id": "61533584",
+    "name": "BANCO SOCIETE GENERALE BRASIL S.A.",
+    "aliases": [
+      "BCO SOCIETE GENERALE BRASIL",
+      "366"
+    ],
+    "logo": null
+  },
+  {
+    "id": "60889128",
+    "name": "BANCO SOFISA S.A.",
+    "aliases": [
+      "BCO SOFISA S.A.",
+      "637"
+    ],
+    "logo": "assets/banks/60889128.svg",
+    "logo_source": "https://www.sofisa.com.br/openbanking/logo_sofisa.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "4981ef30e71424e7527b8fb83fd374f332bbff2021fdf0863eb838cb5f4b1a7a",
+    "source_sha256": "8e8037f1bd61964c959251bad1b16b5941ab8d950487ec1945f7402867a3deed"
+  },
+  {
+    "id": "28811341",
+    "name": "BANCO STONEX S.A.",
+    "aliases": [
+      "BCO STONEX S.A.",
+      "554"
+    ],
+    "logo": null
+  },
+  {
+    "id": "60518222",
+    "name": "Banco Sumitomo Mitsui Brasileiro S.A.",
+    "aliases": [
+      "BCO SUMITOMO MITSUI BRASIL S.A.",
+      "464"
+    ],
+    "logo": null
+  },
+  {
+    "id": "07679404",
+    "name": "BANCO TOPÁZIO S.A.",
+    "aliases": [
+      "BANCO TOPÁZIO S.A.",
+      "082"
+    ],
+    "logo": null
+  },
+  {
+    "id": "03215790",
+    "name": "Banco Toyota do Brasil S.A.",
+    "aliases": [
+      "BCO TOYOTA DO BRASIL S.A.",
+      "387"
+    ],
+    "logo": null
+  },
+  {
+    "id": "52067630",
+    "name": "BANCO TRATON BRASIL S.A.",
+    "aliases": [
+      "BANCO TRATON BRASIL S.A.",
+      "795"
+    ],
+    "logo": null
+  },
+  {
+    "id": "11703662",
+    "name": "BANCO TRAVELEX S.A.",
+    "aliases": [
+      "BANCO TRAVELEX S.A.",
+      "095"
+    ],
+    "logo": null
+  },
+  {
+    "id": "17351180",
+    "name": "BANCO TRIANGULO S.A.",
+    "aliases": [
+      "BCO TRIANGULO S.A.",
+      "634"
+    ],
+    "logo": null
+  },
+  {
+    "id": "57839805",
+    "name": "Banco Tricury S.A.",
+    "aliases": [
+      "BCO TRICURY S.A.",
+      "018"
+    ],
+    "logo": null
+  },
+  {
+    "id": "32062580",
+    "name": "BANCO UBS (BRASIL) S.A.",
+    "aliases": [
+      "BCO UBS BRASIL",
+      "505"
+    ],
+    "logo": null
+  },
+  {
+    "id": "59109165",
+    "name": "Banco Volkswagen S.A.",
+    "aliases": [
+      "BCO VOLKSWAGEN S.A",
+      "393"
+    ],
+    "logo": null
+  },
+  {
+    "id": "59588111",
+    "name": "Banco Votorantim S.A.",
+    "aliases": [
+      "BCO VOTORANTIM S.A.",
+      "655"
+    ],
+    "logo": "assets/banks/59588111.svg",
+    "logo_source": "https://www.bv.com.br/ng15-open-base-recepcao-jornada/assets/images/logo-bv.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "27c285329e0320b070983b769fd8fc1b493da7e5f99374e81a8cd5742b5d07c3",
+    "source_sha256": "936bddaa9bcebeccd0ed3274560389efec07868a1c2e8d0f3b921f54664d69f3"
+  },
+  {
+    "id": "78626983",
+    "name": "Banco VR S.A.",
+    "aliases": [
+      "BCO VR S.A.",
+      "610"
+    ],
+    "logo": null
+  },
+  {
+    "id": "13720915",
+    "name": "Banco Western Union do Brasil S.A.",
+    "aliases": [
+      "BCO WESTERN UNION",
+      "119"
+    ],
+    "logo": null
+  },
+  {
+    "id": "15357060",
+    "name": "Banco Woori Bank do Brasil S.A.",
+    "aliases": [
+      "BCO WOORI BANK DO BRASIL S.A.",
+      "124"
+    ],
+    "logo": null
+  },
+  {
+    "id": "33264668",
+    "name": "Banco XP S.A.",
+    "aliases": [
+      "BCO XP S.A.",
+      "348"
+    ],
+    "logo": "assets/banks/33264668.svg",
+    "logo_source": "https://openbanking-redirect.xpi.com.br/assets/xpi.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "2eb1da736a5fd1769f60988a072eb45b234b61b9db7e90a59d54addaa78219fa",
+    "source_sha256": "7f75762e82f828eb401dbc27d38b2d57eda0b14d5662a89315bb756ade7b5566"
+  },
+  {
+    "id": "10371492",
+    "name": "Banco Yamaha Motor do Brasil S.A.",
+    "aliases": [
+      "BCO YAMAHA MOTOR S.A.",
+      "475"
+    ],
+    "logo": null
+  },
+  {
+    "id": "10264663",
+    "name": "BancoSeguro S.A.",
+    "aliases": [
+      "BANCOSEGURO S.A.",
+      "081"
+    ],
+    "logo": null
+  },
+  {
+    "id": "28127603",
+    "name": "BANESTES S.A. BANCO DO ESTADO DO ESPIRITO SANTO",
+    "aliases": [
+      "BCO BANESTES S.A.",
+      "021"
+    ],
+    "logo": "assets/banks/28127603.svg",
+    "logo_source": "https://cdn.banestes.b.br/openbanking/img/logo_centralizada.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "5fb4b89227c4f1a6f6617d98026c30d56cf3c73abc4be6c70cfa27c00b3e3c27",
+    "source_sha256": "011b293dd99bc4488d61ec98eae5d11ed7dfe0043d09e2f45b7b34044ca496ae"
+  },
+  {
+    "id": "62073200",
+    "name": "Bank of America Merrill Lynch Banco Múltiplo S.A.",
+    "aliases": [
+      "BOFA MERRILL LYNCH BM S.A.",
+      "755"
+    ],
+    "logo": null
+  },
+  {
+    "id": "07450604",
+    "name": "BANK OF CHINA (BRASIL) BANCO MÚLTIPLO S/A",
+    "aliases": [
+      "BOC BRASIL",
+      "320"
+    ],
+    "logo": null
+  },
+  {
+    "id": "42963742",
+    "name": "BANSUR JM SOCIEDADE DE CRÉDITO DIRETO S/A",
+    "aliases": [
+      "BANSUR JM SCD S.A.",
+      "759"
+    ],
+    "logo": null
+  },
+  {
+    "id": "02671743",
+    "name": "BANVOX DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS LTDA - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+    "aliases": [
+      "BANVOX DTVM - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+      "591"
+    ],
+    "logo": null
+  },
+  {
+    "id": "14511781",
+    "name": "BARI COMPANHIA HIPOTECÁRIA",
+    "aliases": [
+      "BARI CIA HIPOTECÁRIA",
+      "268"
+    ],
+    "logo": null
+  },
+  {
+    "id": "58006471",
+    "name": "BASE DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS LTDA.",
+    "aliases": [
+      "BASE DTVM",
+      "781"
+    ],
+    "logo": null
+  },
+  {
+    "id": "45283173",
+    "name": "BBVA BRASIL BANCO DE INVESTIMENTO S.A.",
+    "aliases": [
+      "BBVA BRASIL BI S.A.",
+      "496"
+    ],
+    "logo": null
+  },
+  {
+    "id": "20443996",
+    "name": "BECKER FINANCEIRA S.A. - CRÉDITO, FINANCIAMENTO E INVESTIMENTO",
+    "aliases": [
+      "BECKER FINANCEIRA SA - CFI",
+      "768"
+    ],
+    "logo": null
+  },
+  {
+    "id": "35523352",
+    "name": "BEES INSTITUICAO DE PAGAMENTO LTDA.",
+    "aliases": [
+      "BEES IP LTDA.",
+      "695"
+    ],
+    "logo": null
+  },
+  {
+    "id": "32074986",
+    "name": "BEETELLER INSTITUIÇÃO DE PAGAMENTO LTDA.",
+    "aliases": [
+      "BEETELLER IP LTDA.",
+      "550"
+    ],
+    "logo": null
+  },
+  {
+    "id": "59396084",
+    "name": "BFC SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "BFC SCD S.A.",
+      "699"
+    ],
+    "logo": null
+  },
+  {
+    "id": "33862244",
+    "name": "BGC LIQUIDEZ DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS LTDA",
+    "aliases": [
+      "BGC LIQUIDEZ DTVM LTDA",
+      "134"
+    ],
+    "logo": null
+  },
+  {
+    "id": "68757681",
+    "name": "BINANCE BRASIL CORRETORA DE CÂMBIO E VALORES MOBILIÁRIOS S.A.",
+    "aliases": [
+      "BINANCE BRASIL",
+      "365"
+    ],
+    "logo": null
+  },
+  {
+    "id": "58367961",
+    "name": "BIT SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "BIT SCD S.A.",
+      "698"
+    ],
+    "logo": null
+  },
+  {
+    "id": "12481100",
+    "name": "BIZ INSTITUIÇÃO DE PAGAMENTO S.A.",
+    "aliases": [
+      "BIZ IP LTDA.",
+      "686"
+    ],
+    "logo": null
+  },
+  {
+    "id": "16814330",
+    "name": "BK INSTITUIÇÃO DE PAGAMENTO S.A.",
+    "aliases": [
+      "BK IP S.A.",
+      "690"
+    ],
+    "logo": null
+  },
+  {
+    "id": "11581339",
+    "name": "BMP SOCIEDADE DE CRÉDITO AO MICROEMPREENDEDOR E A EMPRESA DE PEQUENO PORTE LTDA.",
+    "aliases": [
+      "BMP SCMEPP LTDA",
+      "274"
+    ],
+    "logo": null
+  },
+  {
+    "id": "34337707",
+    "name": "BMP SOCIEDADE DE CRÉDITO DIRETO S.A",
+    "aliases": [
+      "BMP SCD S.A.",
+      "531"
+    ],
+    "logo": null
+  },
+  {
+    "id": "17826860",
+    "name": "BMS SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "BMS SCD S.A.",
+      "377"
+    ],
+    "logo": null
+  },
+  {
+    "id": "45331622",
+    "name": "BNK DIGITAL SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "BNK DIGITAL SCD S.A.",
+      "547"
+    ],
+    "logo": null
+  },
+  {
+    "id": "42272526",
+    "name": "BNY Mellon Banco S.A.",
+    "aliases": [
+      "BNY MELLON BCO S.A.",
+      "017"
+    ],
+    "logo": null
+  },
+  {
+    "id": "36586946",
+    "name": "BONUSPAGO SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "BONUSPAGO SCD S.A.",
+      "408"
+    ],
+    "logo": null
+  },
+  {
+    "id": "27842177",
+    "name": "BPY CORRETORA DE CÂMBIO, TÍTULOS E VALORES MOBILIÁRIOS S.A.",
+    "aliases": [
+      "BPY CCTVM S.A.",
+      "271"
+    ],
+    "logo": null
+  },
+  {
+    "id": "13220493",
+    "name": "BR Partners Banco de Investimento S.A.",
+    "aliases": [
+      "BR PARTNERS BI",
+      "126"
+    ],
+    "logo": null
+  },
+  {
+    "id": "44077014",
+    "name": "BR-CAPITAL DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS S.A.",
+    "aliases": [
+      "BR-CAPITAL DTVM S.A.",
+      "433"
+    ],
+    "logo": null
+  },
+  {
+    "id": "30507541",
+    "name": "BRASIL CASH INSTITUICAO DE PAGAMENTO S.A",
+    "aliases": [
+      "BRASIL CASH IP S.A.",
+      "683"
+    ],
+    "logo": null
+  },
+  {
+    "id": "19307785",
+    "name": "BRAZA BANK S.A. BANCO DE CÂMBIO",
+    "aliases": [
+      "BRAZA BANK S.A. BCO DE CÂMBIO",
+      "128"
+    ],
+    "logo": null
+  },
+  {
+    "id": "16944141",
+    "name": "Broker Brasil Corretora de Câmbio Ltda.",
+    "aliases": [
+      "BROKER BRASIL CC LTDA.",
+      "142"
+    ],
+    "logo": null
+  },
+  {
+    "id": "11491029",
+    "name": "BSN PAGAMENTOS INSTITUIÇÃO DE PAGAMENTO LTDA",
+    "aliases": [
+      "BSN",
+      "670"
+    ],
+    "logo": null
+  },
+  {
+    "id": "73622748",
+    "name": "BT CORRETORA DE CÂMBIO LTDA.",
+    "aliases": [
+      "BT CC LTDA.",
+      "080"
+    ],
+    "logo": null
+  },
+  {
+    "id": "39696395",
+    "name": "CACTVS INSTITUICAO DE PAGAMENTO S.A",
+    "aliases": [
+      "CACTVS IP S.A.",
+      "596"
+    ],
+    "logo": null
+  },
+  {
+    "id": "40083667",
+    "name": "CAPITAL CONSIG SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "CAPITAL CONSIG SCD S.A.",
+      "465"
+    ],
+    "logo": null
+  },
+  {
+    "id": "62237649",
+    "name": "CAROL DISTRIBUIDORA DE TITULOS E VALORES MOBILIARIOS LTDA.",
+    "aliases": [
+      "CAROL DTVM LTDA.",
+      "288"
+    ],
+    "logo": null
+  },
+  {
+    "id": "21332862",
+    "name": "CARTOS SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "CARTOS SCD S.A.",
+      "324"
+    ],
+    "logo": null
+  },
+  {
+    "id": "09313766",
+    "name": "CARUANA S.A. - SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTO",
+    "aliases": [
+      "CARUANA SCFI",
+      "130"
+    ],
+    "logo": null
+  },
+  {
+    "id": "05442029",
+    "name": "Casa do Crédito S.A. Sociedade de Crédito ao Microempreendedor",
+    "aliases": [
+      "CASA CREDITO S.A. SCM",
+      "159"
+    ],
+    "logo": null
+  },
+  {
+    "id": "30723871",
+    "name": "CASAS BAHIA PAY INSTITUIÇÃO DE PAGAMENTO LTDA.",
+    "aliases": [
+      "CASAS BAHIA PAY IP LTDA.",
+      "675"
+    ],
+    "logo": null
+  },
+  {
+    "id": "34829992",
+    "name": "CBSF DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS S.A.- EM LIQUIDAÇÃO EXTRAJUDICIAL",
+    "aliases": [
+      "CBSF DTVM -EM LIQUIDAÇÃO EXTRAJUDICIAL",
+      "528"
+    ],
+    "logo": null
+  },
+  {
+    "id": "18394228",
+    "name": "CDC SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "CDC SCD S.A.",
+      "470"
+    ],
+    "logo": null
+  },
+  {
+    "id": "13935893",
+    "name": "CELCOIN INSTITUICAO DE PAGAMENTO S.A.",
+    "aliases": [
+      "CELCOIN IP S.A.",
+      "509"
+    ],
+    "logo": null
+  },
+  {
+    "id": "48632754",
+    "name": "CELCOIN SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "CELCOIN SCD",
+      "668"
+    ],
+    "logo": null
+  },
+  {
+    "id": "23399607",
+    "name": "CERC S.A.",
+    "aliases": [
+      "CERC S.A.",
+      "n/a"
+    ],
+    "logo": null
+  },
+  {
+    "id": "01027058",
+    "name": "CIELO S.A. - INSTITUIÇÃO DE PAGAMENTO",
+    "aliases": [
+      "CIELO IP S.A.",
+      "362"
+    ],
+    "logo": "assets/banks/01027058.svg",
+    "logo_source": "https://www.cielo.com.br/assets_cielo/logo_footer_cielo.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "486ef72663a420201a99db8adcf71f81a6adbdccab7b49e5b0d31f95a05b957e",
+    "source_sha256": "541a6d62016ae0fb12c7eb16e23501e2f97ad377faaa2d52c9425b41703f8f7b"
+  },
+  {
+    "id": "02992335",
+    "name": "CIP S.A",
+    "aliases": [
+      "CIP SA Siloc",
+      "n/a"
+    ],
+    "logo": null
+  },
+  {
+    "id": "04391007",
+    "name": "CIP S.A",
+    "aliases": [
+      "CIP SA Sitraf",
+      "n/a"
+    ],
+    "logo": null
+  },
+  {
+    "id": "29011780",
+    "name": "CIP S.A",
+    "aliases": [
+      "CIP SA C3",
+      "n/a"
+    ],
+    "logo": null
+  },
+  {
+    "id": "33042953",
+    "name": "Citibank N.A.",
+    "aliases": [
+      "CITIBANK N.A.",
+      "477"
+    ],
+    "logo": null
+  },
+  {
+    "id": "18189547",
+    "name": "CLOUDWALK INSTITUIÇÃO DE PAGAMENTO E SERVICOS LTDA",
+    "aliases": [
+      "CLOUDWALK IP LTDA",
+      "542"
+    ],
+    "logo": null
+  },
+  {
+    "id": "02685483",
+    "name": "CM CAPITAL MARKETS CORRETORA DE CÂMBIO, TÍTULOS E VALORES MOBILIÁRIOS LTDA",
+    "aliases": [
+      "CM CAPITAL MARKETS CCTVM LTDA",
+      "180"
+    ],
+    "logo": null
+  },
+  {
+    "id": "36947229",
+    "name": "COBUCCIO S/A - SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTOS",
+    "aliases": [
+      "COBUCCIO S.A. SCFI",
+      "402"
+    ],
+    "logo": null
+  },
+  {
+    "id": "09512542",
+    "name": "Codepe Corretora de Valores e Câmbio S.A.",
+    "aliases": [
+      "CODEPE CVC S.A.",
+      "127"
+    ],
+    "logo": null
+  },
+  {
+    "id": "00460065",
+    "name": "COLUNA S/A DISTRIBUIDORA DE TITULOS E VALORES MOBILIÁRIOS",
+    "aliases": [
+      "COLUNA S.A. DTVM",
+      "423"
+    ],
+    "logo": null
+  },
+  {
+    "id": "10398952",
+    "name": "CONFEDERAÇÃO NACIONAL DAS COOPERATIVAS CENTRAIS DE CRÉDITO E ECONOMIA FAMILIAR E SOLIDÁRIA - CRESOL CONFEDERAÇÃO",
+    "aliases": [
+      "CRESOL CONFEDERAÇÃO",
+      "133"
+    ],
+    "logo": "assets/banks/10398952.svg",
+    "logo_source": "https://cresol.com.br/util/cresol-logo-obk.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "3c52a6d5072f1358aeb9fc3645afd09d2d4ca724926ad4df65bbfb8efa449f1c",
+    "source_sha256": "431bbb26f8526ad35c2f75450c4e68ff24161ce66f58bad03de01bbec71c66db"
+  },
+  {
+    "id": "04913129",
+    "name": "CONFIDENCE SOCIEDADE CORRETORA DE CAMBIO S.A.",
+    "aliases": [
+      "CONFIDENCE CC S.A.",
+      "060"
+    ],
+    "logo": null
+  },
+  {
+    "id": "12473687",
+    "name": "CONTA PRONTA INSTITUICAO DE PAGAMENTO LTDA",
+    "aliases": [
+      "CONTA PRONTA IP",
+      "569"
+    ],
+    "logo": null
+  },
+  {
+    "id": "53720128",
+    "name": "CONTA SIMPLES SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "CONTA SIMPLES SCD S.A.",
+      "023"
+    ],
+    "logo": null
+  },
+  {
+    "id": "47381104",
+    "name": "CONTAAZUL INSTITUICAO DE PAGAMENTO LTDA.",
+    "aliases": [
+      "CONTAAZUL IP LTDA.",
+      "775"
+    ],
+    "logo": null
+  },
+  {
+    "id": "05463212",
+    "name": "Cooperativa Central de Crédito - Ailos",
+    "aliases": [
+      "COOPCENTRAL AILOS",
+      "085"
+    ],
+    "logo": "assets/banks/05463212.svg",
+    "logo_source": "https://www.ailos.coop.br/wp-content/uploads/2023/06/Logos_512x512px_Ailos.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "df3f66386a2e860438bd92d51c9951f470ba12a17b48dde2fcffc0df1aced746",
+    "source_sha256": "ca043b92fd666a4f4ec01162b8eaec0b96eb69d599e477b73fa2ba9fe8f83664"
+  },
+  {
+    "id": "00315557",
+    "name": "COOPERATIVA CENTRAL DE CRÉDITO UNICRED DO BRASIL - UNICRED DO BRASIL",
+    "aliases": [
+      "UNICRED DO BRASIL",
+      "136"
+    ],
+    "logo": "assets/banks/00315557.svg",
+    "logo_source": "https://unicred.com.br/site/logo_unicred_vertical-margem90px.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "517e3f9cbb41ac91d26fcb414d5827e1bcd30c45ecd7686c20da0aec0865beb8",
+    "source_sha256": "6a4f9713f091dcba81fb5a08c84168925f9bdf48fd6e2d1e1a939e3281922ec4"
+  },
+  {
+    "id": "08240446",
+    "name": "COOPERATIVA DE CREDITO RURAL DE IBIAM - SULCREDI/IBIAM",
+    "aliases": [
+      "CCR DE IBIAM",
+      "391"
+    ],
+    "logo": null
+  },
+  {
+    "id": "00204963",
+    "name": "COOPERATIVA DE CREDITO RURAL SEARA - CREDISEARA",
+    "aliases": [
+      "CCR SEARA",
+      "430"
+    ],
+    "logo": null
+  },
+  {
+    "id": "08253539",
+    "name": "COOPERATIVA DE CREDITO SULCREDI AMPLEA",
+    "aliases": [
+      "COOP SULCREDI AMPLEA",
+      "273"
+    ],
+    "logo": null
+  },
+  {
+    "id": "27302181",
+    "name": "COOPERATIVA DE CRÉDITO DOS SERVIDORES DA UNIVERSIDADE FEDERAL DO ESPIRITO SANTO",
+    "aliases": [
+      "CRED.UFES",
+      "427"
+    ],
+    "logo": null
+  },
+  {
+    "id": "04715685",
+    "name": "COOPERATIVA DE CRÉDITO MÚTUO DOS DESPACHANTES DE TRÂNSITO DE SANTA CATARINA E RIO GRANDE DO SUL - SICOOB CREDITRAN",
+    "aliases": [
+      "CCM DESP TRÂNS SC E RS",
+      "016"
+    ],
+    "logo": null
+  },
+  {
+    "id": "20833992",
+    "name": "COOPERATIVA DE CRÉDITO MÚTUO DOS EMPREGADOS DO CENTRO UNIVERSITÁRIO NEWTON PAIVA LTDA. - CREDIPAIVA - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+    "aliases": [
+      "CC MECUNP - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+      "772"
+    ],
+    "logo": null
+  },
+  {
+    "id": "01330387",
+    "name": "COOPERATIVA DE CRÉDITO POPULAR DO BRASIL - CREHNOR",
+    "aliases": [
+      "COOPERATIVA DE CRÉDITO POPULAR DO BRASIL",
+      "350"
+    ],
+    "logo": null
+  },
+  {
+    "id": "76461557",
+    "name": "Cooperativa de Crédito Rural Coopavel",
+    "aliases": [
+      "CCR COOPAVEL",
+      "281"
+    ],
+    "logo": null
+  },
+  {
+    "id": "01073966",
+    "name": "Cooperativa de Crédito Rural de Abelardo Luz - Sulcredi/Crediluz",
+    "aliases": [
+      "CCR DE ABELARDO LUZ",
+      "322"
+    ],
+    "logo": null
+  },
+  {
+    "id": "08482873",
+    "name": "COOPERATIVA DE CRÉDITO RURAL DO AGRESTE ALAGOANO - COOPERAGRE",
+    "aliases": [
+      "CCR DO AGRESTE ALAGOANO",
+      "673"
+    ],
+    "logo": null
+  },
+  {
+    "id": "05491616",
+    "name": "COOPERATIVA DE CRÉDITO, POUPANÇA E SERVIÇOS FINANCEIROS - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+    "aliases": [
+      "COOP CREDITAG - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+      "400"
+    ],
+    "logo": null
+  },
+  {
+    "id": "03844699",
+    "name": "COOPERATIVA DE ECONOMIA E CREDITO MUTUO DOS TRABALHADORES PORTUARIOS DA GRANDE VITORIA - CREDESTIVA.",
+    "aliases": [
+      "CECM DOS TRAB.PORT. DA G.VITOR",
+      "385"
+    ],
+    "logo": null
+  },
+  {
+    "id": "92825397",
+    "name": "COOPERATIVA DE ECONOMIA E CRÉDITO MÚTUO DOS ELETRICITÁRIOS E DOS TRABALHADORES DAS EMPRESAS DO SETOR DE ENERGIA - COOPCRECE",
+    "aliases": [
+      "COOPCRECE",
+      "543"
+    ],
+    "logo": null
+  },
+  {
+    "id": "01658426",
+    "name": "COOPERFORTE COOPERATIVA DE CRÉDITO E INVESTIMENTOS LTDA",
+    "aliases": [
+      "COOP COOPERFORTE LTDA.",
+      "379"
+    ],
+    "logo": null
+  },
+  {
+    "id": "37880206",
+    "name": "CORA SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTO S.A.",
+    "aliases": [
+      "CORA SCFI",
+      "403"
+    ],
+    "logo": "assets/banks/37880206.svg",
+    "logo_source": "https://corastatic.com/openbank/img/logo-cora.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "a869a6f9d8b63769a82b241497bb704c06f6f6ea6dc7f319b86a48cd65ef4508",
+    "source_sha256": "251c9f35b91fa264f8fd3d4e8b51bf71c4aad35f3379c206bad3f31cb0e6d13a"
+  },
+  {
+    "id": "82096447",
+    "name": "CREDI&GENTE - COOPERATIVA DE CRÉDITO E INVESTIMENTOS",
+    "aliases": [
+      "COOP CREDI&GENTE",
+      "440"
+    ],
+    "logo": null
+  },
+  {
+    "id": "81723108",
+    "name": "CREDICOAMO CREDITO RURAL COOPERATIVA",
+    "aliases": [
+      "CREDICOAMO",
+      "010"
+    ],
+    "logo": null
+  },
+  {
+    "id": "39676772",
+    "name": "CREDIFIT SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "CREDIFIT SCD S.A.",
+      "452"
+    ],
+    "logo": null
+  },
+  {
+    "id": "62109566",
+    "name": "CREDISAN COOPERATIVA DE CRÉDITO",
+    "aliases": [
+      "CREDISAN CC",
+      "089"
+    ],
+    "logo": null
+  },
+  {
+    "id": "04632856",
+    "name": "CREDISIS - CENTRAL DE COOPERATIVAS DE CRÉDITO",
+    "aliases": [
+      "CREDISIS - CENTRAL DE COOPERATIVAS DE CRÉDITO",
+      "097"
+    ],
+    "logo": null
+  },
+  {
+    "id": "32997490",
+    "name": "Creditas Sociedade de Crédito Direto S.A.",
+    "aliases": [
+      "CREDITAS SCD",
+      "342"
+    ],
+    "logo": null
+  },
+  {
+    "id": "39664698",
+    "name": "CREDSYSTEM SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "CREDSYSTEM SCD S.A.",
+      "428"
+    ],
+    "logo": null
+  },
+  {
+    "id": "18188384",
+    "name": "CREFAZ SOCIEDADE DE CRÉDITO AO MICROEMPREENDEDOR E A EMPRESA DE PEQUENO PORTE S.A.",
+    "aliases": [
+      "CREFAZ SCMEPP SA",
+      "321"
+    ],
+    "logo": null
+  },
+  {
+    "id": "30498377",
+    "name": "CSD CENTRAL DE SERVICOS DE REGISTRO E DEPOSITO AOS MERCADOS FINANCEIRO E DE CAPITAIS S.A.",
+    "aliases": [
+      "CSDBR",
+      "n/a"
+    ],
+    "logo": null
+  },
+  {
+    "id": "54641030",
+    "name": "Câmara B3",
+    "aliases": [
+      "Câmara B3",
+      "0"
+    ],
+    "logo": null
+  },
+  {
+    "id": "60934221",
+    "name": "Câmara de Câmbio B3",
+    "aliases": [
+      "Câmbio B3",
+      "0"
+    ],
+    "logo": null
+  },
+  {
+    "id": "38224857",
+    "name": "DELFINANCE SOCIEDADE DE CREDITO DIRETO S.A.",
+    "aliases": [
+      "DELFINANCE SCD S.A.",
+      "435"
+    ],
+    "logo": null
+  },
+  {
+    "id": "55823094",
+    "name": "DELTA GLOBAL SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "DELTA GLOBAL SCD S.A.",
+      "680"
+    ],
+    "logo": null
+  },
+  {
+    "id": "10663610",
+    "name": "DESENVOLVE SP - AGÊNCIA DE FOMENTO DO ESTADO DE SÃO PAULO S.A.",
+    "aliases": [
+      "AF DESENVOLVE SP S.A.",
+      "577"
+    ],
+    "logo": null
+  },
+  {
+    "id": "62331228",
+    "name": "DEUTSCHE BANK S.A. - BANCO ALEMAO",
+    "aliases": [
+      "DEUTSCHE BANK S.A.BCO ALEMAO",
+      "487"
+    ],
+    "logo": null
+  },
+  {
+    "id": "48584954",
+    "name": "DGBK CREDIT S.A. - SOCIEDADE DE CRÉDITO DIRETO.",
+    "aliases": [
+      "DGBK CREDIT S.A. - SOCIEDADE DE CRÉDITO DIRETO.",
+      "575"
+    ],
+    "logo": null
+  },
+  {
+    "id": "25021356",
+    "name": "DLOCAL BRASIL INSTITUIÇÃO DE PAGAMENTO S.A.",
+    "aliases": [
+      "DLOCAL BRASIL IP S.A.",
+      "803"
+    ],
+    "logo": null
+  },
+  {
+    "id": "37555231",
+    "name": "DM SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "DM",
+      "449"
+    ],
+    "logo": null
+  },
+  {
+    "id": "91669747",
+    "name": "DM SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTO S.A",
+    "aliases": [
+      "DM SCFI",
+      "646"
+    ],
+    "logo": null
+  },
+  {
+    "id": "13370835",
+    "name": "DOCK INSTITUIÇÃO DE PAGAMENTO S.A.",
+    "aliases": [
+      "DOCK IP S.A.",
+      "301"
+    ],
+    "logo": "assets/banks/13370835.svg",
+    "logo_source": "https://statics.contabemol.com.br/images/contabemol/emails/Sem_fundo_Azul_Versao_reduzida.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "e6930e224024cb1bf05bf9045137839d8977e45bc273f53549771456e1fd3cc3",
+    "source_sha256": "839ce4d676c0ac0f94b22fdfe8e7c4c631b60d8c1d9d81ee583bfc2f91c52b98"
+  },
+  {
+    "id": "35479592",
+    "name": "DUFRIO FINANCEIRA, CRÉDITO, FINANCIAMENTO E INVESTIMENTOS S.A.",
+    "aliases": [
+      "DUFRIO CFI S.A.",
+      "676"
+    ],
+    "logo": null
+  },
+  {
+    "id": "21018182",
+    "name": "EBANX INSTITUICAO DE PAGAMENTOS LTDA.",
+    "aliases": [
+      "EBANX IP LTDA.",
+      "383"
+    ],
+    "logo": "assets/banks/21018182.svg",
+    "logo_source": "https://cdn-assets.ebanx.com/images/ebanx-ip-blue.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "9e588274139d057c6b8dba8359a184a8a2efbc74e7d3e68772852b400c9a353f",
+    "source_sha256": "42237c446a6a8b607bbc7d1de7bb6d5db3514548e8a335e6a9d7c03349802cd1"
+  },
+  {
+    "id": "13059145",
+    "name": "EBURY BANCO DE CÂMBIO S.A.",
+    "aliases": [
+      "EBURY BCO DE CÂMBIO S.A.",
+      "144"
+    ],
+    "logo": null
+  },
+  {
+    "id": "32820711",
+    "name": "EFEX INSTITUIÇÃO DE PAGAMENTO S.A.",
+    "aliases": [
+      "EFEX IP",
+      "693"
+    ],
+    "logo": null
+  },
+  {
+    "id": "94968518",
+    "name": "EFX CORRETORA DE CÂMBIO LTDA.",
+    "aliases": [
+      "EFX CC LTDA.",
+      "289"
+    ],
+    "logo": null
+  },
+  {
+    "id": "09089356",
+    "name": "EFÍ S.A. - INSTITUIÇÃO DE PAGAMENTO",
+    "aliases": [
+      "EFÍ S.A. - IP",
+      "364"
+    ],
+    "logo": "assets/banks/09089356.svg",
+    "logo_source": "https://gerencianet-pub-prod-1.s3.amazonaws.com/openbanking/efi-by-gn-512x512.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "f7a2421875f54e1f68162bb5d9cde0d8463bcdaf7247ea4af59cf9b488af5fc4",
+    "source_sha256": "185517da3805bc5c910f62920d22b2d69651f70dcd380ce1ec9ba8b242d2f8c0"
+  },
+  {
+    "id": "34139916",
+    "name": "EMCASH SERVIÇOS FINANCEIROS SOCIEDADE DE EMPRÉSTIMO ENTRE PESSOAS S.A.",
+    "aliases": [
+      "EMCASH SERV FINANC SEP S.A.",
+      "760"
+    ],
+    "logo": null
+  },
+  {
+    "id": "00714671",
+    "name": "EWALLY INSTITUIÇÃO DE PAGAMENTO S.A.",
+    "aliases": [
+      "EWALLY IP S.A.",
+      "534"
+    ],
+    "logo": null
+  },
+  {
+    "id": "73302408",
+    "name": "EXIM SOCIEDADE CORRETORA DE CÂMBIO LTDA",
+    "aliases": [
+      "EXIM SCC",
+      "514"
+    ],
+    "logo": null
+  },
+  {
+    "id": "08673569",
+    "name": "F.D'GOLD - DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS LTDA.",
+    "aliases": [
+      "F D GOLD DTVM LTDA",
+      "395"
+    ],
+    "logo": null
+  },
+  {
+    "id": "15581638",
+    "name": "Facta Financeira S.A. - Crédito Financiamento e Investimento",
+    "aliases": [
+      "FACTA S.A. CFI",
+      "149"
+    ],
+    "logo": null
+  },
+  {
+    "id": "32648370",
+    "name": "FAIR SOCIEDADE CORRETORA DE CÂMBIO S.A.",
+    "aliases": [
+      "FAIR SOCIEDADE CC",
+      "196"
+    ],
+    "logo": null
+  },
+  {
+    "id": "44663846",
+    "name": "FESTOR INSTITUIÇÃO DE PAGAMENTO LTDA.",
+    "aliases": [
+      "FESTOR IP LTDA.",
+      "704"
+    ],
+    "logo": null
+  },
+  {
+    "id": "39738065",
+    "name": "FFCRED SOCIEDADE DE CRÉDITO DIRETO S.A..",
+    "aliases": [
+      "FFCRED SCD S.A.",
+      "510"
+    ],
+    "logo": null
+  },
+  {
+    "id": "37678915",
+    "name": "FIDD DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS LTDA.",
+    "aliases": [
+      "FIDD DTVM LTDA.",
+      "587"
+    ],
+    "logo": null
+  },
+  {
+    "id": "45716916",
+    "name": "FIDEM SOCIEDADE DE CRÉDITO DIRETO S/A",
+    "aliases": [
+      "FIDEM SCD S/A",
+      "678"
+    ],
+    "logo": null
+  },
+  {
+    "id": "04307598",
+    "name": "FIDÚCIA SOCIEDADE DE CRÉDITO AO MICROEMPREENDEDOR E À EMPRESA DE PEQUENO PORTE LIMITADA.",
+    "aliases": [
+      "FIDUCIA SCMEPP LTDA",
+      "382"
+    ],
+    "logo": null
+  },
+  {
+    "id": "00411939",
+    "name": "FINAMAX S.A. - CREDITO, FINANCIAMENTO E INVESTIMENTO",
+    "aliases": [
+      "FINAMAX S.A. CFI",
+      "714"
+    ],
+    "logo": null
+  },
+  {
+    "id": "36266751",
+    "name": "FINVEST DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS LTDA.",
+    "aliases": [
+      "FINVEST DTVM",
+      "512"
+    ],
+    "logo": null
+  },
+  {
+    "id": "13203354",
+    "name": "FITS INSTITUIÇÃO DE PAGAMENTO S.A.",
+    "aliases": [
+      "FITS IP",
+      "450"
+    ],
+    "logo": null
+  },
+  {
+    "id": "23114447",
+    "name": "FLAGSHIP INSTITUICAO DE PAGAMENTO LTDA",
+    "aliases": [
+      "FLAGSHIP IP LTDA",
+      "566"
+    ],
+    "logo": null
+  },
+  {
+    "id": "40353377",
+    "name": "FOURTRADE CORRETORA DE CÂMBIO LTDA.",
+    "aliases": [
+      "FOURTRADE COR. DE CAMBIO LTDA",
+      "305"
+    ],
+    "logo": null
+  },
+  {
+    "id": "55428859",
+    "name": "FREEX SOCIEDADE CORRETORA DE CÂMBIO S.A.",
+    "aliases": [
+      "FREEX SCC S.A.",
+      "661"
+    ],
+    "logo": null
+  },
+  {
+    "id": "00954288",
+    "name": "FUNDO GARANTIDOR DE CREDITOS - FGC",
+    "aliases": [
+      "FDO GARANTIDOR CRÉDITOS",
+      "541"
+    ],
+    "logo": null
+  },
+  {
+    "id": "45745537",
+    "name": "FUTURO SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "FUTURO SCD",
+      "532"
+    ],
+    "logo": null
+  },
+  {
+    "id": "51212088",
+    "name": "G5 SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "G5 SCD SA",
+      "589"
+    ],
+    "logo": null
+  },
+  {
+    "id": "28650236",
+    "name": "GALAPAGOS CAPITAL DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS S.A.",
+    "aliases": [
+      "GALAPAGOS DTVM S.A.",
+      "292"
+    ],
+    "logo": null
+  },
+  {
+    "id": "11760553",
+    "name": "GAZINCRED S.A. SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTO",
+    "aliases": [
+      "GAZINCRED S.A. SCFI",
+      "478"
+    ],
+    "logo": null
+  },
+  {
+    "id": "10853017",
+    "name": "GET MONEY SOCIEDADE CORRETORA DE CÂMBIO S.A.",
+    "aliases": [
+      "GET MONEY CC LTDA.",
+      "138"
+    ],
+    "logo": null
+  },
+  {
+    "id": "10440482",
+    "name": "GETNET ADQUIRÊNCIA E SERVIÇOS PARA MEIOS DE PAGAMENTO S.A. INSTITUIÇÃO DE PAGAMENTO",
+    "aliases": [
+      "GETNET IP",
+      "703"
+    ],
+    "logo": "assets/banks/10440482.svg",
+    "logo_source": "https://site.getnet.com.br/wp-content/uploads/2021/07/logo_reduzido_getnet.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "6b5edf8b0e8fae1331f5ee8376f70cd9f742194db6501d08419e105becbec2d1",
+    "source_sha256": "59f8d11c1ec4d7016e6e89623f0002ef007c19e64e49ce5a465bc80390cf48b3"
+  },
+  {
+    "id": "40112555",
+    "name": "GIRO - SOCIEDADE DE CRÉDITO DIRETO S/A",
+    "aliases": [
+      "GIRO - SCD S/A",
+      "636"
+    ],
+    "logo": null
+  },
+  {
+    "id": "11165756",
+    "name": "GLOBAL FINANÇAS SOCIEDADE DE CRÉDITO AO MICROEMPREENDEDOR E À EMPRESA DE PEQUENO PORTE LTDA.",
+    "aliases": [
+      "GLOBAL SCM LTDA",
+      "384"
+    ],
+    "logo": null
+  },
+  {
+    "id": "04332281",
+    "name": "GOLDMAN SACHS DO BRASIL BANCO MULTIPLO S.A.",
+    "aliases": [
+      "GOLDMAN SACHS DO BRASIL BM S.A",
+      "064"
+    ],
+    "logo": null
+  },
+  {
+    "id": "33630661",
+    "name": "GOWD INSTITUIÇÃO DE PAGAMENTO LTDA.",
+    "aliases": [
+      "GOWD IP LTDA.",
+      "677"
+    ],
+    "logo": null
+  },
+  {
+    "id": "24074692",
+    "name": "GUITTA CORRETORA DE CAMBIO LTDA.",
+    "aliases": [
+      "GUITTA CC LTDA",
+      "146"
+    ],
+    "logo": null
+  },
+  {
+    "id": "34111187",
+    "name": "Haitong Banco de Investimento do Brasil S.A.",
+    "aliases": [
+      "HAITONG BI DO BRASIL S.A.",
+      "078"
+    ],
+    "logo": null
+  },
+  {
+    "id": "56392166",
+    "name": "HARMOS S.A. - SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTO",
+    "aliases": [
+      "HARMOS S.A. - SCFI",
+      "684"
+    ],
+    "logo": null
+  },
+  {
+    "id": "04849745",
+    "name": "HBI SOCIEDADE DE CRÉDITO DIRETO S/A.",
+    "aliases": [
+      "HBI SCD",
+      "540"
+    ],
+    "logo": null
+  },
+  {
+    "id": "07253654",
+    "name": "HEDGE INVESTMENTS DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS LTDA.",
+    "aliases": [
+      "HEDGE INVESTMENTS DTVM LTDA.",
+      "458"
+    ],
+    "logo": null
+  },
+  {
+    "id": "39669186",
+    "name": "HEMERA DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS LTDA.",
+    "aliases": [
+      "HEMERA DTVM LTDA.",
+      "448"
+    ],
+    "logo": null
+  },
+  {
+    "id": "27970567",
+    "name": "HINOVA PAY INSTITUICAO DE PAGAMENTO S.A.",
+    "aliases": [
+      "HINOVA PAY IP S.A.",
+      "674"
+    ],
+    "logo": null
+  },
+  {
+    "id": "44292580",
+    "name": "HR DIGITAL - SOCIEDADE DE CRÉDITO DIRETO S/A",
+    "aliases": [
+      "HR DIGITAL SCD",
+      "523"
+    ],
+    "logo": null
+  },
+  {
+    "id": "07512441",
+    "name": "HS FINANCEIRA S/A CREDITO, FINANCIAMENTO E INVESTIMENTOS",
+    "aliases": [
+      "HS FINANCEIRA",
+      "189"
+    ],
+    "logo": null
+  },
+  {
+    "id": "07693858",
+    "name": "HSCM - SOCIEDADE DE CRÉDITO AO MICROEMPREENDEDOR E À EMPRESA DE PEQUENO PORTE LTDA.",
+    "aliases": [
+      "HSCM SCMEPP LTDA.",
+      "312"
+    ],
+    "logo": null
+  },
+  {
+    "id": "09105360",
+    "name": "ICAP do Brasil Corretora de Títulos e Valores Mobiliários Ltda.",
+    "aliases": [
+      "ICAP DO BRASIL CTVM LTDA.",
+      "157"
+    ],
+    "logo": null
+  },
+  {
+    "id": "17453575",
+    "name": "ICBC do Brasil Banco Múltiplo S.A.",
+    "aliases": [
+      "ICBC DO BRASIL BM S.A.",
+      "132"
+    ],
+    "logo": null
+  },
+  {
+    "id": "16695922",
+    "name": "ID CORRETORA DE TÍTULOS E VALORES MOBILIÁRIOS S.A.",
+    "aliases": [
+      "ID CTVM",
+      "439"
+    ],
+    "logo": null
+  },
+  {
+    "id": "45860531",
+    "name": "IDEA MAKER INSTITUICAO DE PAGAMENTO LTDA",
+    "aliases": [
+      "IDEA MAKER IP LTDA",
+      "476"
+    ],
+    "logo": null
+  },
+  {
+    "id": "31749596",
+    "name": "IDEAL CORRETORA DE TÍTULOS E VALORES MOBILIÁRIOS S.A.",
+    "aliases": [
+      "IDEAL CTVM S.A.",
+      "398"
+    ],
+    "logo": null
+  },
+  {
+    "id": "19468242",
+    "name": "IFOOD PAGO INSTITUIÇÃO DE PAGAMENTO S.A.",
+    "aliases": [
+      "IFOOD PAGO IP",
+      "595"
+    ],
+    "logo": null
+  },
+  {
+    "id": "35340796",
+    "name": "INCO SOCIEDADE DE EMPRÉSTIMO ENTRE PESSOAS S.A.",
+    "aliases": [
+      "INCO SEP S.A.",
+      "687"
+    ],
+    "logo": null
+  },
+  {
+    "id": "04306351",
+    "name": "INDEPENDÊNCIA COOPERATIVA DE CRÉDITO E INVESTIMENTO - INDEPENDÊNCIA COOPERATIVA DE CRÉDITO",
+    "aliases": [
+      "INDEPENDÊNCIA CC",
+      "764"
+    ],
+    "logo": null
+  },
+  {
+    "id": "45548763",
+    "name": "INSTITUIÇÃO DE PAGAMENTOS MAPS LTDA.",
+    "aliases": [
+      "MAPS IP LTDA.",
+      "592"
+    ],
+    "logo": null
+  },
+  {
+    "id": "51118615",
+    "name": "INTEGRAÇÃO DE CRÉDITO E COBRANÇA SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "INTEGRAÇÃO DE CRÉDITO E COBRANÇA SCD",
+      "701"
+    ],
+    "logo": null
+  },
+  {
+    "id": "55230916",
+    "name": "Intesa Sanpaolo Brasil S.A. - Banco Múltiplo",
+    "aliases": [
+      "INTESA SANPAOLO BRASIL S.A. BM",
+      "139"
+    ],
+    "logo": null
+  },
+  {
+    "id": "02992317",
+    "name": "INTEX BANK BANCO DE CÂMBIO S.A.",
+    "aliases": [
+      "INTEX BANK BCO DE CÂMBIO S.A.",
+      "143"
+    ],
+    "logo": null
+  },
+  {
+    "id": "34747388",
+    "name": "ISSUER INSTITUICAO DE PAGAMENTO LTDA.",
+    "aliases": [
+      "ISSUER IP LTDA.",
+      "597"
+    ],
+    "logo": null
+  },
+  {
+    "id": "15111975",
+    "name": "IUGU INSTITUIÇÃO DE PAGAMENTO S.A.",
+    "aliases": [
+      "IUGU IP S.A.",
+      "401"
+    ],
+    "logo": null
+  },
+  {
+    "id": "40475846",
+    "name": "J17 - SOCIEDADE DE CRÉDITO DIRETO S/A",
+    "aliases": [
+      "J17 - SCD S/A",
+      "451"
+    ],
+    "logo": null
+  },
+  {
+    "id": "45056494",
+    "name": "JM CORRETORA DE CÂMBIO LTDA.",
+    "aliases": [
+      "JM CORRETORA DE CÂMBIO",
+      "697"
+    ],
+    "logo": null
+  },
+  {
+    "id": "46518205",
+    "name": "JPMorgan Chase Bank, National Association",
+    "aliases": [
+      "JPMORGAN CHASE BANK",
+      "488"
+    ],
+    "logo": null
+  },
+  {
+    "id": "49288113",
+    "name": "KANASTRA FINANCEIRA S.A, CREDITO, FINANCIAMENTO E INVESTIMENTO",
+    "aliases": [
+      "KANASTRA CFI",
+      "559"
+    ],
+    "logo": null
+  },
+  {
+    "id": "43978697",
+    "name": "KIKAI SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "KIKAI SCD S.A.",
+      "688"
+    ],
+    "logo": null
+  },
+  {
+    "id": "01701201",
+    "name": "Kirton Bank S.A. - Banco Múltiplo",
+    "aliases": [
+      "Kirton Bank",
+      "399"
+    ],
+    "logo": null
+  },
+  {
+    "id": "53908413",
+    "name": "KIWIFY INSTITUICAO DE PAGAMENTO LTDA",
+    "aliases": [
+      "KIWIFY IP",
+      "773"
+    ],
+    "logo": null
+  },
+  {
+    "id": "50626276",
+    "name": "KONECT SOCIEDADE DE CRÉDITO DIRETO S/A",
+    "aliases": [
+      "KONECT SCD S/A",
+      "598"
+    ],
+    "logo": null
+  },
+  {
+    "id": "53058329",
+    "name": "LA FINTECA INSTITUICAO DE PAGAMENTO LTDA",
+    "aliases": [
+      "LA FINTECA IP LTDA",
+      "785"
+    ],
+    "logo": null
+  },
+  {
+    "id": "19324634",
+    "name": "LAMARA SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "LAMARA SCD S.A.",
+      "416"
+    ],
+    "logo": null
+  },
+  {
+    "id": "39343350",
+    "name": "LAR COOPERATIVA DE CRÉDITO - LAR CREDI",
+    "aliases": [
+      "CC LAR CREDI",
+      "421"
+    ],
+    "logo": null
+  },
+  {
+    "id": "71590442",
+    "name": "Lastro RDV Distribuidora de Títulos e Valores Mobiliários Ltda.",
+    "aliases": [
+      "LASTRO RDV DTVM LTDA",
+      "293"
+    ],
+    "logo": null
+  },
+  {
+    "id": "52833288",
+    "name": "LB PAY INSTITUIÇÃO DE PAGAMENTO LTDA",
+    "aliases": [
+      "LB PAY IP LTDA",
+      "766"
+    ],
+    "logo": null
+  },
+  {
+    "id": "07652226",
+    "name": "Lecca Crédito, Financiamento e Investimento S/A",
+    "aliases": [
+      "LECCA CFI S.A.",
+      "105"
+    ],
+    "logo": null
+  },
+  {
+    "id": "37526080",
+    "name": "LEND SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "LEND SCD S.A.",
+      "414"
+    ],
+    "logo": null
+  },
+  {
+    "id": "50579044",
+    "name": "LEVYCAM - CORRETORA DE CAMBIO E VALORES LTDA.",
+    "aliases": [
+      "LEVYCAM CCV LTDA",
+      "145"
+    ],
+    "logo": null
+  },
+  {
+    "id": "40768766",
+    "name": "LIONS TRUST DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS LTDA.",
+    "aliases": [
+      "LIONS TRUST DTVM",
+      "519"
+    ],
+    "logo": null
+  },
+  {
+    "id": "34088029",
+    "name": "LISTO SOCIEDADE DE CREDITO DIRETO S.A.",
+    "aliases": [
+      "LISTO SCD S.A.",
+      "397"
+    ],
+    "logo": null
+  },
+  {
+    "id": "50032584",
+    "name": "LOAN BRASIL SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "LOAN BRASIL SCD S.A.",
+      "696"
+    ],
+    "logo": null
+  },
+  {
+    "id": "21995256",
+    "name": "MAG INSTITUICAO DE PAGAMENTO LTDA",
+    "aliases": [
+      "MAG IP LTDA.",
+      "560"
+    ],
+    "logo": null
+  },
+  {
+    "id": "61021673",
+    "name": "MAGALUPAY - SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTO S.A.",
+    "aliases": [
+      "MAGALUPAY SCFI S.A.",
+      "793"
+    ],
+    "logo": null
+  },
+  {
+    "id": "13884775",
+    "name": "MAGALUPAY INSTITUIÇÃO DE PAGAMENTO S.A.",
+    "aliases": [
+      "MAGALUPAY",
+      "396"
+    ],
+    "logo": null
+  },
+  {
+    "id": "44683140",
+    "name": "MAGNUM SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "MAGNUM SCD",
+      "511"
+    ],
+    "logo": null
+  },
+  {
+    "id": "33886862",
+    "name": "MASTER S/A CORRETORA DE CÂMBIO, TÍTULOS E VALORES MOBILIÁRIOS - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+    "aliases": [
+      "MASTER S/A CCTVM - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+      "467"
+    ],
+    "logo": null
+  },
+  {
+    "id": "54024532",
+    "name": "MAX INSTITUIÇÃO DE PAGAMENTO LTDA",
+    "aliases": [
+      "MAX IP",
+      "790"
+    ],
+    "logo": null
+  },
+  {
+    "id": "11351086",
+    "name": "MERCADO BITCOIN INSTITUICAO DE PAGAMENTO LTDA",
+    "aliases": [
+      "MERCADO BITCOIN IP LTDA",
+      "576"
+    ],
+    "logo": null
+  },
+  {
+    "id": "37679449",
+    "name": "MERCADO CRÉDITO SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTO S.A.",
+    "aliases": [
+      "MERCADO CRÉDITO SCFI S.A.",
+      "518"
+    ],
+    "logo": null
+  },
+  {
+    "id": "33040601",
+    "name": "MERCANTIL FINANCEIRA S.A. - SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTO.",
+    "aliases": [
+      "MERCANTIL FINANCEIRA",
+      "567"
+    ],
+    "logo": null
+  },
+  {
+    "id": "03311443",
+    "name": "MEUTUDO S.A - SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTO",
+    "aliases": [
+      "MEUTUDO SCFI",
+      "326"
+    ],
+    "logo": null
+  },
+  {
+    "id": "09464032",
+    "name": "MIDWAY S.A. - SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTO",
+    "aliases": [
+      "MIDWAY S.A. - SCFI",
+      "358"
+    ],
+    "logo": "assets/banks/09464032.svg",
+    "logo_source": "https://openfinance.midway.com.br/midway.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "5ea74fd259ae05fafc05c7966da5d9df05f4ab633934c65d450aeadfd80ca05f",
+    "source_sha256": "50b86169b87b491532466436345b12f654808c292895af2c94a92bf48e83fee7"
+  },
+  {
+    "id": "12392983",
+    "name": "MIRAE ASSET (BRASIL) CORRETORA DE CÂMBIO, TÍTULOS  E VALORES MOBILIÁRIOS LTDA.",
+    "aliases": [
+      "MIRAE ASSET (BRASIL) CCTVM LTDA.",
+      "447"
+    ],
+    "logo": null
+  },
+  {
+    "id": "46505612",
+    "name": "MONERY INSTITUICAO DE PAGAMENTO S.A.",
+    "aliases": [
+      "MONERY IP S.A.",
+      "682"
+    ],
+    "logo": null
+  },
+  {
+    "id": "46026562",
+    "name": "MONETARIE SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "MONETARIE SCD",
+      "526"
+    ],
+    "logo": null
+  },
+  {
+    "id": "08609934",
+    "name": "MONEYCORP BANCO DE CÂMBIO S.A.",
+    "aliases": [
+      "MONEYCORP BCO DE CÂMBIO S.A.",
+      "259"
+    ],
+    "logo": null
+  },
+  {
+    "id": "50489148",
+    "name": "MONTE BRAVO CORRETORA DE TÍTULOS E VALORES MOBILIÁRIOS S.A.",
+    "aliases": [
+      "MONTE BRAVO CTVM S.A.",
+      "571"
+    ],
+    "logo": null
+  },
+  {
+    "id": "33959738",
+    "name": "MOVA SOCIEDADE DE EMPRÉSTIMO ENTRE PESSOAS S.A.",
+    "aliases": [
+      "MOVA SEP S.A.",
+      "774"
+    ],
+    "logo": null
+  },
+  {
+    "id": "50871921",
+    "name": "MT INSTITUICAO DE PAGAMENTO SA",
+    "aliases": [
+      "MT IP S.A.",
+      "681"
+    ],
+    "logo": null
+  },
+  {
+    "id": "38593706",
+    "name": "MULTICRED SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "MULTICRED SCD S.A.",
+      "544"
+    ],
+    "logo": null
+  },
+  {
+    "id": "62448932",
+    "name": "MULTIPLIKE FINANCEIRA S.A. SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTO",
+    "aliases": [
+      "MULTIPLIKE FINANCEIRA S.A. SCFI",
+      "791"
+    ],
+    "logo": null
+  },
+  {
+    "id": "53822116",
+    "name": "MW INSTITUICAO DE PAGAMENTO LTDA - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+    "aliases": [
+      "MW IP LTDA. - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+      "700"
+    ],
+    "logo": null
+  },
+  {
+    "id": "41592532",
+    "name": "MÉRITO DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS LTDA.",
+    "aliases": [
+      "MÉRITO DTVM LTDA.",
+      "454"
+    ],
+    "logo": null
+  },
+  {
+    "id": "32343119",
+    "name": "MÊNTORE INSTITUIÇÃO DE PAGAMENTO S.A.",
+    "aliases": [
+      "MÊNTORE IP S.A.",
+      "804"
+    ],
+    "logo": null
+  },
+  {
+    "id": "61723847",
+    "name": "NEON CORRETORA DE TÍTULOS E VALORES MOBILIÁRIOS S.A.",
+    "aliases": [
+      "NEON CTVM S.A.",
+      "113"
+    ],
+    "logo": null
+  },
+  {
+    "id": "11285104",
+    "name": "NEON FINANCEIRA - SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTO S.A",
+    "aliases": [
+      "NEON FINANCEIRA - SCFI S.A.",
+      "426"
+    ],
+    "logo": null
+  },
+  {
+    "id": "44921281",
+    "name": "NIXFIN SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "NIXFIN SCD",
+      "792"
+    ],
+    "logo": null
+  },
+  {
+    "id": "04257795",
+    "name": "Nova Futura Corretora de Títulos e Valores Mobiliários Ltda.",
+    "aliases": [
+      "NOVA FUTURA CTVM LTDA.",
+      "191"
+    ],
+    "logo": null
+  },
+  {
+    "id": "74828799",
+    "name": "Novo Banco Continental S.A. - Banco Múltiplo",
+    "aliases": [
+      "NOVO BCO CONTINENTAL S.A. - BM",
+      "753"
+    ],
+    "logo": null
+  },
+  {
+    "id": "30680829",
+    "name": "NU FINANCEIRA S.A. - Sociedade de Crédito, Financiamento e Investimento",
+    "aliases": [
+      "NU FINANCEIRA S.A. CFI",
+      "386"
+    ],
+    "logo": null
+  },
+  {
+    "id": "62169875",
+    "name": "NU INVESTIMENTOS S.A. - CORRETORA DE TÍTULOS E VALORES MOBILIÁRIOS",
+    "aliases": [
+      "NU INVESTIMENTOS S.A. - CTVM",
+      "140"
+    ],
+    "logo": null
+  },
+  {
+    "id": "38129006",
+    "name": "NUMBRS SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "NUMBRS SCD S.A.",
+      "419"
+    ],
+    "logo": null
+  },
+  {
+    "id": "39416705",
+    "name": "OCTA SOCIEDADE DE CRÉDITO DIRETO S.A. - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+    "aliases": [
+      "OCTA SCD S.A. - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+      "443"
+    ],
+    "logo": null
+  },
+  {
+    "id": "30980539",
+    "name": "OKTO INSTITUIÇÃO DE PAGAMENTO S.A.",
+    "aliases": [
+      "OKTO IP",
+      "546"
+    ],
+    "logo": null
+  },
+  {
+    "id": "36113876",
+    "name": "OLIVEIRA TRUST DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIARIOS S.A.",
+    "aliases": [
+      "OLIVEIRA TRUST DTVM S.A.",
+      "111"
+    ],
+    "logo": null
+  },
+  {
+    "id": "11495073",
+    "name": "OM DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS LTDA",
+    "aliases": [
+      "OM DTVM LTDA",
+      "319"
+    ],
+    "logo": null
+  },
+  {
+    "id": "60850229",
+    "name": "Omni Banco S.A.",
+    "aliases": [
+      "OMNI BANCO S.A.",
+      "613"
+    ],
+    "logo": null
+  },
+  {
+    "id": "35210410",
+    "name": "ONEKEY PAYMENTS INSTITUICAO DE PAGAMENTO SA",
+    "aliases": [
+      "ONEKEY PAYMENTS IP S.A.",
+      "659"
+    ],
+    "logo": null
+  },
+  {
+    "id": "39519944",
+    "name": "OPEA SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "OPEA SCD",
+      "535"
+    ],
+    "logo": null
+  },
+  {
+    "id": "13673855",
+    "name": "OSLO CAPITAL DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS S.A",
+    "aliases": [
+      "OSLO CAPITAL DTVM SA",
+      "331"
+    ],
+    "logo": null
+  },
+  {
+    "id": "78632767",
+    "name": "OURIBANK S.A. BANCO MÚLTIPLO",
+    "aliases": [
+      "OURIBANK S.A.",
+      "712"
+    ],
+    "logo": null
+  },
+  {
+    "id": "18282093",
+    "name": "OXY COMPANHIA HIPOTECÁRIA",
+    "aliases": [
+      "OXY CH",
+      "573"
+    ],
+    "logo": null
+  },
+  {
+    "id": "04062902",
+    "name": "OZ SOCIEDADE CORRETORA DE CÂMBIO S.A.",
+    "aliases": [
+      "OZ CÂMBIO",
+      "296"
+    ],
+    "logo": null
+  },
+  {
+    "id": "25104230",
+    "name": "PAGARE INSTITUICAO DE PAGAMENTO S.A.",
+    "aliases": [
+      "PAGARE IP S.A.",
+      "651"
+    ],
+    "logo": null
+  },
+  {
+    "id": "34471744",
+    "name": "PAGME INSTITUIÇÃO DE PAGAMENTO LTDA.",
+    "aliases": [
+      "PAGME IP LTDA",
+      "660"
+    ],
+    "logo": null
+  },
+  {
+    "id": "30944783",
+    "name": "PAGPRIME INSTITUICAO DE PAGAMENTO LTDA",
+    "aliases": [
+      "PAGPRIME IP",
+      "557"
+    ],
+    "logo": null
+  },
+  {
+    "id": "08561701",
+    "name": "PAGSEGURO INTERNET INSTITUIÇÃO DE PAGAMENTO S.A.",
+    "aliases": [
+      "PAGSEGURO INTERNET IP S.A.",
+      "290"
+    ],
+    "logo": "assets/banks/08561701.svg",
+    "logo_source": "https://api.open-finance.pagbank.com.br/img/logo_pagbank.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "d53d0799380b3568d444d950338ab1eea1a6c91b8679bcba18a798349ecf643f",
+    "source_sha256": "ea47e0f0d6687547248eadbafbd867e7e3954b70b96b2cc3284724a22d47d7c4"
+  },
+  {
+    "id": "37753531",
+    "name": "PAGSMILE INSTITUIÇÃO DE PAGAMENTO LTDA.",
+    "aliases": [
+      "PAGSMILE IP LTDA.",
+      "765"
+    ],
+    "logo": null
+  },
+  {
+    "id": "03816413",
+    "name": "PAGUEVELOZ INSTITUIÇÃO DE PAGAMENTO LTDA.",
+    "aliases": [
+      "PAGUEVELOZ IP LTDA.",
+      "517"
+    ],
+    "logo": null
+  },
+  {
+    "id": "02682287",
+    "name": "PAN FINANCEIRA S.A. - SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTOS",
+    "aliases": [
+      "PAN FINAN",
+      "555"
+    ],
+    "logo": null
+  },
+  {
+    "id": "14388334",
+    "name": "PARANÁ BANCO S.A.",
+    "aliases": [
+      "PARANA BCO S.A.",
+      "254"
+    ],
+    "logo": null
+  },
+  {
+    "id": "36690516",
+    "name": "PAY INSTITUICAO DE PAGAMENTO S.A.",
+    "aliases": [
+      "PAY IP S.A.",
+      "679"
+    ],
+    "logo": null
+  },
+  {
+    "id": "20757199",
+    "name": "PAY4FUN INSTITUICAO DE PAGAMENTO S.A.",
+    "aliases": [
+      "PAY4FUN IP S.A.",
+      "561"
+    ],
+    "logo": null
+  },
+  {
+    "id": "58674454",
+    "name": "PB SOCIEDADE DE CREDITO DIRETO S.A.",
+    "aliases": [
+      "PB SCD",
+      "778"
+    ],
+    "logo": null
+  },
+  {
+    "id": "44019481",
+    "name": "PEAK SOCIEDADE DE EMPRÉSTIMO ENTRE PESSOAS S.A.",
+    "aliases": [
+      "PEAK SEP S.A.",
+      "521"
+    ],
+    "logo": null
+  },
+  {
+    "id": "43180355",
+    "name": "PEFISA S.A. - CRÉDITO, FINANCIAMENTO E INVESTIMENTO",
+    "aliases": [
+      "PEFISA S.A. - C.F.I.",
+      "174"
+    ],
+    "logo": "assets/banks/43180355.svg",
+    "logo_source": "https://storage.googleapis.com/pnb-openbank-pefisa-prd/LOGO_PNB_Prancheta.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "17f07afadcd72564f80da0955f2b6fee87fbf9b3fe05addd8a6c29362932bd2b",
+    "source_sha256": "8f03c2a4814e9d766472d5c8592277e265c61124768b7e685ea7a7884bf1f786"
+  },
+  {
+    "id": "48707451",
+    "name": "PERCAPITAL SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "PERCAPITAL SCD S.A.",
+      "553"
+    ],
+    "logo": null
+  },
+  {
+    "id": "09516419",
+    "name": "PICPAY BANK - BANCO MÚLTIPLO S.A",
+    "aliases": [
+      "PICPAY BANK - BANCO MÚLTIPLO S.A",
+      "079"
+    ],
+    "logo": null
+  },
+  {
+    "id": "07138049",
+    "name": "PICPAY INVEST DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS LTDA",
+    "aliases": [
+      "PICPAY INVEST",
+      "469"
+    ],
+    "logo": null
+  },
+  {
+    "id": "17079937",
+    "name": "PINBANK BRASIL INSTITUIÇÃO DE PAGAMENTO S.A.",
+    "aliases": [
+      "PINBANK IP",
+      "529"
+    ],
+    "logo": null
+  },
+  {
+    "id": "36583700",
+    "name": "PLACARPAY S.A. - SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTO",
+    "aliases": [
+      "PLACARPAY S.A - SCFI",
+      "516"
+    ],
+    "logo": null
+  },
+  {
+    "id": "00806535",
+    "name": "Planner Corretora de Valores S.A.",
+    "aliases": [
+      "PLANNER CV S.A.",
+      "100"
+    ],
+    "logo": null
+  },
+  {
+    "id": "05684234",
+    "name": "PLANNER SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "PLANNER SOCIEDADE DE CRÉDITO DIRETO",
+      "410"
+    ],
+    "logo": null
+  },
+  {
+    "id": "35551187",
+    "name": "PLANTAE S.A. - CRÉDITO, FINANCIAMENTO E INVESTIMENTO",
+    "aliases": [
+      "PLANTAE CFI",
+      "445"
+    ],
+    "logo": null
+  },
+  {
+    "id": "04862600",
+    "name": "PORTOSEG S.A. - CREDITO, FINANCIAMENTO E INVESTIMENTO",
+    "aliases": [
+      "PORTOSEG S.A. CFI",
+      "468"
+    ],
+    "logo": null
+  },
+  {
+    "id": "40276692",
+    "name": "PROTEGE CASH INSTITUIÇÃO DE PAGAMENTO S.A.",
+    "aliases": [
+      "PROTEGE CASH",
+      "563"
+    ],
+    "logo": null
+  },
+  {
+    "id": "35713491",
+    "name": "PROTOTYPE INSTITUICAO DE PAGAMENTO S.A.",
+    "aliases": [
+      "PROTOTYPE IP S.A.",
+      "788"
+    ],
+    "logo": null
+  },
+  {
+    "id": "07945233",
+    "name": "PÓLOCRED   SOCIEDADE DE CRÉDITO AO MICROEMPREENDEDOR E À EMPRESA DE PEQUENO PORTE LTDA.",
+    "aliases": [
+      "POLOCRED SCMEPP LTDA.",
+      "093"
+    ],
+    "logo": null
+  },
+  {
+    "id": "62285390",
+    "name": "QI CORRETORA DE TÍTULOS E VALORES MOBILIÁRIOS S.A.",
+    "aliases": [
+      "QI CTVM S.A.",
+      "363"
+    ],
+    "logo": null
+  },
+  {
+    "id": "32402502",
+    "name": "QI Sociedade de Crédito Direto S.A.",
+    "aliases": [
+      "QI SCD S.A.",
+      "329"
+    ],
+    "logo": "assets/banks/32402502.svg",
+    "logo_source": "https://storage.googleapis.com/qitech-website-documents/qi_logo_blue.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "23944945591d7bb9d049e22c940652787e4376624cd9fd03b60066522832f621",
+    "source_sha256": "5e069eed5c4bade949d52f5ad1572b712947fdf30523f4bfce0132f580e19d9e"
+  },
+  {
+    "id": "62264924",
+    "name": "QORE DISTRIBUIDORA DE TITULOS E VALORES MOBILIÁRIOS LTDA",
+    "aliases": [
+      "QORE",
+      "767"
+    ],
+    "logo": null
+  },
+  {
+    "id": "49555647",
+    "name": "QUADRA SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "QUADRA SCD",
+      "579"
+    ],
+    "logo": null
+  },
+  {
+    "id": "89960090",
+    "name": "RB INVESTIMENTOS DISTRIBUIDORA DE TITULOS E VALORES MOBILIARIOS LIMITADA",
+    "aliases": [
+      "RB INVESTIMENTOS DTVM LTDA.",
+      "283"
+    ],
+    "logo": null
+  },
+  {
+    "id": "27351731",
+    "name": "REALIZE SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTO S.A.",
+    "aliases": [
+      "REALIZE SCFI S.A.",
+      "374"
+    ],
+    "logo": null
+  },
+  {
+    "id": "47593544",
+    "name": "RED SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "RED SCD S.A.",
+      "522"
+    ],
+    "logo": null
+  },
+  {
+    "id": "40473435",
+    "name": "REPASSES FINANCEIROS E SOLUCOES TECNOLOGICAS INSTITUICAO DE PAGAMENTO S.A.",
+    "aliases": [
+      "REPASSES FINANCEIROS E SOLUCOES TECNOLOGICAS IP S.A.",
+      "590"
+    ],
+    "logo": null
+  },
+  {
+    "id": "51342763",
+    "name": "REVOLUT SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "REVOLUT SCD S.A.",
+      "620"
+    ],
+    "logo": null
+  },
+  {
+    "id": "42066258",
+    "name": "RJI CORRETORA DE TITULOS E VALORES MOBILIARIOS LTDA",
+    "aliases": [
+      "RJI",
+      "506"
+    ],
+    "logo": null
+  },
+  {
+    "id": "06249129",
+    "name": "RPW S/A SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTO",
+    "aliases": [
+      "RPW S.A. SCFI",
+      "548"
+    ],
+    "logo": null
+  },
+  {
+    "id": "12102128",
+    "name": "SAFETYPAY BRASIL INSTITUICAO DE PAGAMENTO LTDA",
+    "aliases": [
+      "SAFETYPAY BRASIL IP LTDA",
+      "780"
+    ],
+    "logo": null
+  },
+  {
+    "id": "29162769",
+    "name": "SANTANDER CORRETORA DE TÍTULOS E VALORES MOBILIÁRIOS S.A.",
+    "aliases": [
+      "SANTANDER CTVM S.A.",
+      "352"
+    ],
+    "logo": null
+  },
+  {
+    "id": "00122327",
+    "name": "SANTINVEST S.A. - CREDITO, FINANCIAMENTO E INVESTIMENTOS",
+    "aliases": [
+      "SANTINVEST S.A. - CFI",
+      "539"
+    ],
+    "logo": null
+  },
+  {
+    "id": "52440987",
+    "name": "SANTS SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "SANTS SCD S.A.",
+      "614"
+    ],
+    "logo": null
+  },
+  {
+    "id": "40333582",
+    "name": "SAYGO SOCIEDADE CORRETORA DE CÂMBIO S.A.",
+    "aliases": [
+      "SAYGO CC S.A.",
+      "556"
+    ],
+    "logo": null
+  },
+  {
+    "id": "29030467",
+    "name": "Scotiabank Brasil S.A. Banco Múltiplo",
+    "aliases": [
+      "Scotiabank Brasil",
+      "751"
+    ],
+    "logo": null
+  },
+  {
+    "id": "00394460",
+    "name": "Secretaria do Tesouro Nacional - STN",
+    "aliases": [
+      "STN",
+      "n/a"
+    ],
+    "logo": null
+  },
+  {
+    "id": "00329598",
+    "name": "SEFER INVESTIMENTOS DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS LTDA - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+    "aliases": [
+      "SEFER INVESTIMENTOS DTVM LTDA - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+      "407"
+    ],
+    "logo": null
+  },
+  {
+    "id": "45756448",
+    "name": "SELECT CREDIT SOCIEDADE DE CRÉDITO AO MICROEMPREENDEDOR E À EMPRESA DE PEQUENO PORTE LTDA.",
+    "aliases": [
+      "SELECT CREDIT SCMEPP LTDA.",
+      "537"
+    ],
+    "logo": null
+  },
+  {
+    "id": "47873449",
+    "name": "SER FINANCE SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "SER FINANCE SCD S.A.",
+      "530"
+    ],
+    "logo": null
+  },
+  {
+    "id": "03973814",
+    "name": "SERVICOOP - COOPERATIVA DE CRÉDITO DOS SERVIDORES PÚBLICOS ESTADUAIS E MUNICIPAIS DO RIO GRANDE DO SUL",
+    "aliases": [
+      "SERVICOOP",
+      "190"
+    ],
+    "logo": null
+  },
+  {
+    "id": "50946592",
+    "name": "SETHI SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "SETHI SCD SA",
+      "585"
+    ],
+    "logo": null
+  },
+  {
+    "id": "02398976",
+    "name": "SISPRIME DO BRASIL - COOPERATIVA DE CRÉDITO",
+    "aliases": [
+      "SISPRIME DO BRASIL - COOP",
+      "084"
+    ],
+    "logo": null
+  },
+  {
+    "id": "28719664",
+    "name": "Sistema do Balcão B3",
+    "aliases": [
+      "Balcão B3",
+      "0"
+    ],
+    "logo": null
+  },
+  {
+    "id": "37470405",
+    "name": "SMART SOLUTIONS GROUP INSTITUICAO DE PAGAMENTO LTDA",
+    "aliases": [
+      "SMART SOLUTIONS GROUP IP LTDA",
+      "615"
+    ],
+    "logo": null
+  },
+  {
+    "id": "15173776",
+    "name": "SOCIAL BANK BANCO MÚLTIPLO S/A",
+    "aliases": [
+      "SOCIAL BANK S/A",
+      "412"
+    ],
+    "logo": null
+  },
+  {
+    "id": "37229413",
+    "name": "SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTO EFÍ S.A.",
+    "aliases": [
+      "SCFI EFÍ S.A.",
+      "507"
+    ],
+    "logo": null
+  },
+  {
+    "id": "03881423",
+    "name": "SOCINAL S.A. - CRÉDITO, FINANCIAMENTO E INVESTIMENTO",
+    "aliases": [
+      "SOCINAL S.A. CFI",
+      "425"
+    ],
+    "logo": null
+  },
+  {
+    "id": "09210106",
+    "name": "SOCRED S.A. - SOCIEDADE DE CRÉDITO AO MICROEMPREENDEDOR E À EMPRESA DE PEQUENO PORTE",
+    "aliases": [
+      "SOCRED SA - SCMEPP",
+      "183"
+    ],
+    "logo": null
+  },
+  {
+    "id": "44705774",
+    "name": "SOMAPAY SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "SOMAPAY SCD S.A.",
+      "520"
+    ],
+    "logo": null
+  },
+  {
+    "id": "22575466",
+    "name": "SRM BANK INSTITUIÇÃO DE PAGAMENTO S/A",
+    "aliases": [
+      "SRM BANK",
+      "533"
+    ],
+    "logo": null
+  },
+  {
+    "id": "20018183",
+    "name": "STARK BANK S.A. - INSTITUICAO DE PAGAMENTO",
+    "aliases": [
+      "STARK BANK S.A. - IP",
+      "665"
+    ],
+    "logo": null
+  },
+  {
+    "id": "39908427",
+    "name": "STARK SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "STARK SCD S.A.",
+      "462"
+    ],
+    "logo": null
+  },
+  {
+    "id": "09274232",
+    "name": "STATE STREET BRASIL S.A. - BANCO COMERCIAL",
+    "aliases": [
+      "STATE STREET BR S.A. BCO COMERCIAL",
+      "014"
+    ],
+    "logo": null
+  },
+  {
+    "id": "16501555",
+    "name": "STONE INSTITUIÇÃO DE PAGAMENTO S.A.",
+    "aliases": [
+      "STONE IP S.A.",
+      "197"
+    ],
+    "logo": "assets/banks/16501555.svg",
+    "logo_source": "https://public-assets.stone.com.br/openfinance/stone-logo.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "b17e70199e3c2cea18c0052fb8b62f946460c1b7113e600c13ab90d1a0dcdf7a",
+    "source_sha256": "c9ea826d048365162288b9d7d4e45ee527275315355fb491c45cfabdbbc0c6a3"
+  },
+  {
+    "id": "53505601",
+    "name": "STONE SOCIEDADE DE CREDITO, FINANCIAMENTO E INVESTIMENTO S.A.",
+    "aliases": [
+      "STONE CFI S.A.",
+      "672"
+    ],
+    "logo": null
+  },
+  {
+    "id": "20251847",
+    "name": "SUDACRED SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "SUDACRED SCD S.A.",
+      "538"
+    ],
+    "logo": null
+  },
+  {
+    "id": "37241230",
+    "name": "SUMUP SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTO S.A.",
+    "aliases": [
+      "SUMUP SCFI S.A",
+      "404"
+    ],
+    "logo": "assets/banks/37241230.svg",
+    "logo_source": "https://sumup-openbanking-staticfiles.s3.amazonaws.com/logo.svg",
+    "logo_directory": "https://data.directory.openbankingbrasil.org.br/participants",
+    "logo_sha256": "8426e85e7ed6d546f7bbdb1c73811aa9d0ee03c86b2b6e7d4b598dfb0adafb81",
+    "source_sha256": "7f22b00cfe40948e03b7405a1f02f63f9e29ea05984cf6497a31ca2b0d3c2cb8"
+  },
+  {
+    "id": "43599047",
+    "name": "SUPERLÓGICA SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "SUPERLÓGICA SCD S.A.",
+      "481"
+    ],
+    "logo": null
+  },
+  {
+    "id": "31680151",
+    "name": "SWAP INSTITUIÇÃO DE PAGAMENTO S.A.",
+    "aliases": [
+      "SWAP IP S.A.",
+      "783"
+    ],
+    "logo": null
+  },
+  {
+    "id": "03751794",
+    "name": "Terra Investimentos Distribuidora de Títulos e Valores Mobiliários Ltda.",
+    "aliases": [
+      "TERRA INVESTIMENTOS DTVM",
+      "307"
+    ],
+    "logo": null
+  },
+  {
+    "id": "27084098",
+    "name": "TRANSFEERA INSTITUIÇÃO DE PAGAMENTO S.A",
+    "aliases": [
+      "TRANSFEERA IP S.A.",
+      "593"
+    ],
+    "logo": null
+  },
+  {
+    "id": "47133056",
+    "name": "TRANSFERO INSTITUICAO DE PAGAMENTO LTDA.",
+    "aliases": [
+      "TRANSFERO IP LTDA.",
+      "669"
+    ],
+    "logo": null
+  },
+  {
+    "id": "02276653",
+    "name": "TRINUS CAPITAL DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS S.A.",
+    "aliases": [
+      "TRINUS CAPITAL DTVM",
+      "360"
+    ],
+    "logo": null
+  },
+  {
+    "id": "40654622",
+    "name": "TRINUS SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "TRINUS SCD S.A.",
+      "444"
+    ],
+    "logo": null
+  },
+  {
+    "id": "49931906",
+    "name": "TRIO INSTITUICAO DE PAGAMENTO LTDA.",
+    "aliases": [
+      "TRIO IP LTDA.",
+      "619"
+    ],
+    "logo": null
+  },
+  {
+    "id": "67030395",
+    "name": "TRUSTEE DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS LTDA. - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+    "aliases": [
+      "TRUSTEE DTVM LTDA. - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+      "438"
+    ],
+    "logo": null
+  },
+  {
+    "id": "61747085",
+    "name": "TULLETT PREBON BRASIL CORRETORA DE VALORES E CÂMBIO LTDA",
+    "aliases": [
+      "TULLETT PREBON BRASIL CVC LTDA",
+      "131"
+    ],
+    "logo": null
+  },
+  {
+    "id": "26615279",
+    "name": "TYCOON TECHNOLOGY INSTITUICAO DE PAGAMENTO S.A",
+    "aliases": [
+      "TYCOON TECHNOLOGY IIP S.A",
+      "685"
+    ],
+    "logo": null
+  },
+  {
+    "id": "61809182",
+    "name": "UBS (BRASIL) CORRETORA DE VALORES S.A.",
+    "aliases": [
+      "UBS (BRASIL) CORRETORA DE VALORES S.A.",
+      "011"
+    ],
+    "logo": null
+  },
+  {
+    "id": "18520834",
+    "name": "UBS BB BANCO DE INVESTIMENTO S.A.",
+    "aliases": [
+      "UBS BB BI S.A.",
+      "129"
+    ],
+    "logo": null
+  },
+  {
+    "id": "02819125",
+    "name": "UBS BB CORRETORA DE CÂMBIO, TÍTULOS E VALORES MOBILIÁRIOS S.A.",
+    "aliases": [
+      "UBS BB CCTVM S.A.",
+      "015"
+    ],
+    "logo": null
+  },
+  {
+    "id": "42047025",
+    "name": "UNAVANTI SOCIEDADE DE CRÉDITO DIRETO S/A",
+    "aliases": [
+      "UNAVANTI SCD S/A",
+      "460"
+    ],
+    "logo": null
+  },
+  {
+    "id": "20155248",
+    "name": "UNIDA DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS LTDA.",
+    "aliases": [
+      "UNIDA DTVM LTDA",
+      "194"
+    ],
+    "logo": null
+  },
+  {
+    "id": "03046391",
+    "name": "UNIPRIME CENTRAL NACIONAL - CENTRAL NACIONAL DE COOPERATIVA DE CREDITO",
+    "aliases": [
+      "UNIPRIME COOPCENTRAL LTDA.",
+      "099"
+    ],
+    "logo": null
+  },
+  {
+    "id": "35977097",
+    "name": "UP.P SOCIEDADE DE EMPRÉSTIMO ENTRE PESSOAS S.A.",
+    "aliases": [
+      "UP.P SEP S.A.",
+      "373"
+    ],
+    "logo": null
+  },
+  {
+    "id": "53842122",
+    "name": "URBANO S.A. - SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTO",
+    "aliases": [
+      "URBANO S.A. SCFI",
+      "761"
+    ],
+    "logo": null
+  },
+  {
+    "id": "39587424",
+    "name": "UY3 SOCIEDADE DE CRÉDITO DIRETO S/A",
+    "aliases": [
+      "UY3 SCD S/A",
+      "457"
+    ],
+    "logo": null
+  },
+  {
+    "id": "32192325",
+    "name": "UZZIPAY INSTITUIÇÃO DE PAGAMENTO S.A.",
+    "aliases": [
+      "UZZIPAY IP S.A.",
+      "552"
+    ],
+    "logo": null
+  },
+  {
+    "id": "38320462",
+    "name": "V3 INSTITUICAO DE PAGAMENTO S.A.",
+    "aliases": [
+      "V3 IP S.A.",
+      "770"
+    ],
+    "logo": null
+  },
+  {
+    "id": "07799277",
+    "name": "VALOR S/A SOCIEDADE DE CRÉDITO, FINANCIAMENTO E INVESTIMENTO",
+    "aliases": [
+      "VALOR S/A SCFI",
+      "195"
+    ],
+    "logo": null
+  },
+  {
+    "id": "48967968",
+    "name": "VERT DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS LTDA",
+    "aliases": [
+      "VERT DTVM LTDA.",
+      "551"
+    ],
+    "logo": null
+  },
+  {
+    "id": "05192316",
+    "name": "Via Certa Financiadora S.A. - Crédito, Financiamento e Investimentos",
+    "aliases": [
+      "VIA CERTA FINANCIADORA S.A. - CFI",
+      "411"
+    ],
+    "logo": null
+  },
+  {
+    "id": "17772370",
+    "name": "VIPS CORRETORA DE CÂMBIO S.A.",
+    "aliases": [
+      "VIPS CC S.A.",
+      "298"
+    ],
+    "logo": null
+  },
+  {
+    "id": "22610500",
+    "name": "VORTX DISTRIBUIDORA DE TITULOS E VALORES MOBILIARIOS LTDA.",
+    "aliases": [
+      "VORTX DTVM LTDA.",
+      "310"
+    ],
+    "logo": null
+  },
+  {
+    "id": "56106523",
+    "name": "VUE INSTITUIÇÃO DE PAGAMENTO S.A.",
+    "aliases": [
+      "VUE IP S.A.",
+      "763"
+    ],
+    "logo": null
+  },
+  {
+    "id": "62287735",
+    "name": "WARREN RENA DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS LTDA",
+    "aliases": [
+      "WARREN RENA DTVM",
+      "101"
+    ],
+    "logo": null
+  },
+  {
+    "id": "32708748",
+    "name": "WE PAY OUT INSTITUICAO DE PAGAMENTO LTDA.",
+    "aliases": [
+      "WE PAY OUT IP LTDA.",
+      "662"
+    ],
+    "logo": null
+  },
+  {
+    "id": "23862762",
+    "name": "WILL FINANCEIRA S.A. CRÉDITO, FINANCIAMENTO E INVESTIMENTO - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+    "aliases": [
+      "WILL FINANCEIRA S.A.CFI - EM LIQUIDAÇÃO EXTRAJUDICIAL",
+      "280"
+    ],
+    "logo": null
+  },
+  {
+    "id": "45854066",
+    "name": "WNT CAPITAL DISTRIBUIDORA DE TÍTULOS E VALORES MOBILIÁRIOS S.A.",
+    "aliases": [
+      "WNT CAPITAL DTVM",
+      "524"
+    ],
+    "logo": null
+  },
+  {
+    "id": "54811417",
+    "name": "WOOVI INSTITUICAO DE PAGAMENTO LTDA",
+    "aliases": [
+      "WOOVI IP LTDA.",
+      "694"
+    ],
+    "logo": null
+  },
+  {
+    "id": "57824223",
+    "name": "WX INSTITUICAO DE PAGAMENTO LTDA",
+    "aliases": [
+      "WX IP LTDA.",
+      "771"
+    ],
+    "logo": null
+  },
+  {
+    "id": "02332886",
+    "name": "XP INVESTIMENTOS CORRETORA DE CÂMBIO,TÍTULOS E VALORES MOBILIÁRIOS S/A",
+    "aliases": [
+      "XP INVESTIMENTOS CCTVM S/A",
+      "102"
+    ],
+    "logo": null
+  },
+  {
+    "id": "52586293",
+    "name": "Z-ON SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "Z-ON SCD S.A.",
+      "632"
+    ],
+    "logo": null
+  },
+  {
+    "id": "35810871",
+    "name": "Z1 INSTITUIÇÃO DE PAGAMENTO LTDA.",
+    "aliases": [
+      "Z1 IP LTDA.",
+      "586"
+    ],
+    "logo": null
+  },
+  {
+    "id": "05351887",
+    "name": "ZEMA CRÉDITO, FINANCIAMENTO E INVESTIMENTO S/A",
+    "aliases": [
+      "ZEMA CFI S/A",
+      "359"
+    ],
+    "logo": null
+  },
+  {
+    "id": "26264220",
+    "name": "ZERO INSTITUIÇÃO DE PAGAMENTO S.A.",
+    "aliases": [
+      "ZERO IP",
+      "671"
+    ],
+    "logo": null
+  },
+  {
+    "id": "37414009",
+    "name": "ZIPDIN SOLUÇÕES DIGITAIS SOCIEDADE DE CRÉDITO DIRETO S/A",
+    "aliases": [
+      "ZIPDIN SCD S.A.",
+      "418"
+    ],
+    "logo": null
+  },
+  {
+    "id": "56198117",
+    "name": "ZYDI SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "ZYDI",
+      "692"
+    ],
+    "logo": null
+  },
+  {
+    "id": "74014747",
+    "name": "ÁGORA CORRETORA DE TITULOS E VALORES MOBILIARIOS S.A.",
+    "aliases": [
+      "ÁGORA CTVM S.A.",
+      "565"
+    ],
+    "logo": null
+  },
+  {
+    "id": "34335592",
+    "name": "ÓTIMO SOCIEDADE DE CRÉDITO DIRETO S.A.",
+    "aliases": [
+      "ÓTIMO SCD S.A.",
+      "355"
+    ],
+    "logo": null
+  }
+]

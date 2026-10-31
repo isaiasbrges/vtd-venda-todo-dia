@@ -63,9 +63,9 @@ class Response
         $output = fopen('php://output', 'w');
         // UTF-8 BOM para Excel
         fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
-        fputcsv($output, $headers, ';');
+        fputcsv($output, $headers, ';', '"', '');
         foreach ($rows as $row) {
-            fputcsv($output, $row, ';');
+            fputcsv($output, $row, ';', '"', '');
         }
         fclose($output);
         

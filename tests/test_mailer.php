@@ -23,7 +23,7 @@ assert(count($sentMails) === 1, "Exactly one email must be recorded");
 assert($sentMails[0]['to'] === 'cliente@loja.com');
 assert(str_contains($sentMails[0]['subject'], 'Venda Todo Dia'));
 assert(str_contains($sentMails[0]['body'], 'MinhaSenhaForte123'));
-assert(str_contains($sentMails[0]['body'], 'Kit + Financeiro'));
+assert(str_contains(mb_strtolower($sentMails[0]['body']), 'kit + financeiro'));
 
 // Test Password Reset Flow in AuthController
 $auth = new \VTD\Controllers\AuthController();

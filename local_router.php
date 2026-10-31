@@ -35,6 +35,56 @@ if ($uri === '/' || $uri === '') {
 // 4. Arquivos estáticos (app.js, styles.css, data.js, imagens, etc.)
 $filePath = __DIR__ . str_replace('/', DIRECTORY_SEPARATOR, $uri);
 if (is_file($filePath)) {
+    // O servidor embutido do PHP não trata intervalos de MP4. Servir os bytes
+    // solicitados permite avançar o vídeo na prévia local, como na hospedagem.
+    if (strtolower(pathinfo($filePath, PATHINFO_EXTENSION)) === 'mp4') {
+        $size = filesize($filePath);
+        $start = 0;
+        $end = $size - 1;
+        $range = $_SERVER['HTTP_RANGE'] ?? null;
+        if ($range !== null) {
+            if (!preg_match('/^bytes=(\d*)-(\d*)$/D', $range, $match) || ($match[1] === '' && $match[2] === '')) {
+                http_response_code(416);
+                header('Content-Range: bytes */' . $size);
+                exit;
+            }
+            if ($match[1] === '') {
+                $start = max(0, $size - (int) $match[2]);
+            } else {
+                $start = (int) $match[1];
+                $end = $match[2] === '' ? $end : min($end, (int) $match[2]);
+            }
+            if ($start > $end || $start >= $size) {
+                http_response_code(416);
+                header('Content-Range: bytes */' . $size);
+                exit;
+            }
+        }
+        $stream = fopen($filePath, 'rb');
+        if ($stream === false) {
+            http_response_code(500);
+            exit;
+        }
+        header('Content-Type: video/mp4');
+        header('Accept-Ranges: bytes');
+        header('Content-Length: ' . ($end - $start + 1));
+        if ($range !== null) {
+            http_response_code(206);
+            header('Content-Range: bytes ' . $start . '-' . $end . '/' . $size);
+        }
+        if ($_SERVER['REQUEST_METHOD'] !== 'HEAD') {
+            fseek($stream, $start);
+            $remaining = $end - $start + 1;
+            while ($remaining > 0 && !feof($stream) && !connection_aborted()) {
+                $chunk = fread($stream, min(262144, $remaining));
+                if ($chunk === false || $chunk === '') break;
+                echo $chunk;
+                $remaining -= strlen($chunk);
+            }
+        }
+        fclose($stream);
+        exit;
+    }
     return false; // Permite que o servidor embutido do PHP sirva diretamente
 }
 

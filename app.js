@@ -510,11 +510,39 @@ function calendar() {
     </div>`;
 }
 
+function guideVideo() {
+  return `<details class="panel guide-video" id="guide-video-panel">
+    <summary>
+      <span class="guide-video-preview" aria-hidden="true">
+        <img src="assets/images/guia-do-matheus-poster.webp" width="1024" height="576" alt="">
+        <span class="guide-video-play">▶</span>
+      </span>
+      <span class="guide-video-copy">
+        <span class="eyebrow muted">GUIA EM VÍDEO · 10 MIN 50 S</span>
+        <strong>Guia do Matheus em vídeo</strong>
+        <span>Assista às orientações e continue pelos capítulos no seu ritmo.</span>
+      </span>
+      <span class="guide-video-action"><span class="guide-video-open">Assistir ao vídeo</span><span class="guide-video-close">Fechar vídeo</span></span>
+      <span class="guide-video-caret" aria-hidden="true">⌄</span>
+    </summary>
+    <div class="guide-video-content">
+      <div class="guide-video-frame">
+        <div class="guide-video-brand"><strong>VTD</strong><span>GUIA DO MATHEUS</span></div>
+        <video id="guide-matheus-video" controls playsinline preload="none" poster="assets/images/guia-do-matheus-poster.webp" width="1024" height="576" aria-label="Guia do Matheus em vídeo">
+          <source src="assets/videos/guia-do-matheus.mp4" type="video/mp4">
+          Seu navegador não suporta este vídeo. <a href="assets/videos/guia-do-matheus.mp4">Abrir vídeo do guia</a>.
+        </video>
+      </div>
+      <p class="guide-video-help">Use os controles para pausar, ajustar o som ou ampliar. <a href="https://youtu.be/PIhtK3foiAI" target="_blank" rel="noopener noreferrer">Assistir pelo link alternativo ↗</a></p>
+    </div>
+  </details>`;
+}
+
 function guide() {
-  if (!S.chapters.length) return head('Guia do Matheus', 'Aprenda no seu ritmo.') + '<section class="empty"><h2>Seu guia está em preparação</h2><p>Os capítulos aparecerão aqui quando estiverem disponíveis.</p></section>';
+  if (!S.chapters.length) return head('Guia do Matheus', 'Aprenda no seu ritmo.') + guideVideo() + '<section class="empty"><h2>Seu guia está em preparação</h2><p>Os capítulos aparecerão aqui quando estiverem disponíveis.</p></section>';
   state.chapter = Math.min(state.chapter, Math.max(0, S.chapters.length - 1));
   const ch = S.chapters[state.chapter] || { title: '', body: '', task: '', name: '' };
-  return head('Guia do Matheus', 'Leia no seu ritmo e transforme cada capítulo em uma ação.') +
+  return head('Guia do Matheus', 'Leia no seu ritmo e transforme cada capítulo em uma ação.') + guideVideo() +
     `<div class="reading">
       <aside class="panel chapters">
         <h3>Loja que Vende Todo Dia</h3>
@@ -585,7 +613,7 @@ function financeWelcome() {
 
 function financeNav(current) {
   return `<nav class="financial-nav" aria-label="Seções financeiras">
-    ${[['finance', 'Visão geral'], ['finance/transactions', 'Lançamentos'], ['finance/payable', 'A pagar'], ['finance/receivable', 'A receber'], ['finance/categories', 'Categorias'], ['finance/reports', 'Relatórios'], ['finance/agenda', 'Agenda'], ['finance/recurring', 'Recorrências']].map(([r, t]) => link(t, r, ' ' + (current === r ? 'active' : ''))).join('')}
+    ${[['finance', 'Visão geral'], ['finance/transactions', 'Lançamentos'], ['finance/payable', 'A pagar'], ['finance/receivable', 'A receber'], ['finance/cards', 'Meus cartões'], ['finance/categories', 'Categorias'], ['finance/reports', 'Relatórios'], ['finance/agenda', 'Agenda'], ['finance/recurring', 'Recorrências']].map(([r, t]) => link(t, r, ' ' + (current === r ? 'active' : ''))).join('')}
   </nav>`;
 }
 
@@ -595,7 +623,7 @@ function stats() {
     ${[['Saldo inicial', t.start, 'wallet', 'Abertura do período'], ['Entradas recebidas', t.inc, 'up', 'Recebidas no mês'], ['Saídas pagas', t.out, 'down', 'Pagas no mês'], ['Saldo atual', t.balance, 'chart', 'Disponível no período']].map(([l,v,i,d])=>`
       <div class="stat" aria-label="${l}: ${money(v)}">
         <div class="stat-icon">${icon(i)}</div>
-        <small>${l}</small><strong>${money(v)}</strong>
+        <small>${l}</small><strong>${money(v).replace(/ /g, ' ')}</strong>
         <span class="stat-meta">${d}</span>
       </div>`).join('')}
   </div>`;
@@ -637,16 +665,18 @@ function txTable(list) {
     <thead><tr><th>Descrição</th><th>Categoria</th><th>Vencimento / data</th><th>Valor</th><th>Status</th><th>Ações</th></tr></thead>
     <tbody>
       ${list.map(t => `<tr>
-        <td>${esc(t.description)}</td>
+        <td>${esc(t.description)}${t.card ? '<small class="finance-tx-card">Cartão · '+esc(t.card.nickname)+'</small>' : ''}</td>
         <td><span class="tag">${esc(t.category)}</span></td>
         <td>${day(t.date)}</td>
         <td class="${t.type === 'income' ? 'positive' : 'negative'}">${t.type === 'income' ? '+' : '−'} ${money(t.value)}</td>
         <td><span class="tag ${t.status === 'paid' ? 'green' : 'yellow'}">${t.status === 'paid' ? (t.type === 'income' ? 'Recebido' : 'Pago') : 'Pendente'}</span></td>
         <td>
           <div class="table-actions">
+            ${t.card ? btn('Ver fatura', 'finance-invoice', 'small', 'data-id="'+esc(t.card.invoice_id)+'"') : `
             ${t.status === 'pending' ? btn(icon('check'), 'settle-tx', 'small', `data-id="${t.id}" aria-label="Marcar como ${t.type === 'income' ? 'recebido' : 'pago'}"`) : ''}
             ${btn(icon('edit'), 'edit-tx', 'small', `data-id="${t.id}" aria-label="Editar lançamento"`)}
             ${btn(icon('trash'), 'delete-tx', 'small danger', `data-id="${t.id}" aria-label="Excluir lançamento"`)}
+`}
           </div>
         </td>
       </tr>`).join('')}
@@ -695,10 +725,12 @@ function finance(current) {
   }
 
   const suffix = current.split('/')[1] || '';
-  const title = { transactions: 'Lançamentos', payable: 'Contas a pagar', receivable: 'Contas a receber', categories: 'Categorias', reports: 'Relatórios', agenda: 'Agenda financeira', recurring: 'Receitas e despesas recorrentes' }[suffix] || 'Seu dinheiro, com clareza.';
-  let html = financeHeader(title, 'Receitas, despesas e vencimentos da sua loja em um só lugar.') +
+  const title = { transactions: 'Lançamentos', payable: 'Contas a pagar', receivable: 'Contas a receber', cards: 'Meus cartões', categories: 'Categorias', reports: 'Relatórios', agenda: 'Agenda financeira', recurring: 'Receitas e despesas recorrentes' }[suffix] || 'Seu dinheiro, com clareza.';
+  let html = (suffix === 'cards' ? head(title, 'Cartões, limites e faturas da sua loja em um só lugar.', btn(icon('plus') + ' Novo lançamento', 'new-tx', 'primary')) : financeHeader(title, 'Receitas, despesas e vencimentos da sua loja em um só lugar.')) +
     (!suffix ? financeWelcome() : '') + financeNav(current);
   if (S.financeV2?.unavailable) html += `<section class="panel" role="alert"><strong>Agenda e recorrências temporariamente indisponíveis</strong><p class="small muted">${esc(S.financeV2.message)}. Os lançamentos e o saldo continuam disponíveis.</p></section>`;
+
+  if (suffix === 'cards') return html + FinanceUI.renderCards();
 
   if (suffix === 'agenda') {
     const d = S.financeV2?.agenda || {upcoming:[],overdue:[],overdue_count:0,overdue_cents:0};
@@ -729,6 +761,7 @@ function finance(current) {
   }
 
   html += stats();
+  if (!suffix) html += FinanceUI.overview();
   if (!suffix && S.financeV2) {
     const d = S.financeV2.agenda || {};
     html += `<section class="panel" style="margin-bottom:20px"><div class="panel-head"><h2>Próximos compromissos</h2>${link('Abrir agenda →','finance/agenda','link')}</div><p class="small muted">${Number(d.overdue_count || 0)} vencido(s) · ${money(Number(d.overdue_cents || 0))} em atraso</p>${financeAgendaList((d.upcoming || []).slice(0,4))}</section>`;
@@ -757,7 +790,8 @@ function finance(current) {
           </select>` : ''}
         ${btn(icon('download') + ' CSV', 'export-csv', 'small')}
       </div>
-      <div id="tx-results">${txTable(list)}</div>
+      ${FinanceUI.filters()}
+      <div id="tx-results">${txTable(FinanceUI.filtered(list))}</div>
     </section>`;
     return html;
   }
@@ -791,26 +825,7 @@ function finance(current) {
 }
 
 function transactionModal(id) {
-  if (!S.categories.length) {
-    modal('Organize seu primeiro lançamento', `<p>Crie uma categoria antes de registrar entradas e saídas.</p>${btn('Criar categoria', 'new-category', 'primary')}`);
-    return;
-  }
-  const defaultDate = state.financeMonth === today().slice(0, 7) ? today() : state.financeMonth + '-01';
-  const t = S.transactions.find(x => String(x.id) === String(id)) || { type: 'expense', value: 0, category_id: S.categories[0].id, date: defaultDate, status: 'pending' };
-  modal(id ? 'Editar lançamento' : 'Novo lançamento', `
-    <input type="hidden" name="id" value="${esc(id || '')}">
-    <div class="fields">
-      ${field('Descrição', 'description', t.description || '')}
-      ${field('Valor em R$', 'value', t.value ? (t.value / 100).toFixed(2) : '', 'number')}
-      ${select('Tipo', 'type', [['income', 'Entrada'], ['expense', 'Saída']], t.type)}
-      ${select('Categoria', 'category_id', S.categories.map(c => [c.id, c.name]), t.category_id)}
-      ${field('Data de vencimento', 'date', t.date, 'date')}
-      ${select('Status', 'status', [['pending', 'Pendente'], ['paid', 'Realizado (pago / recebido)']], t.status)}
-    </div>
-    <p class="storage-note">O vencimento permanece no histórico; ao quitar, você informa a data efetiva de pagamento.</p>
-  `, 'Salvar lançamento', 'transaction');
-  $('#f-value').min = '0.01';
-  $('#f-value').step = '0.01';
+  FinanceUI.openTransaction(S.transactions.find(x => String(x.id) === String(id)) || {});
 }
 
 function account() {
@@ -1060,11 +1075,12 @@ async function loadFinanceData() {
   const suffix = current.split('/')[1];
   const pending = ['payable', 'receivable'].includes(suffix);
   try {
-    const [overview, txs, cats, financeV2] = await Promise.all([
+    const [overview, txs, cats, financeV2, creditCards] = await Promise.all([
       api.get('/finance/overview', { month: state.financeMonth }),
       api.get('/finance/transactions', { month: state.financeMonth, search: state.txSearch, status: pending ? 'pending' : state.txStatus, type: suffix === 'payable' ? 'expense' : suffix === 'receivable' ? 'income' : state.txType }),
       api.get('/finance/categories'),
-      api.get('/finance/v2/dashboard', { month: state.financeMonth }).catch(error => ({ unavailable: true, message: error.message || 'Falha na agenda financeira' }))
+      api.get('/finance/v2/dashboard', { month: state.financeMonth }).catch(error => ({ unavailable: true, message: error.message || 'Falha na agenda financeira' })),
+      api.get('/finance/cards').then(cards => ({ available: true, cards })).catch(error => ({ available: false, cards: [], message: error.message }))
     ]);
 
     if (requestId !== financeRequestId || current !== route()) return;
@@ -1074,6 +1090,7 @@ async function loadFinanceData() {
     S.transactions = txs || [];
     S.categories = cats || [];
     S.financeV2 = financeV2;
+    S.creditCards = creditCards;
   } catch (e) {
     throw e;
   }
@@ -1496,6 +1513,7 @@ document.addEventListener('keydown', e => {
 });
 
 document.addEventListener('input', async e => {
+  FinanceUI.input(e);
   if (e.target.id === 'chapter-note') {
     noteDrafts[state.chapter + 1] = e.target.value;
     if ($('#note-status')) $('#note-status').textContent = 'Rascunho ainda não salvo.';
@@ -1552,7 +1570,15 @@ document.addEventListener('input', async e => {
   }
 });
 
+// O evento toggle não propaga; a captura permite pausar antes de ocultar o vídeo.
+document.addEventListener('toggle', e => {
+  if (e.target.id === 'guide-video-panel' && !e.target.open) {
+    e.target.querySelector('video')?.pause();
+  }
+}, true);
+
 document.addEventListener('change', async e => {
+  FinanceUI.change(e);
   const t = e.target;
   if (t.dataset.check) {
     const previous = !!S.checks[t.dataset.check];
@@ -1658,6 +1684,8 @@ document.addEventListener('click', async e => {
   el.disabled = true;
   try {
 
+  if (await FinanceUI.action(a, id, el)) return;
+
   if (a === 'toggle-password') {
     const input = document.getElementById(el.getAttribute('aria-controls'));
     const visible = input.type === 'password';
@@ -1704,7 +1732,7 @@ document.addEventListener('click', async e => {
     try { await api.post('/auth/logout'); } catch (error) { toast(error.message); return; }
     S.session = false;
     api.csrfToken = '';
-    S.favs = []; S.notes = {}; S.transactions = [];
+    S.favs = []; S.notes = {}; S.transactions = []; S.creditCards = null; FinanceUI.reset();
     Object.keys(noteDrafts).forEach(key => delete noteDrafts[key]);
     go('login');
     return;
@@ -2051,6 +2079,7 @@ document.addEventListener('submit', async e => {
   try {
   const d = Object.fromEntries(new FormData(form));
   const kind = form.dataset.form;
+  if (await FinanceUI.submit(kind, form, d)) return;
 
   if (kind === 'login') {
     try {

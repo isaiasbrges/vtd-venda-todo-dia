@@ -3,6 +3,8 @@
    ========================================================================== */
 
 :root {
+  --master-sidebar-width: 224px;
+  --master-topbar-height: 64px;
   --master-bg: #F8F9FA;
   --master-sidebar-bg: #111215;
   --master-sidebar-text: #9CA3AF;
@@ -31,7 +33,7 @@ body.master-active {
 .master-sidebar {
   position: fixed;
   inset: 0 auto 0 0;
-  width: 260px;
+  width: var(--master-sidebar-width);
   background-color: var(--master-sidebar-bg);
   color: var(--master-sidebar-text);
   display: flex;
@@ -128,14 +130,14 @@ body.master-active {
 
 /* ---------------- SHELL & TOPBAR ---------------- */
 .master-shell {
-  margin-left: 260px;
+  margin-left: var(--master-sidebar-width);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
 .master-topbar {
-  height: 64px;
+  height: var(--master-topbar-height);
   background: rgba(255, 255, 255, 0.95);
   border-bottom: 1px solid var(--master-border);
   padding: 0 32px;
@@ -716,8 +718,8 @@ body.master-active {
     display: block;
   }
   .master-sidebar.open {
-    top: 64px;
-    height: calc(100vh - 64px);
+    top: var(--master-topbar-height);
+    height: calc(100dvh - var(--master-topbar-height));
   }
   .master-sidebar {
     transform: translateX(-100%);

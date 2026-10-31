@@ -17,29 +17,60 @@ class Migrator
 
     public function runMigrations(): void
     {
-        $migrationsDir = dirname(__DIR__, 2) . '/migrations';
-        $files = glob($migrationsDir . '/*.sql');
+        // Explicit CLI migration only. Never invoked by an HTTP request.
+        $driver = $this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME);
+        $this->pdo->exec('CREATE TABLE IF NOT EXISTS schema_migrations (version VARCHAR(191) PRIMARY KEY, applied_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP)');
+        $files = glob(dirname(__DIR__, 2) . '/migrations/*.sql');
         sort($files);
-
-        $driver = Config::get('db.driver', 'mysql');
-
         foreach ($files as $file) {
-            $sql = file_get_contents($file);
-
+            $version = basename($file);
+            $check = $this->pdo->prepare('SELECT version FROM schema_migrations WHERE version = ?');
+            $check->execute([$version]);
+            if ($check->fetchColumn()) continue;
+            $sql = preg_replace('/--[^\r\n]*/', '', file_get_contents($file));
             if ($driver === 'sqlite') {
                 $sql = str_replace('INTEGER PRIMARY KEY AUTO_INCREMENT', 'INTEGER PRIMARY KEY AUTOINCREMENT', $sql);
-                $sql = str_replace('AUTO_INCREMENT', '', $sql);
-                $sql = preg_replace('/ENGINE\s*=\s*InnoDB.*?;/i', ';', $sql);
+                $sql = preg_replace('/\bENUM\([^)]*\)/i', 'VARCHAR(30)', $sql);
+                $sql = preg_replace('/\bAUTO_INCREMENT\b/i', '', $sql);
+                $sql = preg_replace('/ENGINE\s*=\s*InnoDB[^;]*;/i', ';', $sql);
             }
-
-            $statements = array_filter(array_map('trim', explode(';', $sql)));
-
-            foreach ($statements as $stmt) {
-                if (!empty($stmt)) {
-                    $this->pdo->exec($stmt);
+            // Legacy installations have no migration history. Inspect additive DDL
+            // so an existing or partially applied 003 can be resumed safely.
+            foreach (array_filter(array_map('trim', explode(';', $sql))) as $stmt) {
+                if (preg_match('/^ALTER TABLE (\w+) ADD COLUMN (\w+)/i', $stmt, $m) && $this->hasColumn($m[1], $m[2])) continue;
+                if (preg_match('/^CREATE (?:UNIQUE )?INDEX (\w+) ON (\w+)/i', $stmt, $m) && $this->hasIndex($m[2], $m[1])) continue;
+                $extraIndexes = [];
+                if ($driver === 'sqlite' && preg_match('/^CREATE TABLE IF NOT EXISTS (\w+)/i', $stmt, $table)) {
+                    $stmt = preg_replace_callback('/,\s*INDEX (\w+)\s*\(([^)]+)\)/i', function($match) use (&$extraIndexes, $table) {
+                        $extraIndexes[] = 'CREATE INDEX IF NOT EXISTS '.$match[1].' ON '.$table[1].' ('.$match[2].')';
+                        return '';
+                    }, $stmt);
                 }
+                $this->pdo->exec($stmt);
+                foreach ($extraIndexes as $indexSql) $this->pdo->exec($indexSql);
             }
+            $this->pdo->prepare('INSERT INTO schema_migrations (version) VALUES (?)')->execute([$version]);
         }
+    }
+
+    private function hasColumn(string $table, string $column): bool
+    {
+        if ($this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite') {
+            foreach ($this->pdo->query("PRAGMA table_info($table)")->fetchAll() as $row) if ($row['name'] === $column) return true;
+            return false;
+        }
+        $s = $this->pdo->prepare('SELECT COUNT(*) FROM information_schema.columns WHERE table_schema=DATABASE() AND table_name=? AND column_name=?');
+        $s->execute([$table, $column]); return (int)$s->fetchColumn() > 0;
+    }
+
+    private function hasIndex(string $table, string $index): bool
+    {
+        if ($this->pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite') {
+            $s = $this->pdo->prepare("SELECT COUNT(*) FROM sqlite_master WHERE type='index' AND name=?");
+            $s->execute([$index]); return (int)$s->fetchColumn() > 0;
+        }
+        $s = $this->pdo->prepare('SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=DATABASE() AND table_name=? AND index_name=?');
+        $s->execute([$table, $index]); return (int)$s->fetchColumn() > 0;
     }
 
     public function runSeeds(): void

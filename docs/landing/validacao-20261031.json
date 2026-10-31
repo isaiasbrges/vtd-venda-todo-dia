@@ -1,0 +1,195 @@
+{
+  "timestamp": "2026-10-31T18:44:51.282Z",
+  "base": "http://127.0.0.1:8095/vendas.html",
+  "errors": [],
+  "badResponses": [],
+  "results": [
+    {
+      "test": "Layout 1920x1080",
+      "ok": true,
+      "width": 1920,
+      "scrollWidth": 1920,
+      "clipped": [],
+      "heroCtaBottom": 589.296875,
+      "playerRatio": 0.5625146767754705,
+      "headerHeight": 77,
+      "dockVisible": false
+    },
+    {
+      "test": "Layout 1440x900",
+      "ok": true,
+      "width": 1440,
+      "scrollWidth": 1440,
+      "clipped": [],
+      "heroCtaBottom": 581.0625,
+      "playerRatio": 0.5625146767754705,
+      "headerHeight": 77,
+      "dockVisible": false
+    },
+    {
+      "test": "Layout 1366x768",
+      "ok": true,
+      "width": 1366,
+      "scrollWidth": 1366,
+      "clipped": [],
+      "heroCtaBottom": 581.0625,
+      "playerRatio": 0.5625146767754705,
+      "headerHeight": 77,
+      "dockVisible": false
+    },
+    {
+      "test": "Layout 1024x768",
+      "ok": true,
+      "width": 1024,
+      "scrollWidth": 1024,
+      "clipped": [],
+      "heroCtaBottom": 536.4375,
+      "playerRatio": 0.5625146767754705,
+      "headerHeight": 77,
+      "dockVisible": false
+    },
+    {
+      "test": "Layout 768x1024",
+      "ok": true,
+      "width": 768,
+      "scrollWidth": 768,
+      "clipped": [],
+      "heroCtaBottom": 514.5625,
+      "playerRatio": 0.5625127750902773,
+      "headerHeight": 77,
+      "dockVisible": false
+    },
+    {
+      "test": "Layout 390x844",
+      "ok": true,
+      "width": 390,
+      "scrollWidth": 390,
+      "clipped": [],
+      "heroCtaBottom": 483.9375,
+      "playerRatio": 0.5625081988718352,
+      "headerHeight": 69,
+      "dockVisible": true
+    },
+    {
+      "test": "Layout 375x812",
+      "ok": true,
+      "width": 375,
+      "scrollWidth": 375,
+      "clipped": [],
+      "heroCtaBottom": 503.46875,
+      "playerRatio": 0.5625081988718352,
+      "headerHeight": 69,
+      "dockVisible": true
+    },
+    {
+      "test": "Layout 360x800",
+      "ok": true,
+      "width": 360,
+      "scrollWidth": 360,
+      "clipped": [],
+      "heroCtaBottom": 503.46875,
+      "playerRatio": 0.5625081988718352,
+      "headerHeight": 69,
+      "dockVisible": true
+    },
+    {
+      "test": "CTAs de entrada levam ao pagamento na mesma pÃ¡gina",
+      "ok": true,
+      "count": 4
+    },
+    {
+      "test": "BotÃ£o de finalizar compra abre o checkout oficial",
+      "ok": true,
+      "count": 1
+    },
+    {
+      "test": "Filtros da amostra e navegaÃ§Ã£o por teclado",
+      "ok": true
+    },
+    {
+      "test": "Galeria, teclas de navegaÃ§Ã£o, Escape e retorno de foco",
+      "ok": true
+    },
+    {
+      "test": "Todas as perguntas do FAQ",
+      "ok": true,
+      "count": 10
+    },
+    {
+      "test": "Menu mobile e fechamento apÃ³s navegaÃ§Ã£o",
+      "ok": true
+    },
+    {
+      "test": "YouTube real: autoplay sem som, pausar/reproduzir, som, busca e tela cheia",
+      "ok": true,
+      "muted": true,
+      "time": 0.05321788746643066,
+      "duration": 120.201
+    },
+    {
+      "test": "MP4 local reproduz e permite avanÃ§ar",
+      "ok": true,
+      "duration": 56.28,
+      "width": 1920,
+      "height": 1080,
+      "currentTime": 40,
+      "error": null
+    },
+    {
+      "test": "Movimento reduzido",
+      "ok": true
+    },
+    {
+      "test": "ReferÃªncias locais HTTP 200",
+      "ok": true,
+      "count": 21
+    },
+    {
+      "test": "PÃ¡gina pÃºblica sem JavaScript: oferta, links e FAQ disponÃ­veis",
+      "ok": true
+    },
+    {
+      "test": "Checkout externo acessÃ­vel (sem preencher ou enviar formulÃ¡rio)",
+      "ok": true,
+      "status": 200,
+      "prices": [
+        "R$ 97,00",
+        "R$ 50,98",
+        "R$ 34,55",
+        "R$ 26,34",
+        "R$ 21,42",
+        "R$ 18,14"
+      ],
+      "title": "Kit Loja que Vende Todo Dia | Greenn"
+    }
+  ],
+  "conteudoEProtecaoImagens": {
+    "timestamp": "2026-10-31T18:45:22.718Z",
+    "protection": {
+      "imageContextBlocked": true,
+      "imageDragBlocked": true,
+      "galleryLinkContextBlocked": true,
+      "textContextAllowed": true,
+      "allImagesNonDraggable": true,
+      "textSelectionAllowed": true
+    },
+    "newScreensOpenWithKeyboard": true,
+    "galleryImages": 10,
+    "screenshots": [
+      {
+        "viewport": [
+          1366,
+          768
+        ],
+        "semRolagemHorizontal": true
+      },
+      {
+        "viewport": [
+          390,
+          844
+        ],
+        "semRolagemHorizontal": true
+      }
+    ]
+  }
+}

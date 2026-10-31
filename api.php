@@ -56,6 +56,22 @@ $router->post('/finance/categories', [\VTD\Controllers\FinanceController::class,
 $router->delete('/finance/categories/{id}', [\VTD\Controllers\FinanceController::class, 'deleteCategory']);
 $router->get('/finance/export-csv', [\VTD\Controllers\FinanceController::class, 'exportCsv']);
 
+$router->get('/finance/card-purchases/{id}', [\VTD\Controllers\FinanceCardsController::class, 'purchaseDetail']);
+
+// Cartões: mesmas barreiras de plano e sessão do financeiro.
+$router->get('/finance/banks', [\VTD\Controllers\FinanceCardsController::class, 'banks']);
+$router->get('/finance/cards', [\VTD\Controllers\FinanceCardsController::class, 'cards']);
+$router->post('/finance/cards', [\VTD\Controllers\FinanceCardsController::class, 'create']);
+$router->put('/finance/cards/{id}', [\VTD\Controllers\FinanceCardsController::class, 'update']);
+$router->post('/finance/cards/{id}/archive', [\VTD\Controllers\FinanceCardsController::class, 'archive']);
+$router->get('/finance/cards/{id}/invoices', [\VTD\Controllers\FinanceCardsController::class, 'invoices']);
+$router->get('/finance/card-invoices/{id}', [\VTD\Controllers\FinanceCardsController::class, 'invoice']);
+$router->post('/finance/card-purchases/preview', [\VTD\Controllers\FinanceCardsController::class, 'preview']);
+$router->post('/finance/card-purchases', [\VTD\Controllers\FinanceCardsController::class, 'purchase']);
+$router->put('/finance/card-purchases/{id}', [\VTD\Controllers\FinanceCardsController::class, 'updatePurchase']);
+$router->post('/finance/card-purchases/{id}/cancel', [\VTD\Controllers\FinanceCardsController::class, 'cancel']);
+$router->post('/finance/card-invoices/{id}/settle', [\VTD\Controllers\FinanceCardsController::class, 'settle']);
+
 // Financeiro V2: painel consolidado, agenda e recorrências
 $router->get('/finance/v2/dashboard', [\VTD\Controllers\FinanceV2Controller::class, 'dashboard']);
 $router->post('/finance/v2/recurring', [\VTD\Controllers\FinanceV2Controller::class, 'createRecurring']);

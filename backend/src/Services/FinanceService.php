@@ -210,8 +210,17 @@ class FinanceService
         $stmt->execute($params);
         $rows = $stmt->fetchAll();
 
-        return array_map(function($r) {
+        $cardMap = []; $methods = [];
+        if (FinanceCardsService::ready($this->pdo)) {
+            $q=$this->pdo->prepare('SELECT i.transaction_id,i.invoice_id,i.purchase_id,i.installment_number,p.installments,f.card_id,c.nickname FROM financial_card_installments i JOIN financial_card_purchases p ON p.id=i.purchase_id AND p.tenant_id=i.tenant_id JOIN financial_card_invoices f ON f.id=i.invoice_id AND f.tenant_id=i.tenant_id JOIN financial_credit_cards c ON c.id=f.card_id AND c.tenant_id=f.tenant_id WHERE i.tenant_id=?');
+            $q->execute([$tenantId]); foreach($q->fetchAll() as $item) $cardMap[$item['transaction_id']]=$item;
+            $q=$this->pdo->prepare('SELECT transaction_id,method FROM financial_transaction_methods WHERE tenant_id=?');$q->execute([$tenantId]);
+            foreach($q->fetchAll() as $item) $methods[$item['transaction_id']]=$item['method'];
+        }
+        return array_map(function($r) use ($cardMap,$methods) {
             return [
+                'card' => $cardMap[$r['id']] ?? null,
+                'payment_method' => isset($cardMap[$r['id']]) ? 'credit' : ($methods[$r['id']] ?? 'unspecified'),
                 'id'          => $r['id'],
                 'description' => $r['description'],
                 'type'        => $r['type'],
@@ -229,7 +238,8 @@ class FinanceService
 
     public function createTransaction(string $tenantId, array $data, string $userId): array
     {
-        $id = $data['id'] ?? ('tx_' . bin2hex(random_bytes(10)));
+        $id = trim((string)($data['id'] ?? ''));
+        if ($id === '') $id = 'tx_' . bin2hex(random_bytes(10));
         $desc = trim((string)($data['description'] ?? ''));
         $type = ($data['type'] ?? 'expense') === 'income' ? 'income' : 'expense';
         $valueCents = (int)($data['value_cents'] ?? 0);
@@ -259,6 +269,8 @@ class FinanceService
                 ':settled_at' => $settledAt,
                 ':uid'    => $userId
             ]);
+
+            $this->saveMethod($tenantId, $id, $data);
 
             // Grava auditoria
             $stmtAudit = $this->pdo->prepare("
@@ -291,6 +303,7 @@ class FinanceService
 
     public function updateTransaction(string $tenantId, string $id, array $data, string $userId): array
     {
+        $this->assertNotCardInstallment($tenantId, $id);
         $stmtBefore = $this->pdo->prepare("SELECT * FROM financial_transactions WHERE id = :id AND tenant_id = :tid");
         $stmtBefore->execute([':id' => $id, ':tid' => $tenantId]);
         $before = $stmtBefore->fetch();
@@ -327,6 +340,7 @@ class FinanceService
                 ':tid'    => $tenantId
             ]);
 
+            $this->saveMethod($tenantId, $id, $data);
             $stmtAudit = $this->pdo->prepare("
                 INSERT INTO financial_audit_logs (tenant_id, transaction_id, user_id, action, snapshot_before, snapshot_after)
                 VALUES (:tid, :txid, :uid, 'update', :before, :after)
@@ -358,6 +372,7 @@ class FinanceService
 
     public function settleTransaction(string $tenantId, string $id, string $effectiveDate, string $userId): array
     {
+        $this->assertNotCardInstallment($tenantId, $id);
         $stmtBefore = $this->pdo->prepare("SELECT * FROM financial_transactions WHERE id = :id AND tenant_id = :tid");
         $stmtBefore->execute([':id' => $id, ':tid' => $tenantId]);
         $before = $stmtBefore->fetch();
@@ -405,6 +420,7 @@ class FinanceService
 
     public function deleteTransaction(string $tenantId, string $id, string $userId): void
     {
+        $this->assertNotCardInstallment($tenantId, $id);
         $stmtBefore = $this->pdo->prepare("SELECT * FROM financial_transactions WHERE id = :id AND tenant_id = :tid");
         $stmtBefore->execute([':id' => $id, ':tid' => $tenantId]);
         $before = $stmtBefore->fetch();
@@ -469,6 +485,12 @@ class FinanceService
 
     public function deleteCategory(string $tenantId, int $id): void
     {
+        if(FinanceCardsService::ready($this->pdo)) {
+            $q=$this->pdo->prepare('SELECT COUNT(*) FROM financial_card_purchases WHERE tenant_id=? AND category_id=?');
+            $q->execute([$tenantId,$id]);
+            if((int)$q->fetchColumn()) throw new \InvalidArgumentException('Esta categoria faz parte do histórico de compras no cartão e deve ser preservada.');
+        }
+
         $stmtCheck = $this->pdo->prepare("SELECT COUNT(*) FROM financial_transactions WHERE category_id = :cid AND tenant_id = :tid");
         $stmtCheck->execute([':cid' => $id, ':tid' => $tenantId]);
         $count = (int)$stmtCheck->fetchColumn();
@@ -480,6 +502,27 @@ class FinanceService
         $stmt = $this->pdo->prepare("DELETE FROM financial_categories WHERE id = :cid AND tenant_id = :tid");
         $stmt->execute([':cid' => $id, ':tid' => $tenantId]);
     }
+    private function saveMethod(string $tenantId, string $id, array $data): void
+    {
+        if(!array_key_exists('payment_method',$data)) return;
+        if(!FinanceCardsService::ready($this->pdo)) {
+            if($data['payment_method']!=='unspecified') throw new \InvalidArgumentException('As formas de pagamento aguardam a atualização do financeiro.');
+            return;
+        }
+        $method=$data['payment_method'];
+        if(!in_array($method,['cash','pix','debit','transfer','unspecified'],true)) throw new \InvalidArgumentException('Forma de pagamento inválida.');
+        $this->pdo->prepare('DELETE FROM financial_transaction_methods WHERE tenant_id=? AND transaction_id=?')->execute([$tenantId,$id]);
+        $this->pdo->prepare('INSERT INTO financial_transaction_methods (transaction_id,tenant_id,method) VALUES (?,?,?)')->execute([$id,$tenantId,$method]);
+    }
+
+    private function assertNotCardInstallment(string $tenantId, string $id): void
+    {
+        if (!FinanceCardsService::ready($this->pdo)) return;
+        $s=$this->pdo->prepare('SELECT transaction_id FROM financial_card_installments WHERE tenant_id=? AND transaction_id=?');
+        $s->execute([$tenantId,$id]);
+        if($s->fetchColumn()) throw new \InvalidArgumentException('Esta parcela deve ser gerenciada na compra ou na fatura do cartão.');
+    }
+
     public static function validDate(string $date): bool
     {
         $d = \DateTimeImmutable::createFromFormat('!Y-m-d', $date);

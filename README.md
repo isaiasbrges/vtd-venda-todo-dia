@@ -66,3 +66,11 @@ O frontend também tem testes de favoritos, busca concorrente, navegação, rasc
 - backend/migrations/, backend/seeds/: esquema e dados demonstrativos.
 - tests/: testes automatizados.
 - vendas.html: página comercial; checkout depende de configuração.
+
+## Cartões e lançamentos guiados
+
+O financeiro inclui lançamentos em etapas com modo rápido, carteira de cartões, compras parceladas e faturas com quitação integral sem duplicar despesas. O controle é manual e permanece restrito ao plano Plus.
+
+A instalação é incremental, sem seeds nem substituição dos dados existentes. Consulte [o guia de cartões e publicação](docs/FINANCEIRO-CARTOES-DEPLOY.md) antes de instalar. A funcionalidade só é liberada depois da migração 004.
+
+Testes adicionais: node --test tests/finance-ui.test.cjs e php -d zend.assertions=1 -d assert.exception=1 tests/test_finance_cards.php.
