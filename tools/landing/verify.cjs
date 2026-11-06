@@ -7,7 +7,7 @@ const fs=require('node:fs/promises');const path=require('node:path');
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const BASE=process.argv[2]||'http://127.0.0.1:8095/vendas.html';
 const OUT=path.resolve(process.argv[3]||'landing-qa');
-const CHECKOUT='https://payfast.greenn.com.br/6sxyvkf';
+const CHECKOUT='https://payfast.greenn.com.br/199844/offer/Gte6Us?ch_id=137285';
 let activeBrowser;
 const sizes=[[1920,1080],[1440,900],[1366,768],[1024,768],[768,1024],[390,844],[375,812],[360,800]];
 (async()=>{
