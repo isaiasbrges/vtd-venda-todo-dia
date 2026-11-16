@@ -1,0 +1,15 @@
+.vtd-shortcuts{margin:8px 0 32px}.vtd-shortcuts-heading{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:18px}.vtd-shortcuts-heading h2{font-size:23px;letter-spacing:-.04em;margin:0;color:#111318}.vtd-shortcuts-heading p{font-size:13px;color:#575b64;margin:0}
+.vtd-shortcuts-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.vtd-shortcut{position:relative;display:flex;flex-direction:column;align-items:flex-start;min-height:218px;padding:24px;background:#fff;border:1px solid #dce0e7;border-radius:18px;color:#111318;text-decoration:none;transition:transform .16s ease,border-color .16s ease;overflow:hidden}
+.vtd-shortcut:hover{transform:translateY(-3px);border-color:#9c7e00}.vtd-shortcut:focus-visible{outline:3px solid #8d6e00;outline-offset:4px}
+.vtd-shortcut-icon{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:#f3f4f6;margin-bottom:20px}.vtd-shortcut-icon .icon{width:25px;height:25px;stroke-width:1.7}
+.vtd-shortcut h3{font-size:20px;line-height:1.2;letter-spacing:-.035em;margin:0 0 9px;color:inherit}.vtd-shortcut p{font-size:13px;line-height:1.6;margin:0 0 22px;color:#575b64;max-width:32ch}
+.vtd-shortcut-action{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;font-size:12px;font-weight:700;margin-top:auto;color:inherit}.vtd-shortcut-action .icon{width:19px;height:19px;flex:none}
+.vtd-shortcut--supply{background:#ffd500;border-color:#ffd500}.vtd-shortcut--supply p{color:#403500}.vtd-shortcut--supply .vtd-shortcut-icon{background:#111318;color:#ffd500}
+.vtd-shortcut--price{background:#111318;border-color:#111318;color:#fff}.vtd-shortcut--price p{color:#d7dbe2}.vtd-shortcut--price .vtd-shortcut-icon{background:#ffd500;color:#111318}.vtd-shortcut--price .vtd-shortcut-action{color:#ffd500}
+.vtd-shortcut--finance .vtd-shortcut-icon{background:#fff4b8}.vtd-shortcut--calendar .vtd-shortcut-icon,.vtd-shortcut--favorites .vtd-shortcut-icon,.vtd-shortcut--guide .vtd-shortcut-icon{color:#6b5900;background:#fffbee}
+.upv-dashboard .upv-home-grid>.upv-planning-card{grid-column:1/-1}
+@media(max-width:1100px){.vtd-shortcuts-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.vtd-shortcuts-heading{display:block}.vtd-shortcuts-heading p{margin-top:7px}}
+@media(max-width:560px){.vtd-shortcuts{margin-bottom:24px}.vtd-shortcuts-grid{gap:10px}.vtd-shortcut{padding:16px;min-height:220px;border-radius:14px}.vtd-shortcut h3{font-size:17px;overflow-wrap:anywhere}.vtd-shortcut p{font-size:12px;margin-bottom:16px}.vtd-shortcut-icon{margin-bottom:14px;width:38px;height:38px}.vtd-shortcut-action{font-size:11px;gap:5px;line-height:1.5}.vtd-shortcuts-heading h2{font-size:22px}}
+@media(max-width:340px){.vtd-shortcuts-grid{grid-template-columns:1fr}.vtd-shortcut{min-height:190px}}
+@media(prefers-reduced-motion:reduce){.vtd-shortcut{transition:none}.vtd-shortcut:hover{transform:none}}

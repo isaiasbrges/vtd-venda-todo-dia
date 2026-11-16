@@ -80,22 +80,24 @@ class UserContentController
     public function saveChecklist(string $userId, string $checkKey, bool $checked): void
     {
         $pdo = Connection::getInstance();
-        $stmt = $pdo->prepare("
+        // Choose the dialect before prepare(): native MySQL prepares reject ON CONFLICT.
+        $sql = "
             INSERT INTO user_checklists (user_id, check_key, checked, updated_at)
             VALUES (:uid, :key, :chk, CURRENT_TIMESTAMP)
             ON CONFLICT(user_id, check_key) DO UPDATE SET
                 checked = :chk2,
                 updated_at = CURRENT_TIMESTAMP
-        ");
-        if (\VTD\Config\Config::get('db.driver') === 'mysql') {
-            $stmt = $pdo->prepare("
+        ";
+        if ($pdo->getAttribute(\PDO::ATTR_DRIVER_NAME) === 'mysql') {
+            $sql = "
                 INSERT INTO user_checklists (user_id, check_key, checked, updated_at)
                 VALUES (:uid, :key, :chk, CURRENT_TIMESTAMP)
                 ON DUPLICATE KEY UPDATE
                     checked = :chk2,
                     updated_at = CURRENT_TIMESTAMP
-            ");
+            ";
         }
+        $stmt = $pdo->prepare($sql);
         $val = $checked ? 1 : 0;
         $stmt->execute([':uid' => $userId, ':key' => $checkKey, ':chk' => $val, ':chk2' => $val]);
     }

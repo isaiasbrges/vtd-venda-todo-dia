@@ -265,6 +265,7 @@ function head(title, description, actions = '') {
 const nav = [
   ['home', 'Início', 'home'],
   ['suppliers', 'Fornecedores', 'truck'],
+  ['pricing', 'Precificação', 'chart'],
   ['calendar', 'Calendário comercial', 'calendar'],
   ['guide', 'Guia do Matheus', 'book'],
   ['favorites', 'Meus favoritos', 'star'],
@@ -310,7 +311,7 @@ function shell(body, current) {
   </div>
   <button class="nav-backdrop" data-action="close-menu" aria-label="Fechar menu" hidden></button>
   <nav class="mobile-bottom" aria-label="Navegação mobile">
-    ${nav.filter(n => n[0] !== 'favorites').map(([r, l, i]) => `<a href="#/${r}" class="${section === r ? 'active' : ''}">${icon(i)}${({ suppliers: 'Fornecedores', calendar: 'Calendário', guide: 'Guia', finance: 'Financeiro', home: 'Início' })[r]}</a>`).join('')}
+    ${nav.filter(n => !['favorites', 'guide'].includes(n[0])).map(([r, l, i]) => `<a href="#/${r}" class="${section === r ? 'active' : ''}">${icon(i)}${({ suppliers: 'Fornecedores', calendar: 'Calendário', guide: 'Guia', finance: 'Financeiro', pricing: 'Preço', home: 'Início' })[r]}</a>`).join('')}
   </nav>`;
 }
 
@@ -372,13 +373,26 @@ function home() {
   const date = new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
   return `<div class="upv-dashboard">
     <header class="upv-page-header"><div><span class="upv-eyebrow"><i class="upv-greeting-dot"></i> SUA LOJA, EM MOVIMENTO</span><h1>Olá, ${esc(S.name.split(' ')[0] || 'lojista')}<span class="upv-greeting-period">.</span></h1><p>Um bom dia de vendas começa com um próximo passo.</p></div><div class="upv-header-aside"><span class="upv-date">${icon('calendar')}${esc(date)}</span>${link('Planejar meu mês ' + icon('arrow'), 'calendar', 'btn')}</div></header>
+    <section class="vtd-shortcuts" aria-labelledby="vtd-shortcuts-title">
+      <div class="vtd-shortcuts-heading"><h2 id="vtd-shortcuts-title">O que vamos resolver hoje?</h2><p>As ferramentas da sua loja, a um toque.</p></div>
+      <div class="vtd-shortcuts-grid">
+      ${[
+        ['suppliers','truck','Fornecedores','Encontre contatos para abastecer sua loja.','Explorar fornecedores','supply'],
+        ['pricing','chart','Precificação','Veja por quanto vender e quanto sobra.','Calcular meu preço','price'],
+        ['finance',S.plan === 'plus' ? 'wallet' : 'lock','Financeiro',S.plan === 'plus' ? 'Acompanhe entradas, saídas e vencimentos.' : 'Controle financeiro disponível no VTD Completo.',S.plan === 'plus' ? 'Abrir financeiro' : 'Conhecer o recurso','finance'],
+        ['calendar','calendar','Calendário comercial','Prepare as próximas campanhas da loja.','Planejar meu mês','calendar'],
+        ['favorites','star','Meus fornecedores favoritos','Volte aos contatos que você selecionou.','Ver favoritos','favorites'],
+        ['guide','book','Guia do Matheus','Consulte orientações para o dia a dia.','Abrir meu guia','guide']
+      ].map(([routeName,symbol,title,description,action,tone]) => `<a class="vtd-shortcut vtd-shortcut--${tone}" href="#/${routeName}"><span class="vtd-shortcut-icon">${icon(symbol)}</span><h3>${title}</h3><p>${description}</p><span class="vtd-shortcut-action">${action}${icon('arrow')}</span></a>`).join('')}
+      </div>
+    </section>
     <div class="upv-store-metrics" aria-label="Resumo do seu kit">
       ${[['truck', S.catalogTotal, 'Fornecedores', 'Contatos para sua loja', 'suppliers'], ['star', S.favs.length, 'Seus favoritos', 'Sua seleção de parceiros', 'favorites'], ['book', `${completed}<span> / ${total}</span>`, 'Capítulos concluídos', 'Conhecimento em prática', 'guide'], ['calendar', esc(m.n), 'Planejamento do mês', 'Prepare suas campanhas', 'calendar']].map(([i, value, label, caption, r]) => `<a class="upv-store-metric" href="#/${r}"><div class="upv-metric-top"><span>${label}</span>${icon(i)}</div><strong>${value}</strong><small>${caption}</small></a>`).join('')}
     </div>
     <div class="upv-home-grid">
       <section class="upv-discover-card" aria-labelledby="upv-discover-title"><div class="upv-discover-content"><span class="upv-eyebrow">SEU PRÓXIMO BOM NEGÓCIO</span><h2 id="upv-discover-title">Bons fornecedores.<br>Novas possibilidades.</h2><p>Encontre os produtos certos e aproxime sua loja de quem faz acontecer.</p>${link('Explorar fornecedores ' + icon('arrow'), 'suppliers', 'btn upv-button-dark')}<div class="upv-discover-foot">${icon('shield')} Contatos e catálogos reunidos em um só lugar</div></div><div class="upv-discover-art" aria-hidden="true"><span class="upv-art-orbit"></span><span class="upv-art-orbit upv-art-orbit-two"></span><span class="upv-art-package">${icon('package')}</span><span class="upv-art-arrow">${icon('external')}</span><span class="upv-art-stamp">PARCEIROS<br>PARA CRESCER</span></div></section>
       <section class="upv-learning-card" aria-labelledby="upv-learning-title"><div class="upv-card-topline"><span class="upv-eyebrow">SEU DESENVOLVIMENTO</span>${icon('book')}</div><div class="upv-learning-body"><div class="upv-progress-ring" role="img" aria-label="${progress}% do guia concluído" style="--upv-progress:${progress}%"><div><strong>${progress}<small>%</small></strong><span>do seu guia</span></div></div><h2 id="upv-learning-title">${progress === 100 ? 'Conhecimento que fica.' : 'Aprenda. Aplique. Cresça.'}</h2><p>${completed} de ${total} capítulos concluídos.<br>Pequenas ações transformam sua loja.</p></div>${link((progress === 100 ? 'Revisitar meu guia' : 'Continuar de onde parei') + icon('arrow'), 'guide/' + nextChapter, 'upv-card-link')}</section>
-      <section class="upv-tools-card" aria-labelledby="upv-tools-title"><div class="upv-section-heading"><div><span class="upv-eyebrow">TUDO À MÃO</span><h2 id="upv-tools-title">Seu kit de crescimento</h2></div><span class="upv-access-pill">${icon('check')} ${S.plan === 'plus' ? 'VTD Completo' : 'Acesso básico'}</span></div><div class="upv-tool-list">${[['calendar', 'calendar', 'Calendário comercial', 'Antecipe as datas. Planeje as vendas.', '01'], ['guide', 'book', 'Guia da sua loja', 'Estratégias para colocar em prática.', '02'], ['finance', S.plan === 'plus' ? 'wallet' : 'lock', 'Controle financeiro', S.plan === 'plus' ? 'Veja suas entradas e saídas com clareza.' : 'Disponível no VTD Completo.', '03']].map(([r, i, title, desc, num]) => `<a href="#/${r}" class="upv-tool-item"><span class="upv-tool-icon">${icon(i)}</span><div><h3>${title}</h3><p>${desc}</p></div><span class="upv-tool-number">${num}</span>${icon('external')}</a>`).join('')}</div></section>
+
       <section class="upv-planning-card" aria-labelledby="upv-planning-title"><div class="upv-card-topline"><span class="upv-eyebrow">PLANO EM AÇÃO</span><span class="upv-month-pill">${esc(m.n)}</span></div><h2 id="upv-planning-title">Prepare sua<br>próxima campanha.</h2><p>${esc(m.dates?.[0]?.[0] || 'Planejamento comercial')}<br>Comece pelo que faz a diferença.</p><div class="upv-task-summary"><span>Seu checklist</span><span>${done} de ${tasks.length} concluídos</span></div><div class="progress" role="img" aria-label="${done} de ${tasks.length} tarefas concluídas"><i style="width:${done / tasks.length * 100}%"></i></div><div class="upv-checklist">${tasks.map(([key, label]) => check(key, label)).join('')}</div>${link('Ver calendário completo ' + icon('arrow'), 'calendar', 'upv-text-link')}</section>
     </div>
     <aside class="upv-tip"><span class="upv-tip-icon">${icon('list')}</span><div><span class="upv-eyebrow">UMA IDEIA PARA HOJE</span><p>Anote 3 produtos que seus clientes pediram e você ainda não tem.</p></div>${link('Abrir meu guia ' + icon('arrow'), 'guide', 'upv-text-link')}</aside>
@@ -1490,6 +1504,7 @@ async function renderPage(r, version) {
     base === 'favorites' ? suppliers(true) :
     base === 'calendar' ? calendar() :
     base === 'guide' ? guide() :
+    base === 'pricing' ? VTDPricing.render() :
     base === 'finance' ? finance(r) :
     base === 'account' ? account() :
     base === 'help' ? help() :
