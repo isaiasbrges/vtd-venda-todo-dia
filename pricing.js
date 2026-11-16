@@ -44,40 +44,94 @@
     return `<div class="pricing-field"><label for="pricing-${name}">${labels[name]}${['fee','tax','margin','discount'].includes(name) ? ' (%)' : name === 'quantity' ? '' : ' (R$)'}</label><input id="pricing-${name}" name="${name}" type="text" inputmode="${name === 'quantity' ? 'numeric' : 'decimal'}" value="${value}" ${required ? 'required' : ''} autocomplete="off" aria-describedby="pricing-${name}-hint pricing-${name}-error"><small id="pricing-${name}-hint">${hint}</small><span class="pricing-field-error" id="pricing-${name}-error"></span></div>`;
   }
   function render() {
-    return `<section class="pricing" aria-labelledby="pricing-title"><header class="pricing-heading"><h1 id="pricing-title">Precificação</h1><p>Descubra por quanto vender cada peça, considerando os seus custos e a margem que deseja.</p></header><div class="pricing-layout"><form id="pricing-form" novalidate><fieldset><legend>Quanto custa cada peça?</legend><div class="pricing-fields">${field('cost','Valor pago ao fornecedor por uma unidade.','',true)}${field('quantity','Peças que dividem o frete desta compra.','1',true)}${field('freight','Frete total da compra. Dividiremos pela quantidade.')}${field('packaging','Sacola, caixa ou embalagem de uma unidade.')}${field('extra','Outros custos variáveis de uma unidade.')}</div></fieldset><fieldset><legend>Taxas e margem sobre a venda</legend><div class="pricing-fields">${field('fee','Percentual total cobrado pelo meio de pagamento.')}${field('tax','Percentual aplicável à sua venda. Informe sua alíquota.')}${field('margin','Percentual do preço de venda que você quer que sobre.','',true)}${field('discount','Desconto para simular sobre o preço sugerido.')}</div></fieldset><p class="pricing-tip">Os campos opcionais em branco contam como zero. Inclua todos os custos aplicáveis para uma simulação útil.</p><div class="pricing-actions"><button type="submit" class="btn primary">Calcular preço</button><button type="button" class="btn" data-pricing-example>Usar exemplo</button><button type="reset" class="btn">Limpar</button></div><p class="pricing-errors" role="alert" id="pricing-errors"></p></form><aside class="pricing-results" aria-live="polite" aria-atomic="true"><div id="pricing-result"><h2>Seu preço começa pelos custos</h2><p>Preencha os valores e clique em calcular. Você verá o preço sugerido, a composição da venda e o efeito de um desconto.</p><p>Quer entender primeiro? Use o exemplo de uma peça de R$ 30.</p></div></aside></div><details class="pricing-explanation"><summary>Como o cálculo funciona?</summary><p>Preço = custo por peça ÷ [1 − (taxas + impostos + margem desejada) ÷ 100]. O custo por peça inclui compra, frete rateado, embalagem e outros custos variáveis informados.</p><p>Margem é um percentual do preço de venda, não um acréscimo sobre o custo. A margem de contribuição ainda precisa pagar aluguel, salários e outras despesas fixas; não representa lucro líquido.</p><p>O preço sugerido é arredondado para cima ao centavo. O frete é dividido igualmente entre as peças. Se os produtos têm pesos ou custos de transporte diferentes, informe o custo unitário já rateado usando quantidade 1.</p><p>Esta simulação não registra produtos, estoque nem lançamentos financeiros. Os dados não são salvos ao sair da página.</p></details></section>`;
+    return `<section class="pricing" aria-labelledby="pricing-title"><header class="pricing-heading"><div><h1 id="pricing-title">Seu preço, na prática.</h1><p>Ajuste os valores e veja na hora quanto sobra em cada venda.</p></div><button type="button" class="btn" data-pricing-example>Experimentar com exemplo</button></header>
+    <div class="pricing-mobile-summary"><span>Preço por peça</span><strong id="pricing-mobile-price">—</strong></div>
+    <div class="pricing-layout"><form id="pricing-form" novalidate>
+    <section class="pricing-step"><h2>Quanto você paga?</h2><div class="pricing-cost">${field('cost','Custo de uma unidade, sem frete.','',true)}</div>
+    <details class="pricing-options"><summary>Adicionar frete, embalagem e outros custos</summary><div class="pricing-fields">${field('quantity','Quantidade que divide o frete.','1',true)}${field('freight','Frete total da compra.')}${field('packaging','Custo por unidade.')}${field('extra','Outros custos variáveis por unidade.')}</div></details></section>
+    <section class="pricing-step"><div class="pricing-section-title"><h2>Quanto você quer que sobre?</h2><span>Sobre o valor da venda</span></div>
+    ${field('margin','Margem de contribuição desejada. Ainda precisa cobrir as despesas fixas.','30',true)}
+    <input class="pricing-slider" type="range" min="0" max="80" step="1" value="30" id="pricing-margin-range" aria-label="Ajustar margem desejada" aria-describedby="pricing-margin-hint">
+    <div class="pricing-presets" aria-label="Sugestões de margem">${[20,30,40,50].map(n=>`<button type="button" data-pricing-margin="${n}" aria-pressed="${n===30}">${n}%</button>`).join('')}</div>
+    </section>
+    <details class="pricing-step pricing-options" open><summary>Taxas de pagamento e impostos</summary><p class="pricing-tip">Informe os percentuais da sua operação. Campos em branco contam como zero.</p><div class="pricing-fields">${field('fee','Taxa total do meio de pagamento.')}${field('tax','Alíquota aplicável à sua venda.')}</div></details>
+    <section class="pricing-step"><h2>E se você der um desconto?</h2>${field('discount','Simule o desconto sobre o preço sugerido.','0')}<input class="pricing-slider" type="range" min="0" max="70" step="1" value="0" id="pricing-discount-range" aria-label="Ajustar desconto"></section>
+    <div class="pricing-actions"><button type="reset" class="btn">Nova simulação</button><span>Cálculo automático enquanto você digita</span></div><p class="pricing-errors" id="pricing-errors" role="status"></p></form>
+    <aside class="pricing-results"><div id="pricing-result"><div class="pricing-empty"><span class="pricing-empty-symbol" aria-hidden="true">R$</span><h2>Comece pelo custo da peça.</h2><p>Seu preço, sua margem e o efeito de um desconto aparecem aqui, sem precisar clicar em calcular.</p><small>Use o exemplo para explorar a calculadora.</small></div></div></aside></div>
+    <p id="pricing-announcement" class="pricing-sr" aria-live="polite" aria-atomic="true"></p>
+    <details class="pricing-explanation"><summary>Entenda os números</summary><p>Preço = custo por peça ÷ [1 − (taxas + impostos + margem desejada) ÷ 100]. O custo inclui compra, frete dividido igualmente pela quantidade, embalagem e outros custos variáveis informados.</p><p>Margem é um percentual do preço de venda, não um acréscimo sobre o custo. A sobra é a margem de contribuição: ainda precisa cobrir aluguel, salários e outras despesas fixas. Não é lucro líquido.</p><p>O preço sugerido é arredondado para cima ao centavo. Para um rateio diferente de frete, use quantidade 1 e informe o frete por unidade. Os percentuais e custos são informados por você.</p><p>A simulação não cria produtos nem lançamentos financeiros e não fica salva ao sair da página.</p></details></section>`;
   }
   function resultHTML(r) {
-    const rows = [['Compra por peça', r.values.cost], ['Frete por peça', r.freightUnit], ['Embalagem', r.values.packaging], ['Outros custos', r.values.extra], ['Taxa de pagamento', r.fees], ['Impostos', r.taxes]];
-    return `<p class="pricing-result-label">Preço sugerido por peça</p><strong class="pricing-price">${brl(r.price)}</strong><p>Para uma margem de contribuição de ${pct(r.values.margin)}.</p><dl class="pricing-breakdown">${rows.map(([k,v]) => `<div><dt>${k}</dt><dd>${brl(v)}</dd></div>`).join('')}<div class="pricing-total"><dt>Sobra por peça</dt><dd>${brl(r.contribution)}</dd></div></dl><p class="pricing-note">Margem efetiva: ${pct(r.margin)}. Essa sobra ainda precisa cobrir as despesas fixas da loja.</p><section class="pricing-comparison"><h2>Sem taxa de pagamento</h2><strong>${brl(r.noFeePrice)}</strong><p>Preço para a mesma margem, mantendo os impostos. Use para Pix ou dinheiro somente se não houver taxa.</p></section><section class="pricing-comparison"><h2>Com ${pct(r.values.discount)} de desconto</h2><strong>${brl(r.discounted)}</strong><p>Sobra por peça: <b>${brl(r.discountContribution)}</b> · Margem: ${pct(r.discountMargin)}</p>${r.discountContribution < -1e-8 ? '<p class="pricing-warning">Este desconto não cobre os custos e taxas informados.</p>' : r.discountMargin !== null && r.discountMargin + 0.001 < r.values.margin ? '<p class="pricing-warning">O desconto reduz a margem abaixo da meta.</p>' : ''}<p>Preço mínimo para cobrir apenas os custos variáveis: <b>${brl(r.floor)}</b>. Não cobre as despesas fixas nem garante lucro.</p></section>`;
+    const below = r.discountContribution < -1e-8;
+    const lowMargin = r.discountMargin !== null && r.discountMargin + .001 < r.values.margin;
+    const rows = [['Compra',r.values.cost],['Frete rateado',r.freightUnit],['Embalagem',r.values.packaging],['Outros custos',r.values.extra],['Taxa de pagamento',r.fees],['Impostos',r.taxes]];
+    return `<div class="pricing-ticket"><span>Preço sugerido por peça</span><strong class="pricing-price">${brl(r.price)}</strong><div class="pricing-ticket-bottom"><span>Sobra por peça<strong>${brl(r.contribution)}</strong></span><span>Margem efetiva<strong>${pct(r.margin)}</strong></span></div></div>
+    <div class="pricing-result-body"><h2>Para onde vai cada venda</h2><div class="pricing-bar" aria-hidden="true"><i style="width:${r.cost/r.price*100}%"></i><i style="width:${(r.fees+r.taxes)/r.price*100}%"></i><i style="width:${r.margin}%"></i></div><dl class="pricing-allocation"><div><dt>Custos</dt><dd>${brl(r.cost)}</dd></div><div><dt>Taxas e impostos</dt><dd>${brl(r.fees+r.taxes)}</dd></div><div><dt>Sobra</dt><dd>${brl(r.contribution)}</dd></div></dl><p class="pricing-note">A sobra ainda precisa pagar as despesas fixas. Não é lucro líquido.</p>
+    <div class="pricing-discount ${below?'is-negative':''}"><div><h2>Com ${pct(r.values.discount)} de desconto</h2><strong>${brl(r.discounted)}</strong></div><p>Sobra <b>${brl(r.discountContribution)}</b> por peça · Margem ${pct(r.discountMargin)}</p>${below?'<p class="pricing-warning">Atenção: esse desconto não cobre os custos informados.</p>':lowMargin?'<p class="pricing-warning">A margem fica abaixo da sua meta.</p>':'<p>A margem desejada está preservada.</p>'}</div>
+    <div class="pricing-no-fee"><span>Preço sem taxa de pagamento<strong>${brl(r.noFeePrice)}</strong></span><p>Mesma margem e impostos. Só use no Pix ou dinheiro se não houver taxa.</p></div>
+    <details class="pricing-cost-detail"><summary>Ver composição e preço mínimo</summary><dl class="pricing-breakdown">${rows.map(([label,value])=>`<div><dt>${label}</dt><dd>${brl(value)}</dd></div>`).join('')}</dl><p>Preço mínimo para cobrir os custos variáveis: <b>${brl(r.floor)}</b>. Não cobre despesas fixas nem garante lucro.</p></details></div>`;
   }
+  let announcementTimer;
   function clearErrors(form) {
     Object.keys(labels).forEach(k => { form.elements[k].removeAttribute('aria-invalid'); document.getElementById(`pricing-${k}-error`).textContent = ''; });
     document.getElementById('pricing-errors').textContent = '';
   }
-  function submit(form) {
+  function update(form) {
     clearErrors(form);
     const raw = Object.fromEntries(Object.keys(labels).map(k => [k, form.elements[k].value]));
     const r = calculate(raw);
     const keys = Object.keys(r.errors);
+    const result = document.getElementById('pricing-result');
+    clearTimeout(announcementTimer);
+    document.getElementById('pricing-announcement').textContent = '';
+    for (const key of ['margin','discount']) {
+      const val = parse(form.elements[key].value);
+      const slider = document.getElementById(`pricing-${key}-range`);
+      if (Number.isFinite(val)) slider.value = Math.min(Number(slider.max),val);
+      slider.setAttribute('aria-valuetext',Number.isFinite(val)?pct(val):'Informe um percentual válido');
+    }
+    form.querySelectorAll('[data-pricing-margin]').forEach(button=>button.setAttribute('aria-pressed',String(Number(button.dataset.pricingMargin)===parse(raw.margin))));
     if (keys.length) {
-      keys.forEach(k => { form.elements[k].setAttribute('aria-invalid','true'); document.getElementById(`pricing-${k}-error`).textContent = r.errors[k]; });
-      document.getElementById('pricing-errors').textContent = 'Confira os campos destacados antes de calcular.';
-      document.getElementById('pricing-result').textContent = 'Corrija os valores para ver uma nova simulação.';
-      form.elements[keys[0]].focus();
+      keys.forEach(k => {
+        if (k==='cost' && raw.cost.trim()==='') return;
+        form.elements[k].setAttribute('aria-invalid','true');
+        document.getElementById(`pricing-${k}-error`).textContent=r.errors[k];
+        const details=form.elements[k].closest('details');if(details)details.open=true;
+      });
+      document.getElementById('pricing-mobile-price').textContent='—';
+      result.innerHTML='<div class="pricing-empty"><span class="pricing-empty-symbol" aria-hidden="true">R$</span><h2>'+(!raw.cost.trim()?'Informe o custo da peça.':'Vamos ajustar os valores?')+'</h2><p>'+(!raw.cost.trim()?'Digite quanto você paga por uma unidade para começar.':'Confira os campos destacados. O resultado volta assim que os valores forem válidos.')+'</p></div>';
       return;
     }
-    document.getElementById('pricing-result').innerHTML = resultHTML(r);
+    const detailsOpen = result.querySelector('details')?.open;
+    result.innerHTML=resultHTML(r);
+    if(detailsOpen)result.querySelector('details').open=true;
+    document.getElementById('pricing-mobile-price').textContent=brl(r.price);
+    announcementTimer=setTimeout(()=>{
+      const el=document.getElementById('pricing-announcement');
+      if(el)el.textContent=`Preço sugerido ${brl(r.price)}. Sobra por peça ${brl(r.contribution)}.`;
+    },500);
   }
   if (typeof document !== 'undefined') {
-    document.addEventListener('submit', e => { if (e.target.id === 'pricing-form') { e.preventDefault(); submit(e.target); } });
-    document.addEventListener('input', e => { if (e.target.form?.id === 'pricing-form') document.getElementById('pricing-result').textContent = 'Valores alterados. Clique em Calcular preço para atualizar a simulação.'; });
-    document.addEventListener('reset', e => { if (e.target.id === 'pricing-form') { clearErrors(e.target); document.getElementById('pricing-result').textContent = 'Preencha os valores para calcular uma nova simulação.'; } });
-    document.addEventListener('click', e => {
-      if (!e.target.closest('[data-pricing-example]')) return;
-      const form = document.getElementById('pricing-form');
-      const values = { cost:'30',quantity:'10',freight:'50',packaging:'2',extra:'0',fee:'5',tax:'4',margin:'30',discount:'10' };
-      Object.entries(values).forEach(([k,v]) => { form.elements[k].value = v; });
-      submit(form);
+    document.addEventListener('submit',e=>{if(e.target.id==='pricing-form'){e.preventDefault();update(e.target);}});
+    document.addEventListener('input',e=>{
+      if(e.target.form?.id!=='pricing-form')return;
+      const form=e.target.form;
+      if(e.target.id==='pricing-margin-range')form.elements.margin.value=e.target.value;
+      if(e.target.id==='pricing-discount-range')form.elements.discount.value=e.target.value;
+      update(form);
+    });
+    document.addEventListener('reset',e=>{if(e.target.id==='pricing-form'){clearTimeout(announcementTimer);setTimeout(()=>{if(e.target.isConnected)update(e.target);},0);}});
+    document.addEventListener('click',e=>{
+      const example=e.target.closest('[data-pricing-example]');
+      const preset=e.target.closest('[data-pricing-margin]');
+      if(!example&&!preset)return;
+      const form=document.getElementById('pricing-form');if(!form)return;
+      if(example){
+        const values={cost:'30',quantity:'10',freight:'50',packaging:'2',extra:'0',fee:'5',tax:'4',margin:'30',discount:'10'};
+        Object.entries(values).forEach(([key,value])=>{form.elements[key].value=value;});
+        form.querySelector('.pricing-options').open=true;
+      }else{form.elements.margin.value=preset.dataset.pricingMargin;}
+      update(form);
     });
   }
   const api = { parse, calculate, render };
