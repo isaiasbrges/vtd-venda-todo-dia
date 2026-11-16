@@ -36,6 +36,16 @@ function app() {
 
 const json = data => ({ ok: true, status: 200, json: async () => ({ success: true, data }) });
 
+test('atalhos de fornecedores normalizam WhatsApp e rejeitam catálogo inseguro', () => {
+  const a = app();
+  const links = a.run("supplierQuickLinks({wa:['(11) 99999-9999'],cat:['javascript:alert(1)','https://example.com/catalogo']})");
+  assert.match(links, /https:\/\/wa.me\/5511999999999/);
+  assert.match(links, /https:\/\/example.com\/catalogo/);
+  assert.doesNotMatch(links, /javascript:/);
+  assert.equal(a.run("supplierQuickLinks({wa:['123'],cat:['javascript:alert(1)']})"), '');
+  assert.match(a.run("supplierQuickLinks({wa:['5511999999999']})"), /wa.me\/5511999999999"/);
+});
+
 test('favoritos consultam a API com filtro e paginação reais', async () => {
   const a = app();
   let requested;

@@ -399,6 +399,21 @@ function home() {
   </div>`;
 }
 
+function supplierQuickLinks(r) {
+  const digits = String((r.wa || [])[0] || '').replace(/\D/g, '');
+  const wa = digits.length >= 10 ? 'https://wa.me/' + (digits.startsWith('55') && digits.length > 11 ? '' : '55') + digits : '';
+  const catalog = (r.cat || []).find(url => safeURL(url) !== '#');
+  return `${wa ? `<a class="supplier-direct supplier-whatsapp" href="${esc(wa)}" target="_blank" rel="noopener noreferrer">WhatsApp ${icon('external')}</a>` : ''}${catalog ? `<a class="supplier-direct" href="${esc(safeURL(catalog))}" target="_blank" rel="noopener noreferrer">Catálogo ${icon('external')}</a>` : ''}`;
+}
+
+function syncSupplierFilters() {
+  document.querySelectorAll('[data-action="supplier-category"]').forEach(button => {
+    const active = (button.dataset.segment || '') === state.segment;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
+}
+
 function supplierList(favs = false) {
   const list = S.suppliers;
   const count = state.totalSuppliers;
@@ -409,7 +424,7 @@ function supplierList(favs = false) {
     <span>${count} ${favs ? (count === 1 ? 'favorito' : 'favoritos') : (count === 1 ? 'fornecedor encontrado' : 'fornecedores encontrados')}</span>
     <span>Página ${state.page} de ${pages}</span>
   </div>
-  ${list.length ? list.map(r => `<article class="supplier">
+  ${list.length ? `<div class="supplier-grid">` + list.map(r => `<article class="supplier supplier-card">
     <span class="supplier-logo">${esc(r.nome.slice(0, 2))}</span>
     <div class="supplier-info">
       <h3>${esc(r.nome)}</h3>
@@ -421,13 +436,14 @@ function supplierList(favs = false) {
       </div>
     </div>
     <div class="supplier-side">
-      <button class="star ${S.favs.includes(r.id) ? 'saved' : ''}" data-action="favorite" data-id="${r.id}" aria-pressed="${S.favs.includes(r.id)}" aria-label="Favoritar ${esc(r.nome)}">
+      <button class="star ${S.favs.includes(r.id) ? 'saved' : ''}" data-action="favorite" data-id="${r.id}" aria-pressed="${S.favs.includes(r.id)}" aria-label="${S.favs.includes(r.id) ? 'Remover dos favoritos:' : 'Favoritar'} ${esc(r.nome)}">
         ${S.favs.includes(r.id) ? '★' : '☆'}
       </button>
-      ${btn('Ver contatos', 'supplier-detail', 'small', `data-id="${r.id}"`)}
+      <div class="supplier-actions">${supplierQuickLinks(r)}</div>
+      ${btn('Todos os contatos', 'supplier-detail', 'small supplier-details', `data-id="${r.id}"`)}
       ${S.role === 'admin' && route().startsWith('master/') ? btn('Editar', 'edit-supplier', 'small', `data-id="${r.id}"`) : ''}
     </div>
-  </article>`).join('') : `<div class="empty">
+  </article>`).join('') + '</div>' : `<div class="empty">
     ${icon(favs ? 'star' : 'search')}
     <h3>${favs ? (filtered ? 'Nenhum favorito com esses filtros.' : 'Nenhum favorito por aqui ainda.') : 'Nenhum fornecedor encontrado.'}</h3>
     <p>${favs && !filtered ? 'Marque a estrela de um fornecedor para encontrá-lo aqui.' : 'Tente outra busca ou limpe os filtros.'}</p>
@@ -442,8 +458,9 @@ function supplierList(favs = false) {
 
 function suppliers(favs = false) {
   const segs = [...new Set([...(typeof ORIGINAL_SUPPLIERS !== 'undefined' ? ORIGINAL_SUPPLIERS.map(s => s.seg) : []), ...S.suppliers.map(s => s.seg), state.segment].filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
-  return head(favs ? 'Seus fornecedores, por perto.' : 'Fornecedores do Matheus', favs ? 'Reúna os contatos que você quer consultar novamente.' : 'Base completa de contatos para encontrar os produtos da sua loja.') +
-    `<div class="searchbar">
+  return '<section class="supplier-explorer">' + head(favs ? 'Seus fornecedores, por perto.' : 'Fornecedores do Matheus', favs ? 'Reúna os contatos que você quer consultar novamente.' : 'Encontre o que sua loja precisa. Fale direto com quem fornece.') +
+    `<div class="supplier-discovery">
+    <div class="searchbar">
       <div class="search">
         ${icon('search')}
         <input id="supplier-search" aria-label="Buscar fornecedores" placeholder="Busque por fornecedor, produto ou marca" value="${esc(state.search)}">
@@ -453,13 +470,18 @@ function suppliers(favs = false) {
         ${segs.map(s => `<option ${state.segment === s ? 'selected' : ''}>${esc(s)}</option>`).join('')}
       </select>
     </div>
+    <div class="supplier-categories" aria-label="Categorias de fornecedores">
+      <button class="chip ${!state.segment ? 'active' : ''}" data-action="supplier-category" data-segment="" aria-pressed="${!state.segment}">Todos</button>
+      ${segs.map(segment => `<button class="chip ${state.segment === segment ? 'active' : ''}" data-action="supplier-category" data-segment="${esc(segment)}" aria-pressed="${state.segment === segment}">${esc(segment)}</button>`).join('')}
+    </div>
     <div class="filters">
       <button class="chip ${state.wa ? 'active' : ''}" data-action="filter-wa" aria-pressed="${state.wa}">Com WhatsApp</button>
       <button class="chip ${state.cat ? 'active' : ''}" data-action="filter-cat" aria-pressed="${state.cat}">Com catálogo</button>
       ${btn('Limpar filtros', 'clear-filters', 'small ghost')}
     </div>
+    </div>
     <div id="supplier-results" aria-live="polite">${supplierList(favs)}</div>
-    <p class="storage-note">Contatos comerciais importados do material original. Confirme autenticidade, pedido mínimo, frete e condições diretamente com cada fornecedor.</p>`;
+    <p class="storage-note">Contatos comerciais importados do material original. Confirme autenticidade, pedido mínimo, frete e condições diretamente com cada fornecedor.</p></section>`;
 }
 
 function supplierDetail(id) {
@@ -1639,6 +1661,7 @@ document.addEventListener('change', async e => {
 
   if (t.id === 'supplier-segment') {
     state.segment = t.value;
+    syncSupplierFilters();
     state.page = 1;
     clearTimeout(supplierTimer);
     await refreshSupplierResults();
@@ -1777,10 +1800,24 @@ document.addEventListener('click', async e => {
     supplierDetail(id);
     return;
   }
-  if (a === 'filter-wa' || a === 'filter-cat') {
-    state[a === 'filter-wa' ? 'wa' : 'cat'] = !state[a === 'filter-wa' ? 'wa' : 'cat'];
+  if (a === 'supplier-category') {
+    state.segment = el.dataset.segment || '';
     state.page = 1;
-    render();
+    const select = $('#supplier-segment');
+    if (select) select.value = state.segment;
+    syncSupplierFilters();
+    clearTimeout(supplierTimer);
+    await refreshSupplierResults();
+    return;
+  }
+  if (a === 'filter-wa' || a === 'filter-cat') {
+    const key = a === 'filter-wa' ? 'wa' : 'cat';
+    state[key] = !state[key];
+    state.page = 1;
+    el.classList.toggle('active', state[key]);
+    el.setAttribute('aria-pressed', String(state[key]));
+    clearTimeout(supplierTimer);
+    await refreshSupplierResults();
     return;
   }
   if (a === 'clear-filters') {
