@@ -36,6 +36,15 @@ function app() {
 
 const json = data => ({ ok: true, status: 200, json: async () => ({ success: true, data }) });
 
+test('atalho financeiro mostra somente próximo mês com lançamentos', () => {
+  const a = app();
+  a.run("state.financeMonth='2026-12'; S.nextConfiguredMonth='2027-03';");
+  assert.match(a.run("financeHeader('Financeiro','')"), /Ver gráficos de 03\/2027/);
+  assert.match(a.run("financeHeader('Financeiro','')"), /data-month="2027-03"/);
+  a.run('S.nextConfiguredMonth=null');
+  assert.doesNotMatch(a.run("financeHeader('Financeiro','')"), /Ver gráficos de/);
+});
+
 test('gráficos projetados usam pendentes sem substituir os realizados', () => {
   const a = app();
   a.run("S.chartWeekly={income:[0,0,0,0,0],expense:[0,0,0,0,0]}; S.projectionChart={income:[12345,0,0,0,0],expense:[5000,0,0,0,0]}; S.chartCategories=[]; S.projectionCategories=[{name:'Estoque',value_cents:5000}];");

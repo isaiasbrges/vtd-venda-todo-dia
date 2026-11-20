@@ -666,7 +666,11 @@ function stats() {
 }
 
 function financeHeader(title, desc) {
-  return head(title, desc, `<input type="month" id="finance-month" value="${state.financeMonth}" aria-label="Mês financeiro" style="width:165px">${btn(icon('plus') + ' Novo lançamento', 'new-tx', 'primary')}`);
+  const next = S.nextConfiguredMonth;
+  const shortcut = /^\d{4}-(0[1-9]|1[0-2])$/.test(next || '') && next > state.financeMonth
+    ? btn(icon('chart') + ' Ver gráficos de ' + next.slice(5) + '/' + next.slice(0,4), 'future-charts', '', `data-month="${next}"`) : '';
+  const back = state.financeMonth !== today().slice(0,7) ? btn('Mês atual', 'future-charts', 'ghost', `data-month="${today().slice(0,7)}"`) : '';
+  return head(title, desc, `<input type="month" id="finance-month" value="${state.financeMonth}" aria-label="Mês financeiro" style="width:165px">${shortcut}${back}${btn(icon('plus') + ' Novo lançamento', 'new-tx', 'primary')}`);
 }
 
 function chart(projected = false) {
@@ -847,7 +851,7 @@ function finance(current) {
     <p class="small muted">Saldo atual + entradas pendentes − saídas pendentes do mês selecionado. Valores pendentes não alteram o saldo realizado.</p>
   </section>
   <div class="finance-grid">
-    <section class="panel finance-chart-panel"><div class="panel-head"><h2>Fluxo de caixa projetado</h2><span class="tag yellow">Inclui pendentes</span></div>${chart(true)}<p class="small muted">Recebidos e pagos pela data da quitação; a receber e a pagar pelo vencimento no mês selecionado.</p></section>
+    <section id="finance-projection" tabindex="-1" class="panel finance-chart-panel" style="scroll-margin-top:90px"><div class="panel-head"><h2>Fluxo de caixa projetado · ${state.financeMonth.slice(5)}/${state.financeMonth.slice(0,4)}</h2><span class="tag yellow">Inclui pendentes</span></div>${chart(true)}<p class="small muted">Recebidos e pagos pela data da quitação; a receber e a pagar pelo vencimento no mês selecionado.</p></section>
     <section class="panel finance-category-panel"><div class="panel-head"><h2>Despesas previstas por categoria</h2></div>${categoriesChart(true)}<p class="small muted">Soma das despesas pagas e das contas ainda a pagar no mês.</p></section>
   </div>`;
 
@@ -1131,6 +1135,7 @@ async function loadFinanceData() {
     S.chartCategories = overview.categories || [];
     S.projectionChart = overview.projection_chart || { income: [0,0,0,0,0], expense: [0,0,0,0,0] };
     S.projectionCategories = overview.projection_categories || [];
+    S.nextConfiguredMonth = overview.next_configured_month || null;
     S.transactions = txs || [];
     S.categories = cats || [];
     S.financeV2 = financeV2;
@@ -1937,6 +1942,19 @@ document.addEventListener('click', async e => {
       toast('Categoria excluída com sucesso.');
     } catch (err) {
       toast(err.message);
+    }
+    return;
+  }
+  if (a === 'future-charts') {
+    if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(el.dataset.month || '')) return;
+    state.financeMonth = el.dataset.month;
+    if (!['finance', 'finance/reports'].includes(route())) {
+      go('finance/reports');
+    } else {
+      await render();
+      const projection = $('#finance-projection');
+      projection?.focus({ preventScroll: true });
+      projection?.scrollIntoView({ block: 'start' });
     }
     return;
   }

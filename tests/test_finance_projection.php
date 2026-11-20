@@ -24,6 +24,7 @@ $service = new \VTD\Services\FinanceService($pdo);
 $o = $service->calculateMonthOverview('a','2026-11');
 assert($o['stats']['balance'] === 38000);
 assert($o['stats']['projected'] === 53000);
+assert($o['next_configured_month'] === '2026-12');
 assert($o['projection_chart']['income'] === [20000,0,30000,0,0]);
 assert($o['projection_chart']['expense'] === [0,5000,0,2000,0]);
 assert($o['projection_categories'] === [['name'=>'Estoque','value_cents'=>7000]]);
@@ -38,4 +39,8 @@ $pdo->exec("UPDATE financial_transactions SET settled_at='2026-12-03' WHERE id=1
 $later = $service->calculateMonthOverview('a','2026-11');
 assert(array_sum($later['projection_chart']['income']) === 30000);
 assert($service->calculateMonthOverview('a','2027-02')['projection_categories'] === []);
+assert($service->calculateMonthOverview('a','2027-02')['next_configured_month'] === null);
+$insert->execute([8,'b','income',1000,1,'2027-01-01',null,'pending']);
+$insert->execute([9,'a','expense',1000,1,'2027-03-01',null,'pending']);
+assert($service->calculateMonthOverview('a','2026-12')['next_configured_month'] === '2027-03');
 echo "PASS: pending, paid, settlement dates, no duplicates, month boundaries, tenant isolation, categories and forecast reconciliation\n";

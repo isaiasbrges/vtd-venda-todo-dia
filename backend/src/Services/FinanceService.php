@@ -174,6 +174,16 @@ class FinanceService
             }
         }
         arsort($forecastCategories);
+        $stmtNext = $this->pdo->prepare("
+            SELECT MIN({$forecastDate}) FROM financial_transactions ft
+            WHERE ft.tenant_id = :tid AND ft.status IN ('paid', 'pending')
+              AND {$forecastDate} >= :next_start
+        ");
+        $stmtNext->execute([
+            ':tid' => $tenantId,
+            ':next_start' => (new \DateTimeImmutable($monthStart))->modify('+1 month')->format('Y-m-d')
+        ]);
+        $nextDate = $stmtNext->fetchColumn();
         $forecastCategoryRows = [];
         foreach ($forecastCategories as $name => $value) {
             $forecastCategoryRows[] = ['name' => $name, 'value_cents' => $value];
@@ -181,6 +191,7 @@ class FinanceService
 
         return [
             'month' => $month,
+            'next_configured_month' => $nextDate ? substr((string)$nextDate, 0, 7) : null,
             'stats' => [
                 'start'     => $startBalance,
                 'inc'       => $monthInc,
