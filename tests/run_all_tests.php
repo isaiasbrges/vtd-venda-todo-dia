@@ -6,6 +6,7 @@ echo "      VTD - SUITE GERAL DE TESTES AUTOMATIZADOS     \n";
 echo "====================================================\n\n";
 
 $tests = [
+    'Projeção com pendentes e realizados' => 'test_finance_projection.php',
     'CSV financeiro e compatibilidade PHP'  => 'test_finance_csv.php',
     'Cartões, parcelas e faturas isolados'    => 'test_finance_cards.php',
     'Acesso aos cartões, plano e CSRF'       => 'test_finance_cards_access.php',

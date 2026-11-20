@@ -36,6 +36,16 @@ function app() {
 
 const json = data => ({ ok: true, status: 200, json: async () => ({ success: true, data }) });
 
+test('gráficos projetados usam pendentes sem substituir os realizados', () => {
+  const a = app();
+  a.run("S.chartWeekly={income:[0,0,0,0,0],expense:[0,0,0,0,0]}; S.projectionChart={income:[12345,0,0,0,0],expense:[5000,0,0,0,0]}; S.chartCategories=[]; S.projectionCategories=[{name:'Estoque',value_cents:5000}];");
+  assert.match(a.run('chart(true)'), /Recebidas \+ a receber/);
+  assert.match(a.run('chart(true)'), /123,45/);
+  assert.doesNotMatch(a.run('chart()'), /123,45/);
+  assert.match(a.run('categoriesChart(true)'), /Estoque/);
+  assert.match(a.run('categoriesChart()'), /Não há despesas pagas/);
+});
+
 test('atalhos de fornecedores normalizam WhatsApp e rejeitam catálogo inseguro', () => {
   const a = app();
   const links = a.run("supplierQuickLinks({wa:['(11) 99999-9999'],cat:['javascript:alert(1)','https://example.com/catalogo']})");

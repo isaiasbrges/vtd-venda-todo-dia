@@ -669,31 +669,33 @@ function financeHeader(title, desc) {
   return head(title, desc, `<input type="month" id="finance-month" value="${state.financeMonth}" aria-label="Mês financeiro" style="width:165px">${btn(icon('plus') + ' Novo lançamento', 'new-tx', 'primary')}`);
 }
 
-function chart() {
-  const inc = S.chartWeekly?.income || [0, 0, 0, 0, 0];
-  const out = S.chartWeekly?.expense || [0, 0, 0, 0, 0];
+function chart(projected = false) {
+  const series = projected ? S.projectionChart : S.chartWeekly;
+  const inc = series?.income || [0, 0, 0, 0, 0];
+  const out = series?.expense || [0, 0, 0, 0, 0];
   const max = Math.max(...inc, ...out, 100);
   const pts = a => a.map((v, i) => `${50 + i * 110},${170 - v / max * 130}`).join(' ');
 
-  return `<svg class="chart" viewBox="0 0 530 210" role="img" aria-label="Entradas e saídas pagas por semana do mês">
+  return `<svg class="chart" viewBox="0 0 530 210" role="img" aria-label="${projected ? 'Projeção de entradas e saídas, incluindo pendentes' : 'Entradas recebidas e saídas pagas'} por semana do mês">
     <g stroke="var(--chart-grid)">${[40, 83, 126, 170].map(y => `<path d="M40 ${y}H505"/>`).join('')}</g>
     <g font-size="12" fill="var(--text-muted)">${[0, 1, 2, 3, 4].map(i => `<text x="${38 + i * 110}" y="198">${i * 7 + 1}–${Math.min(i * 7 + 7, 31)}</text>`).join('')}</g>
     <polyline points="${pts(inc)}" fill="none" stroke="var(--chart-primary)" stroke-width="3"/>
     <polyline points="${pts(out)}" fill="none" stroke="var(--chart-highlight)" stroke-width="2" stroke-dasharray="6 4"/>
     ${inc.map((v, i) => `<circle cx="${50 + i * 110}" cy="${170 - v / max * 130}" r="4" fill="var(--chart-primary)"><title>Semana ${i + 1}: entradas ${money(v)}</title></circle>`).join('')}
+    ${out.map((v, i) => `<circle cx="${50 + i * 110}" cy="${170 - v / max * 130}" r="4" fill="var(--chart-highlight)"><title>Semana ${i + 1}: saídas ${money(v)}</title></circle>`).join('')}
   </svg>
-  <div class="chart-legend"><span><i style="background:var(--chart-primary)"></i>Entradas recebidas</span><span><i style="background:var(--chart-highlight)"></i>Saídas pagas · linha tracejada</span></div>`;
+  <div class="chart-legend"><span><i style="background:var(--chart-primary)"></i>${projected ? 'Recebidas + a receber' : 'Entradas recebidas'}</span><span><i style="background:var(--chart-highlight)"></i>${projected ? 'Pagas + a pagar' : 'Saídas pagas'} · linha tracejada</span></div>`;
 }
 
-function categoriesChart() {
-  const cats = S.chartCategories || [];
+function categoriesChart(projected = false) {
+  const cats = (projected ? S.projectionCategories : S.chartCategories) || [];
   const total = cats.reduce((s, x) => s + x.value_cents, 0);
 
   return cats.length ? cats.map(c => `
     <div class="category-bar">
       <div><span>${esc(c.name)}</span><b>${money(c.value_cents)}</b></div>
       <div class="bar"><i style="width:${total ? c.value_cents / total * 100 : 0}%"></i></div>
-    </div>`).join('') : `<p class="muted small">Não há despesas pagas neste mês.</p>`;
+    </div>`).join('') : `<p class="muted small">${projected ? 'Não há despesas pagas ou a pagar neste mês.' : 'Não há despesas pagas neste mês.'}</p>`;
 }
 
 function txTable(list) {
@@ -843,7 +845,11 @@ function finance(current) {
       <strong>${money(S.financeStats.projected)}</strong>
     </div>
     <p class="small muted">Saldo atual + entradas pendentes − saídas pendentes do mês selecionado. Valores pendentes não alteram o saldo realizado.</p>
-  </section>`;
+  </section>
+  <div class="finance-grid">
+    <section class="panel finance-chart-panel"><div class="panel-head"><h2>Fluxo de caixa projetado</h2><span class="tag yellow">Inclui pendentes</span></div>${chart(true)}<p class="small muted">Recebidos e pagos pela data da quitação; a receber e a pagar pelo vencimento no mês selecionado.</p></section>
+    <section class="panel finance-category-panel"><div class="panel-head"><h2>Despesas previstas por categoria</h2></div>${categoriesChart(true)}<p class="small muted">Soma das despesas pagas e das contas ainda a pagar no mês.</p></section>
+  </div>`;
 
   if (suffix === 'reports') {
     html += `<section class="panel">
@@ -1123,6 +1129,8 @@ async function loadFinanceData() {
     S.financeStats = overview.stats || { start: 0, inc: 0, out: 0, balance: 0, projected: 0 };
     S.chartWeekly = overview.chart || { income: [0,0,0,0,0], expense: [0,0,0,0,0] };
     S.chartCategories = overview.categories || [];
+    S.projectionChart = overview.projection_chart || { income: [0,0,0,0,0], expense: [0,0,0,0,0] };
+    S.projectionCategories = overview.projection_categories || [];
     S.transactions = txs || [];
     S.categories = cats || [];
     S.financeV2 = financeV2;

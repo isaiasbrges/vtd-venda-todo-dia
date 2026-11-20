@@ -147,6 +147,38 @@ class FinanceService
             ];
         }, $stmtCat->fetchAll());
 
+        // Forecast uses settlement dates for realized entries and due dates for pending entries.
+        // Each transaction contributes once; this does not change the realized balance.
+        $forecastDate = "CASE WHEN ft.status = 'paid' THEN COALESCE(ft.settled_at, ft.date) ELSE ft.date END";
+        $stmtForecast = $this->pdo->prepare("
+            SELECT ft.type, ft.value_cents, {$forecastDate} AS forecast_date,
+                   COALESCE(fc.name, 'Sem categoria') AS category_name
+            FROM financial_transactions ft
+            LEFT JOIN financial_categories fc ON fc.id = ft.category_id
+            WHERE ft.tenant_id = :tid AND ft.status IN ('paid', 'pending')
+              AND {$forecastDate} >= :start AND {$forecastDate} < :end
+        ");
+        $stmtForecast->execute([
+            ':tid' => $tenantId, ':start' => $monthStart,
+            ':end' => (new \DateTimeImmutable($monthStart))->modify('+1 month')->format('Y-m-d')
+        ]);
+        $forecast = ['income' => [0,0,0,0,0], 'expense' => [0,0,0,0,0]];
+        $forecastCategories = [];
+        foreach ($stmtForecast->fetchAll() as $tx) {
+            $week = min(4, max(0, (int)floor(((int)substr($tx['forecast_date'], 8, 2) - 1) / 7)));
+            $value = (int)$tx['value_cents'];
+            $forecast[$tx['type']][$week] += $value;
+            if ($tx['type'] === 'expense') {
+                $name = $tx['category_name'];
+                $forecastCategories[$name] = ($forecastCategories[$name] ?? 0) + $value;
+            }
+        }
+        arsort($forecastCategories);
+        $forecastCategoryRows = [];
+        foreach ($forecastCategories as $name => $value) {
+            $forecastCategoryRows[] = ['name' => $name, 'value_cents' => $value];
+        }
+
         return [
             'month' => $month,
             'stats' => [
@@ -160,7 +192,9 @@ class FinanceService
                 'income'  => $weeklyInc,
                 'expense' => $weeklyOut
             ],
-            'categories' => $categoriesChart
+            'categories' => $categoriesChart,
+            'projection_chart' => $forecast,
+            'projection_categories' => $forecastCategoryRows
         ];
     }
 
